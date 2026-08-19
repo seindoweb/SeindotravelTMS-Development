@@ -13,12 +13,49 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title')->nullable();
+            $table->string('full_name');
+
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            $table->string('dial_code')->nullable();
+            $table->string('phone_number')->nullable();
+
+            $table->string('identity_type')->nullable()->unique();
+            $table->string('identity_number')->nullable();
+
+            $table->string('gender')->nullable();
+            $table->string('place_of_birth')->nullable();
+            $table->date('date_of_birth')->nullable();
+
+            $table->string('referral_code')->nullable()->unique();
+            $table->boolean('has_credit')->default(false);
+            $table->boolean('is_agent')->default(false);
+            $table->unsignedBigInteger('upline_id')->nullable();
+
+            $table->unsignedMediumInteger('country_id')->nullable();
+            $table->unsignedMediumInteger('state_id')->nullable();
+            $table->unsignedMediumInteger('city_id')->nullable();
+            $table->text('address')->nullable();
+            $table->string('zip_code')->nullable();
+
+            $table->string('password_reset_otp')->nullable();
+            $table->timestamp('password_reset_otp_expires_at')->nullable();
+
+
+            $table->string('lang')->nullable();
+            $table->string('default_currency')->nullable();
+            $table->text('profile_photo_path')->nullable();
+            $table->boolean('active')->default(true);
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
+
+            $table->foreign('upline_id')->references('id')->on('users')->cascadeOnUpdate()->nullOnDelete();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

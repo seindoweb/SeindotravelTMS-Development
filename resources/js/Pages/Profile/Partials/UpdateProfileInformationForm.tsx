@@ -19,7 +19,7 @@ export default function UpdateProfileInformation({
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
-            name: user.name,
+            full_name: user.full_name,
             email: user.email,
         });
 
@@ -28,7 +28,7 @@ export default function UpdateProfileInformation({
 
         patch(route('profile.update'));
     };
-
+    console.log(user)
     return (
         <section className={className}>
             <header>
@@ -46,16 +46,16 @@ export default function UpdateProfileInformation({
                     <InputLabel htmlFor="name" value="Name" />
 
                     <TextInput
-                        id="name"
-                        className="mt-1 block w-full"
-                        value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        id="full_name"
+                        className="block w-full mt-1"
+                        value={data.full_name}
+                        onChange={(e) => setData('full_name', e.target.value)}
                         required
                         isFocused
-                        autoComplete="name"
+                        autoComplete="full_name"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.full_name} />
                 </div>
 
                 <div>
@@ -64,7 +64,7 @@ export default function UpdateProfileInformation({
                     <TextInput
                         id="email"
                         type="email"
-                        className="mt-1 block w-full"
+                        className="block w-full mt-1"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
                         required
@@ -82,7 +82,7 @@ export default function UpdateProfileInformation({
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                className="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                                 Click here to re-send the verification email.
                             </Link>

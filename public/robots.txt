@@ -1,2 +1,13 @@
+User-agent: Googlebot-Image
+Allow: /storage/
+Allow: /assets/
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.gif$
+Allow: /*.webp$
+Allow: /*.svg$
+Allow: /*.ico$
+
 User-agent: *
-Disallow:
+Disallow: /
