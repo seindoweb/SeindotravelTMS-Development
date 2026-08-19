@@ -1,59 +1,381 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SeindoTravel TMS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Fast repository cloning:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/your-organization/SeindotravelTMS-Development.git tms.seindotravel
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**SeindoTravel TMS (Travel Management System)** adalah sistem manajemen operasional untuk mengelola proses bisnis dan operasional perjalanan secara terintegrasi, mulai dari booking, supplier, produk perjalanan, harga, pembayaran, hingga pelaporan.
 
-## Contributing
+Sistem ini dikembangkan untuk mendukung kebutuhan operasional **SeindoTravel** agar proses pengelolaan transaksi perjalanan menjadi lebih terstruktur, efisien, dan mudah dipantau.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ✨ Features
 
-## Code of Conduct
+### Booking Management
+- Kelola booking pelanggan
+- Kelola status booking
+- Booking tiket pesawat
+- Booking hotel
+- Booking paket tour
+- Riwayat transaksi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Flight Management
+- Kelola produk tiket pesawat
+- Kelola airline
+- Kelola rute penerbangan
+- Kelola jadwal penerbangan
+- Kelola harga tiket
 
-## Security Vulnerabilities
+### Hotel Management
+- Kelola data hotel
+- Kelola room type
+- Kelola room availability
+- Kelola harga hotel
+- Kelola supplier hotel
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Tour Management
+- Kelola paket tour
+- Kelola itinerary
+- Kelola harga paket
+- Kelola periode perjalanan
+- Kelola peserta tour
 
-## License
+### Supplier / Provider Management
+- Kelola supplier
+- Kelola provider
+- Kelola produk supplier
+- Kelola credential dan konfigurasi provider
+- Monitoring transaksi provider
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# SeindotravelTMS-Development
+### Pricing & Markup
+- Kelola harga dasar
+- Kelola markup
+- Markup berdasarkan produk
+- Markup berdasarkan supplier
+- Markup berdasarkan customer
+- Perhitungan selling price
+
+### Payment & Finance
+- Kelola pembayaran
+- Monitoring status pembayaran
+- Refund
+- Commission
+- Invoice
+- Payment reconciliation
+
+### Reporting
+- Laporan booking
+- Laporan penjualan
+- Laporan pembayaran
+- Laporan refund
+- Laporan commission
+- Laporan profit & margin
+
+## 🛠️ Technology Stack
+
+| Technology | Description |
+|---|---|
+| Laravel | Backend Framework |
+| PHP | Backend Language |
+| MySQL | Database |
+| React | Frontend |
+| TypeScript | Frontend Language |
+| Inertia.js | Backend & Frontend Integration |
+| Tailwind CSS | UI Framework |
+| Vite | Frontend Build Tool |
+| Laravel Breeze | Authentication |
+
+## 📋 Requirements
+
+Pastikan environment sudah memiliki:
+
+- PHP >= 8.3
+- Composer
+- Node.js
+- Yarn / npm
+- MySQL
+- Git
+
+## 🚀 Installation
+
+Clone repository:
+
+```bash
+git clone https://github.com/your-organization/SeindotravelTMS-Development.git
+```
+
+Masuk ke directory project:
+
+```bash
+cd SeindotravelTMS-Development
+```
+
+Install dependency PHP:
+
+```bash
+composer install
+```
+
+Install dependency frontend:
+
+```bash
+yarn install
+```
+
+atau:
+
+```bash
+npm install
+```
+
+Copy file environment:
+
+```bash
+cp .env.example .env
+```
+
+Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+Konfigurasikan database pada file `.env`:
+
+```env
+DB_DATABASE=tms_seindotravel
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Jalankan migration:
+
+```bash
+php artisan migrate
+```
+
+Jika menggunakan seeder:
+
+```bash
+php artisan db:seed
+```
+
+Build frontend:
+
+```bash
+yarn build
+```
+
+Untuk development:
+
+```bash
+yarn dev
+```
+
+Jalankan Laravel:
+
+```bash
+php artisan serve
+```
+
+## 💻 Development
+
+Untuk menjalankan project dalam mode development:
+
+```bash
+php artisan serve
+```
+
+Kemudian pada terminal lain:
+
+```bash
+yarn dev
+```
+
+Project dapat diakses melalui:
+
+```text
+http://localhost:8000
+```
+
+## 📁 Project Structure
+
+Struktur utama project:
+
+```text
+SeindotravelTMS-Development/
+├── app/
+│   ├── Http/
+│   ├── Models/
+│   └── Services/
+├── database/
+│   ├── migrations/
+│   ├── seeders/
+│   └── factories/
+├── resources/
+│   ├── css/
+│   └── js/
+│       ├── Components/
+│       ├── Layouts/
+│       ├── Pages/
+│       └── app.tsx
+├── routes/
+│   ├── web.php
+│   └── api.php
+├── public/
+├── storage/
+├── tests/
+├── .env.example
+├── composer.json
+├── package.json
+└── vite.config.ts
+```
+
+## 🔐 Authentication
+
+Authentication menggunakan **Laravel Breeze** dan dapat dikembangkan lebih lanjut untuk mendukung kebutuhan keamanan dan akses pengguna.
+
+Role dan permission dapat digunakan untuk membatasi akses berdasarkan fungsi operasional, seperti:
+
+- Administrator
+- Sales
+- Reservation / Ticketing
+- Finance
+- Operations
+- Manager
+
+## 🔄 Business Flow
+
+Secara umum proses bisnis TMS:
+
+```text
+Customer
+   │
+   ▼
+Booking
+   │
+   ├── Flight
+   ├── Hotel
+   └── Tour
+   │
+   ▼
+Supplier / Provider
+   │
+   ▼
+Pricing & Markup
+   │
+   ▼
+Payment
+   │
+   ▼
+Invoice
+   │
+   ▼
+Commission & Profit
+   │
+   ▼
+Reporting
+```
+
+## 🧪 Testing
+
+Menjalankan test:
+
+```bash
+php artisan test
+```
+
+Atau:
+
+```bash
+./vendor/bin/pest
+```
+
+## 📦 Production Build
+
+Build frontend untuk production:
+
+```bash
+yarn build
+```
+
+Kemudian jalankan Laravel menggunakan environment production:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+```
+
+Optimasi Laravel:
+
+```bash
+php artisan optimize
+```
+
+## 🌱 Development Branch
+
+Branch utama yang digunakan:
+
+```text
+main
+```
+
+Branch development:
+
+```text
+development
+```
+
+Gunakan branch feature untuk pengembangan fitur baru:
+
+```text
+feature/booking-management
+feature/hotel-management
+feature/flight-management
+feature/payment-management
+```
+
+## 🤝 Development Guidelines
+
+Sebelum melakukan commit:
+
+```bash
+git status
+```
+
+Pastikan kode sudah diuji:
+
+```bash
+php artisan test
+```
+
+Kemudian commit perubahan:
+
+```bash
+git add .
+git commit -m "Add booking management"
+```
+
+Push ke repository:
+
+```bash
+git push origin development
+```
+
+## 📌 Project Status
+
+> 🚧 **Under Development**
+
+SeindoTravel TMS saat ini masih dalam tahap pengembangan dan fitur dapat berubah mengikuti kebutuhan bisnis dan operasional SeindoTravel.
+
+## 📄 License
+
+This project is proprietary software developed for **SeindoTravel**.
+
+Unauthorized copying, distribution, modification, or commercial use is prohibited without permission.
+
+---
+
+**SeindoTravel TMS**  
+*Travel Management System for SeindoTravel*
