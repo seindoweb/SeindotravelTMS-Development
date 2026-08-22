@@ -41,12 +41,8 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('zip_code')->nullable();
 
-            $table->string('password_reset_otp')->nullable();
-            $table->timestamp('password_reset_otp_expires_at')->nullable();
-
-
-            $table->string('lang')->nullable();
-            $table->string('default_currency')->nullable();
+            $table->string('locale')->nullable()->default('id');
+            $table->string('currency')->nullable()->default('IDR');
             $table->text('profile_photo_path')->nullable();
             $table->boolean('active')->default(true);
             $table->rememberToken();

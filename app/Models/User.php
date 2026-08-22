@@ -8,6 +8,7 @@ use App\Services\Systems\TriadIdMask;
 use Illuminate\Support\Facades\Crypt;
 use App\Services\Systems\CreatorAndUpdater;
 use Database\Factories\UserFactory;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,10 +42,8 @@ use Illuminate\Support\Str;
     'city_id',
     'address',
     'zip_code',
-    'password_reset_otp',
-    'password_reset_otp_expires_at',
-    'lang',
-    'default_currency',
+    'locale',
+    'currency',
     'profile_photo_path',
     'active',
     'created_by',
@@ -55,7 +54,7 @@ use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, Notifiable, LogsActivity, CreatorAndUpdater;
+    use HasFactory, HasRoles, HasApiTokens, Notifiable, LogsActivity, CreatorAndUpdater;
 
     /**
      * Get the attributes that should be cast.
@@ -100,7 +99,7 @@ class User extends Authenticatable
             return $this->attributes['profile_photo_path'];
         }
 
-        return 'https://avatars.mantapbacklink.com/api?format=svg&name=' . $this->full_name . '&format=svg&bold=false&rounded=true&size=512&background=Eb2E34&color=ffffff';
+        return 'https://avatars.mantapbacklink.com/api?format=svg&name=' . $this->full_name . '&format=svg&bold=false&rounded=true&size=320&background=Eb2E34&color=ffffff';
     }
 
 
