@@ -19,7 +19,7 @@ export interface User {
     place_of_birth?: string;
     date_of_birth?: string;
 
-    referral_code?: string;
+    tracking_code?: string;
 
     has_credit: boolean;
     is_agent: boolean;

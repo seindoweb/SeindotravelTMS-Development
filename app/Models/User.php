@@ -33,7 +33,7 @@ use Illuminate\Support\Str;
     'gender',
     'place_of_birth',
     'date_of_birth',
-    'referral_code',
+    'tracking_code',
     'has_credit',
     'is_agent',
     'upline_id',
@@ -81,8 +81,8 @@ class User extends Authenticatable
     {
         static::creating(function (User $user) {
             do {
-                $user->referral_code  = Str::upper(Str::random(8));
-            } while (User::query()->where('referral_code', $user->referral_code)->exists());
+                $user->tracking_code  = Str::lower(Str::random(8));
+            } while (User::query()->where('tracking_code', $user->tracking_code)->exists());
         });
     }
 

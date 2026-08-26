@@ -2,21 +2,32 @@
 
 namespace App\Notifications;
 
+use App\Mail\EmailVerificationMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Carbon;
 
-class LoginActivitNotification extends Notification
+class RegisterActivityNotification extends Notification
 {
     use Queueable;
 
+    /**
+     * platform
+     *
+     * @var mixed
+     */
     public $platform;
-    protected $offerData;
+    /**
+     * offerData
+     *
+     * @var mixed
+     */
+    public $offerData;
 
     /**
      * Create a new notification instance.
+     * @param mixed $offerData
      */
     public function __construct($offerData, $platform = null)
     {
@@ -31,18 +42,15 @@ class LoginActivitNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail', 'database'];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable)
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        return (new EmailVerificationMail($this->offerData))->to($notifiable->email);
     }
 
     /**

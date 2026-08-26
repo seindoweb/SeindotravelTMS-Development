@@ -11,19 +11,22 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LoginActivityEvent
+class RegisterActivityEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * user
+     * The user instance.
      *
      * @var \App\Models\User
      */
     public $user;
 
     /**
-     * Create a new event instance.
+     * __construct
+     *
+     * @param User $user
+     * @return void
      */
     public function __construct(User $user)
     {
@@ -38,7 +41,7 @@ class LoginActivityEvent
     public function broadcastOn(): array
     {
         return [
-            // new PrivateChannel('users.' . $this->user->tracking_code),
+            // new PrivateChannel('channel-name'),
         ];
     }
 }

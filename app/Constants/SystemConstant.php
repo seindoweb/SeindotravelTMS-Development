@@ -4,6 +4,9 @@ namespace App\Constants;
 
 final class SystemConstant
 {
+    public const DEFAULT_LOCALE = "id";
+    public const DEFAULT_CURRENCY = "IDR";
+
     // NOTIFICATION PLATFORM
     public const NOTIFICATION_PLATFORM_CRM = 1;
     public const NOTIFICATION_PLATFORM_WEBMOBILE = 2;

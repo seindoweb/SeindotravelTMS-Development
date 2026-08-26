@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Constants\SystemConstant;
 use App\Events\LoginActivityEvent;
 use App\Events\NotificationWebMobileEvent;
-use App\Notifications\LoginActivitNotification;
+use App\Notifications\LoginActivityNotification;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,9 +34,9 @@ class LoginActivityListener
             'url' => null
         ];
 
-        Notification::send($event?->user, new LoginActivitNotification($offerData, SystemConstant::NOTIFICATION_PLATFORM_WEBMOBILE));
+        Notification::send($event?->user, new LoginActivityNotification($offerData, SystemConstant::NOTIFICATION_PLATFORM_WEBMOBILE));
         sleep(1);
 
-        NotificationWebMobileEvent::dispatch($event?->user?->referral_code, $offerData);
+        NotificationWebMobileEvent::dispatch($event?->user?->tracking_code, $offerData);
     }
 }

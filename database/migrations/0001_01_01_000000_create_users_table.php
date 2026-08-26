@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('place_of_birth')->nullable();
             $table->date('date_of_birth')->nullable();
 
-            $table->string('referral_code')->nullable()->unique();
+            $table->string('tracking_code')->nullable()->unique();
             $table->boolean('has_credit')->default(false);
             $table->boolean('is_agent')->default(false);
             $table->unsignedBigInteger('upline_id')->nullable();
@@ -60,6 +60,12 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable();
         });
 
+        Schema::create('email_verification_codes', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('code', 6);
+            $table->timestamp('created_at')->nullable();
+        });
+
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
@@ -77,6 +83,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('email_verification_codes');
         Schema::dropIfExists('sessions');
     }
 };

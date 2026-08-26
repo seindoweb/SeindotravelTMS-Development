@@ -14,13 +14,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('users')->delete();
-        
-        \DB::table('users')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('users')->insert(array(
+            0 =>
+            array(
                 'id' => 1,
                 'title' => NULL,
                 'full_name' => 'IT Seindo',
@@ -34,7 +34,7 @@ class UsersTableSeeder extends Seeder
                 'gender' => NULL,
                 'place_of_birth' => 'Indonesia',
                 'date_of_birth' => '2008-08-08',
-                'referral_code' => '1T531ND0',
+                'tracking_code' => '1t531nd0',
                 'has_credit' => 0,
                 'is_agent' => 0,
                 'upline_id' => NULL,
@@ -55,7 +55,5 @@ class UsersTableSeeder extends Seeder
                 'updated_by' => 1,
             ),
         ));
-        
-        
     }
 }

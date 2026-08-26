@@ -30,7 +30,7 @@ class UserResource extends JsonResource
             'placeOfBirth' => $this->place_of_birth,
             'dateOfBirth' => $this->date_of_birth,
 
-            'referralCode' => $this->referral_code,
+            'trackingCode' => $this->tracking_code,
             'hasCredit' => $this->has_credit,
             'isAgent' => $this->is_agent,
 
