@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -29,10 +31,30 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $locale = session('locale', 'en');
+        if (Auth::check() && Auth::user()->locale) {
+            $locale = Auth::user()->locale;
+        }
+
+        if (!in_array($locale, ['en', 'id'])) {
+            $locale = 'en';
+        }
+
+        App::setLocale($locale);
+
         return [
             ...parent::share($request),
+            'appLogo' => asset("assets/images/logo.svg"),
+            'appIconDefault' => asset("assets/icons/icon-default.svg"),
+            'appIconWhite' => asset("assets/icons/icon-white.svg"),
+            'appName' => config("app.name"),
             'auth' => [
                 'user' => $request->user(),
+                'roles' =>  $request->user()?->getRoleNames() ?? [],
+            ],
+            'locale' => $locale,
+            'translations' => [
+                'auth' => trans('auth'),
             ],
         ];
     }

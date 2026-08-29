@@ -23,10 +23,10 @@ return new class extends Migration
             $table->string('dial_code')->nullable();
             $table->string('phone_number')->nullable();
 
-            $table->string('identity_type')->nullable()->unique();
-            $table->string('identity_number')->nullable();
+            $table->string('identity_type', 88)->nullable();
+            $table->string('identity_number', 88)->nullable();
 
-            $table->string('gender')->nullable();
+            $table->string('gender', 88)->nullable();
             $table->string('place_of_birth')->nullable();
             $table->date('date_of_birth')->nullable();
 

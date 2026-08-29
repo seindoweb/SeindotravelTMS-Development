@@ -32,7 +32,7 @@ export default function Welcome({
                         }}
                     />
 
-                    <div className="relative grid items-center w-full gap-16 px-6 py-24 mx-auto max-w-7xl lg:grid-cols-2 lg:px-8 lg:py-32">
+                    <div className="relative grid items-center w-full gap-16 px-6 py-24 mx-auto max-w-7xl lg:grid-cols-2 lg:px-8 lg:py-28">
                         {/* =================================================
                             LEFT CONTENT
                         ================================================== */}
@@ -592,31 +592,6 @@ function UsersIcon() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M17 11a4 4 0 1 0 0-8m4 18v-2a4 4 0 0 0-3-3.87"
-            />
-        </svg>
-    );
-}
-
-function ShieldIcon() {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            className="w-6 h-6"
-        >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 3 4.5 6v5.5c0 4.8 3.2 8.5 7.5 9.5 4.3-1 7.5-4.7 7.5-9.5V6L12 3Z"
-            />
-
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m9 12 2 2 4-4"
             />
         </svg>
     );

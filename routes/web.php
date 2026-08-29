@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\Page\DashboardController;
+use App\Http\Controllers\Pages\DashboardController;
+use App\Http\Controllers\Pages\Users\AdministratorsController;
+use App\Http\Controllers\Pages\Users\CustomersController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +29,17 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
     });
 
-    Route::middleware('auth')->group(function () {
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::prefix('administrators')->name('administrators.')->group(function () {
+            Route::match(['get', 'post'], '/', [AdministratorsController::class, 'index'])->name('index');
+        });
+        Route::prefix('customers')->name('customers.')->group(function () {
+            Route::match(['get', 'post'], '/', [CustomersController::class, 'index'])->name('index');
+        });
+    });
+
+
+    Route::middleware(['auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -35,3 +47,4 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 })->name('dashboard');
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/locale.php';

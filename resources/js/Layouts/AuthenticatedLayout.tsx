@@ -1,179 +1,291 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import {
+    ChevronRight,
+    UserRound,
+    X,
+} from 'lucide-react';
 import { Link, usePage } from '@inertiajs/react';
-import { PropsWithChildren, ReactNode, useState } from 'react';
+import {
+    PropsWithChildren,
+    useEffect,
+    useRef,
+    useState,
+    ReactNode
+} from 'react';
+import AuthenticatedMenuDashboard from './Partials/AuthenticatedMenuDashboard';
+import AuthenticatedLogo from './Partials/AuthenticatedLogo';
+import AuthenticatedMenuUsers from './Partials/AuthenticatedMenuUsers';
+import AuthenticatedMenuSettings from './Partials/AuthenticatedMenuSettings';
+import AuthenticatedNotification from './Partials/AuthenticatedNotification';
+import AuthenticatedProfile from './Partials/AuthenticatedProfile';
+
 
 export default function Authenticated({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
+    const { url } = usePage();
     const user = usePage().props.auth.user;
-
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
+    console.log(user);
+    const [settingsOpen, setSettingsOpen] =
         useState(false);
 
+    const [usersOpen, setUsersOpen] =
+        useState(false);
+
+    const [notificationOpen, setNotificationOpen] =
+        useState(false);
+
+    const [profileOpen, setProfileOpen] =
+        useState(false);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Close flymenu when navigating to another page
+    |--------------------------------------------------------------------------
+    */
+    const settingsRef = useRef<HTMLDivElement>(null);
+    const usersRef =  useRef<HTMLDivElement>(null);
+    const notificationRef = useRef<HTMLDivElement>(null);
+    const profileRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setSettingsOpen(false);
+        setUsersOpen(false);
+        setNotificationOpen(false);
+        setProfileOpen(false);
+    }, [url]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Close flymenu when clicking outside
+    |--------------------------------------------------------------------------
+    */
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            const target = event.target as Node;
+
+            const clickedInsideSettings =
+                settingsRef.current?.contains(target);
+
+            const clickedInsideUsers =
+                usersRef.current?.contains(target);
+
+            const clickedInsideNotification =
+                notificationRef.current?.contains(target);
+
+            const clickedInsideProfile =
+                profileRef.current?.contains(target);
+
+            if (
+                !clickedInsideSettings &&
+                !clickedInsideUsers &&
+                !clickedInsideNotification &&
+                !clickedInsideProfile
+            ) {
+                setSettingsOpen(false);
+                setUsersOpen(false);
+                setNotificationOpen(false);
+                setProfileOpen(false);
+            }
+        }
+
+        document.addEventListener(
+            'mousedown',
+            handleClickOutside
+        );
+
+        return () => {
+            document.removeEventListener(
+                'mousedown',
+                handleClickOutside
+            );
+        };
+    }, []);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Settings flymenu
+    |--------------------------------------------------------------------------
+    */
+    const toggleSettings = () => {
+        setSettingsOpen((current) => !current);
+        setUsersOpen(false);
+    };
+
+    const toggleUsers = () => {
+        setUsersOpen((current) => !current);
+        setSettingsOpen(false);
+    };
+
+    const toggleNotification = () => {
+        setNotificationOpen((current) => !current);
+
+        setSettingsOpen(false);
+        setUsersOpen(false);
+        setProfileOpen(false);
+    };
+
+    const toggleProfile = () => {
+        setProfileOpen((current) => !current);
+
+        setNotificationOpen(false);
+        setSettingsOpen(false);
+        setUsersOpen(false);
+    };
+
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="bg-white border-b border-gray-100">
-                <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16">
-                        <div className="flex">
-                            <div className="flex items-center shrink-0">
-                                <Link href="/">
-                                    <ApplicationLogo className="block w-auto text-gray-800 fill-current h-9" />
-                                </Link>
-                            </div>
+        <div className="min-h-screen bg-secondary text-primary">
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard.index')}
-                                    active={route().current('dashboard.index')}
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                        </div>
+            {/* =====================================================
+                SIDEBAR
+            ====================================================== */}
 
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {user.full_name}
+            <aside className="fixed inset-y-0 left-0 z-50 flex w-[72px] flex-col border-r border-[#334155] bg-[#0F172A]">
 
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
+                {/* -------------------------------------------------
+                    Logo
+                -------------------------------------------------- */}
+                <AuthenticatedLogo />
 
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
 
-                        <div className="flex items-center -me-2 sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
-                            >
-                                <svg
-                                    className="w-6 h-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+                {/* -------------------------------------------------
+                    Navigation
+                -------------------------------------------------- */}
+
+                <nav className="flex flex-col items-center flex-1 gap-2 px-2 py-5">
+
+                    {/* =================================================
+                        DASHBOARD
+                    ================================================== */}
+                    <AuthenticatedMenuDashboard url={url} />
+
+                    {/* =================================================
+                        USERS
+                    ================================================== */}
+                    <AuthenticatedMenuUsers url={url}
+                        open={usersOpen}
+                        onToggle={toggleUsers}
+                        containerRef={usersRef}/>
+                    {/* =================================================
+                        SETTINGS
+                    ================================================== */}
+                    <AuthenticatedMenuSettings url={url}
+                        open={settingsOpen}
+                        onToggle={toggleSettings}
+                        containerRef={settingsRef}
+                    />
+
+                </nav>
+
+                {/* -------------------------------------------------
+                    Bottom Profile
+                -------------------------------------------------- */}
+
+                <div className="flex shrink-0 justify-center border-t border-[#334155] p-3">
+                    <button
+                        type="button"
+                        className="group relative flex h-10 w-10 items-center justify-center rounded-full bg-[#334155] text-[#CBD5E1] transition hover:bg-quaternary-dark hover:text-white"
+                    >
+                        <UserRound size={18} />
+
+                        <span className="pointer-events-none absolute left-[58px] top-1/2 z-[100] -translate-y-1/2 whitespace-nowrap rounded-lg bg-primary px-3 py-2 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+                            Travel Admin
+                        </span>
+                    </button>
                 </div>
+            </aside>
 
-                <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
-                    }
-                >
-                    <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink
-                            href={route('dashboard.index')}
-                            active={route().current('dashboard.index')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
+            {/* =====================================================
+                TOP HEADER
+            ====================================================== */}
 
-                    <div className="pt-4 pb-1 border-t border-gray-200">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.full_name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
-                        </div>
+            <header className="fixed left-[72px] right-0 top-0 z-40 h-[72px] border-b border-[#E2E8F0] bg-white/95 backdrop-blur">
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+                <div className="flex items-center justify-between h-full px-4 sm:px-6 lg:px-8">
 
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    {/* Breadcrumb */}
+
+                    <div className="flex items-center min-w-0 gap-2">
+                        <span className="hidden text-xs text-quaternary-bright sm:block">
+                            TMS
+                        </span>
+
+                        <ChevronRight
+                            size={14}
+                            className="hidden text-[#CBD5E1] sm:block"
+                        />
+
                         {header}
                     </div>
-                </header>
+
+                    {/* Right Header */}
+
+                    <div className="flex items-center gap-2 sm:gap-4">
+
+                        {/* Notification */}
+                        <AuthenticatedNotification
+                            open={notificationOpen}
+                            onToggle={toggleNotification}
+                            containerRef={notificationRef}
+                        />
+
+
+                        {/* Divider */}
+
+                        <div className="hidden h-7 w-px bg-[#E2E8F0] sm:block" />
+
+                        {/* Profile */}
+
+                        <AuthenticatedProfile
+                            open={profileOpen}
+                            onToggle={toggleProfile}
+                            containerRef={profileRef}
+                            user={user}
+                        />
+                    </div>
+                </div>
+            </header>
+
+            {/* =====================================================
+                MAIN CONTENT
+            ====================================================== */}
+
+            <main className="min-h-screen pl-[72px] pt-[72px]">
+                <div className="mx-auto w-full max-w-[1290px] p-2 sm:p-3 lg:p-4">
+                    {children}
+                </div>
+            </main>
+
+            {/* =====================================================
+                MOBILE CLOSE BUTTON FOR OPEN FLYMENU
+            ====================================================== */}
+
+            {settingsOpen && (
+                <button
+                    type="button"
+                    aria-label="Close menu"
+                    onClick={() =>
+                        setSettingsOpen(false)
+                    }
+                    className="fixed inset-0 z-40 bg-transparent"
+                />
             )}
 
-            <main>{children}</main>
+            {/* =====================================================
+                MOBILE FLYMENU CLOSE
+            ====================================================== */}
+
+            {settingsOpen && (
+                <button
+                    type="button"
+                    onClick={() =>
+                        setSettingsOpen(false)
+                    }
+                    className="fixed bottom-4 right-4 z-[100] flex h-10 w-10 items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-quaternary shadow-xl lg:hidden"
+                >
+                    <X size={17} />
+                </button>
+            )}
         </div>
     );
 }

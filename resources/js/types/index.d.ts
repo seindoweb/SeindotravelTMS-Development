@@ -1,3 +1,24 @@
+export type Paginate<T> = {
+    data: T[];
+    links: {
+        url: string | null;
+        label: string;
+        page?: number | null;
+        active: boolean;
+    }[];
+    current_page: number;
+    firts_page_url?: string;
+    from: number;
+    last_page: number;
+    last_page_url?: string;
+    next_page_url?: string;
+    path?: string;
+    per_page: number;
+    prev_page_url?: string;
+    to: number;
+    total: number;
+};
+
 export interface User {
     id: number;
     index: string;

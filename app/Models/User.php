@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Services\Systems\TriadIdMask;
 use Illuminate\Support\Facades\Crypt;
 use App\Services\Systems\CreatorAndUpdater;
 use Database\Factories\UserFactory;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,7 +51,7 @@ use Illuminate\Support\Str;
 ])]
 #[Hidden(['password', 'password_reset_otp', 'remember_token'])]
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, HasApiTokens, Notifiable, LogsActivity, CreatorAndUpdater;

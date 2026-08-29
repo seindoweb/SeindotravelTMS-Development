@@ -1,19 +1,54 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { Link } from '@inertiajs/react';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren } from "react";
+import LocaleSwitcher from '@/Components/LocaleSwitcher';
+
 
 export default function Guest({ children }: PropsWithChildren) {
-    return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
-            <div>
-                <Link href="/">
-                    <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
-                </Link>
+    return(
+    <div className="relative min-h-screen bg-gray-50 isolate">
+            <svg
+                aria-hidden="true"
+                className="absolute inset-0 -z-10 size-full mask-[radial-gradient(100%_100%_at_top_right,white,transparent)] stroke-gray-200"
+            >
+                <defs>
+                    <pattern
+                        x="50%"
+                        y={-1}
+                        id="983e3e4c-de6d-4c3f-8d64-b9761d1534cc"
+                        width={200}
+                        height={200}
+                        patternUnits="userSpaceOnUse"
+                    >
+                        <path d="M.5 200V.5H200" fill="none" />
+                    </pattern>
+                </defs>
+                <svg x="50%" y={-1} className="overflow-visible fill-gray-50">
+                    <path
+                        d="M-200 0h201v201h-201Z M600 0h201v201h-201Z M-400 600h201v201h-201Z M200 800h201v201h-201Z"
+                        strokeWidth={0}
+                    />
+                </svg>
+                <rect fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)" width="100%" height="100%" strokeWidth={0} />
+            </svg>
+             <div
+                aria-hidden="true"
+                className="absolute top-10 left-[calc(50%-4rem)] -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:top-[calc(50%-30rem)] lg:left-48 xl:left-[calc(50%-24rem)]"
+            >
+                <div
+                    style={{
+                        clipPath:
+                            'polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)',
+                    }}
+                    /* Perbaikan: Mengubah aspect ratio ke standar, w-277 ke w-[72rem], dan sintaks bg-gradient */
+                    className="aspect-[1155/678] w-[90rem] bg-gradient-to-r from-tertiary to-[#7F141C] opacity-5"
+                />
             </div>
+            <div className="">
 
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
+                <div className="flex justify-end">
+                    <LocaleSwitcher />
+                </div>
                 {children}
             </div>
         </div>
-    );
+        )
 }

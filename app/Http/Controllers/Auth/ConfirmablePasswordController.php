@@ -17,7 +17,10 @@ class ConfirmablePasswordController extends Controller
      */
     public function show(): Response
     {
-        return Inertia::render('Auth/ConfirmPassword');
+        return Inertia::render('Auth/ConfirmPassword', [
+            'appLogo' => asset("assets/icons/icon-default.svg"),
+            'appName' => config('app.name')
+        ]);
     }
 
     /**

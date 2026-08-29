@@ -19,6 +19,8 @@ class PasswordResetLinkController extends Controller
     {
         return Inertia::render('Auth/ForgotPassword', [
             'status' => session('status'),
+            'appLogo' => asset("assets/icons/icon-default.svg"),
+            'appName' => config('app.name')
         ]);
     }
 

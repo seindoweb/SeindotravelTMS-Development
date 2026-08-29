@@ -12,6 +12,11 @@ export default {
 
     theme: {
         extend: {
+            backgroundImage: {
+                'pattern-lines': "url('/assets/images/pattern-lines.png')",
+                'panel-headers': "url('/assets/images/panel-header-background.svg')",
+                'blue-checkered': "url('/assets/images/blue-checkered-background.webp')",
+            },
             colors: {
                 primary: {
                     DEFAULT: "#1E293B",
