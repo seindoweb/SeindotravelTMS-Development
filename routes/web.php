@@ -35,6 +35,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         });
         Route::prefix('customers')->name('customers.')->group(function () {
             Route::match(['get', 'post'], '/', [CustomersController::class, 'index'])->name('index');
+            Route::match(['get', 'post'], '/retrieve-data', [CustomersController::class, 'retrieveData'])->name('retrieveData');
         });
     });
 

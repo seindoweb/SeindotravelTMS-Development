@@ -19,8 +19,15 @@ export type Paginate<T> = {
     total: number;
 };
 
-export interface User {
-    id: number;
+export type PageProps<
+    T extends Record<string, unknown> = Record<string, unknown>,
+> = T & {
+    auth: {
+        user: UserProps;
+    };
+};
+
+export interface UserProps {
     index: string;
     key: string;
 
@@ -69,11 +76,3 @@ export interface User {
     updated_at?: string;
     deleted_at?: string;
 }
-
-export type PageProps<
-    T extends Record<string, unknown> = Record<string, unknown>,
-> = T & {
-    auth: {
-        user: User;
-    };
-};

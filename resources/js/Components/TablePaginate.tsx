@@ -33,7 +33,7 @@ export default function TablePaginate<T>({
         <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
             {/* Prev */}
             <button
-                className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-primary transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
                 disabled={!page.prev_page_url}
                 onClick={() =>
@@ -58,9 +58,9 @@ export default function TablePaginate<T>({
                                 disabled={!l.url || isDots}
                                 onClick={() => l.url && onNavigate(l.url)}
                                 className={cx(
-                                    "relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none",
+                                    "relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-primary transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none",
                                     isActive
-                                        ? "border border-gray-900 hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85]"
+                                        ? "border border-primary-dark hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85]"
                                         : "hover:bg-gray-900/10 active:bg-gray-900/20",
                                 )}
                             >
@@ -96,7 +96,7 @@ export default function TablePaginate<T>({
 
             {/* Next */}
             <button
-                className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-primary transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
                 disabled={!page.next_page_url}
                 onClick={() =>

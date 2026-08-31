@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
 Route::middleware('api.client')->prefix('v2026')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('login', [V2026AuthController::class, 'login']);
-        Route::post('register', [V2026AuthController::class, 'register']);
+        Route::post('sign-up', [V2026AuthController::class, 'signUp']);
     });
     Route::middleware(['auth:sanctum'])->group(function () {});
 });

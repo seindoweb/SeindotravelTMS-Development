@@ -25,7 +25,7 @@ export default function Authenticated({
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const { url } = usePage();
     const user = usePage().props.auth.user;
-    console.log(user);
+
     const [settingsOpen, setSettingsOpen] =
         useState(false);
 

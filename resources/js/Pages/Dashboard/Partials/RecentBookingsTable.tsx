@@ -83,7 +83,7 @@ export default function RecentBookingsTable() {
   return (
     <>
             <div className="rounded-2xl border border-[#E2E8F0] bg-white shadow-sm">
-                <div className="flex flex-col gap-4 border-b border-secondary-dark p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-4 p-5 border-b border-secondary-dark sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 className="text-base font-bold text-[#0F172A]">
                             Recent Bookings
@@ -97,7 +97,7 @@ export default function RecentBookingsTable() {
                     <div className="relative w-full sm:w-56">
                         <Search
                             size={15}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-quaternary-bright"
+                            className="absolute -translate-y-1/2 left-3 top-1/2 text-quaternary-bright"
                         />
 
                         <input
@@ -246,7 +246,7 @@ export default function RecentBookingsTable() {
                                 <tr>
                                     <td
                                         colSpan={7}
-                                        className="px-5 py-12 text-center text-sm text-quaternary-bright"
+                                        className="px-5 py-12 text-sm text-center text-quaternary-bright"
                                     >
                                         No booking found.
                                     </td>
@@ -261,7 +261,7 @@ export default function RecentBookingsTable() {
             {selectedBooking && (
                 <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#0F172A]/50 p-4 backdrop-blur-sm">
                     <div className="w-full max-w-md rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl">
-                        <div className="flex items-center justify-between border-b border-secondary-dark px-5 py-4">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-secondary-dark">
                             <div>
                                 <h3 className="text-sm font-bold text-[#0F172A]">
                                     Booking Details
@@ -281,7 +281,7 @@ export default function RecentBookingsTable() {
                                         null
                                     )
                                 }
-                                className="rounded-lg p-2 text-quaternary-bright hover:bg-secondary-dark"
+                                className="p-2 rounded-lg text-quaternary-bright hover:bg-secondary-dark"
                             >
                                 <X size={18} />
                             </button>

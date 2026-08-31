@@ -6,13 +6,13 @@ import {
 } from 'lucide-react';
 
 import { Link } from '@inertiajs/react';
-import { User } from '@/types';
+import { UserProps } from '@/types';
 
 interface AuthenticatedProfileProps {
     open: boolean;
     onToggle: () => void;
     containerRef: React.RefObject<HTMLDivElement>;
-    user: User
+    user: UserProps
 }
 
 export default function AuthenticatedProfile({

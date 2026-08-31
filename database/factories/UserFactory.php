@@ -26,6 +26,7 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
         // 1. Determine the identity type randomly first.
         $identityType = fake()->randomElement(['KTP', 'Passport', 'SIM']);
 
@@ -52,6 +53,7 @@ class UserFactory extends Factory
 
 
         return [
+            'title' => fake()->title(),
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
