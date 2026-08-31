@@ -14,9 +14,10 @@ import {
 import AuthenticatedMenuDashboard from './Partials/AuthenticatedMenuDashboard';
 import AuthenticatedLogo from './Partials/AuthenticatedLogo';
 import AuthenticatedMenuUsers from './Partials/AuthenticatedMenuUsers';
-import AuthenticatedMenuSettings from './Partials/AuthenticatedMenuSettings';
 import AuthenticatedNotification from './Partials/AuthenticatedNotification';
 import AuthenticatedProfile from './Partials/AuthenticatedProfile';
+import AuthenticatedMenuSales from './Partials/AuthenticatedMenuSales';
+import AuthenticatedMenuHotels from './Partials/AuthenticatedMenuHotels';
 
 
 export default function Authenticated({
@@ -26,7 +27,7 @@ export default function Authenticated({
     const { url } = usePage();
     const user = usePage().props.auth.user;
 
-    const [settingsOpen, setSettingsOpen] =
+    const [hotelsOpen, setHotelsOpen] =
         useState(false);
 
     const [usersOpen, setUsersOpen] =
@@ -43,13 +44,13 @@ export default function Authenticated({
     | Close flymenu when navigating to another page
     |--------------------------------------------------------------------------
     */
-    const settingsRef = useRef<HTMLDivElement>(null);
+    const hotelsRef = useRef<HTMLDivElement>(null);
     const usersRef =  useRef<HTMLDivElement>(null);
     const notificationRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setSettingsOpen(false);
+        setHotelsOpen(false);
         setUsersOpen(false);
         setNotificationOpen(false);
         setProfileOpen(false);
@@ -64,8 +65,8 @@ export default function Authenticated({
         function handleClickOutside(event: MouseEvent) {
             const target = event.target as Node;
 
-            const clickedInsideSettings =
-                settingsRef.current?.contains(target);
+            const clickedInsideHotels =
+                hotelsRef.current?.contains(target);
 
             const clickedInsideUsers =
                 usersRef.current?.contains(target);
@@ -77,12 +78,12 @@ export default function Authenticated({
                 profileRef.current?.contains(target);
 
             if (
-                !clickedInsideSettings &&
+                !clickedInsideHotels &&
                 !clickedInsideUsers &&
                 !clickedInsideNotification &&
                 !clickedInsideProfile
             ) {
-                setSettingsOpen(false);
+                setHotelsOpen(false);
                 setUsersOpen(false);
                 setNotificationOpen(false);
                 setProfileOpen(false);
@@ -107,30 +108,37 @@ export default function Authenticated({
     | Settings flymenu
     |--------------------------------------------------------------------------
     */
-    const toggleSettings = () => {
-        setSettingsOpen((current) => !current);
-        setUsersOpen(false);
-    };
+    // const toggleHotels = () => {
+    //     setSettingsOpen((current) => !current);
+    //     setUsersOpen(false);
+    // };
 
-    const toggleUsers = () => {
-        setUsersOpen((current) => !current);
-        setSettingsOpen(false);
-    };
+    // const toggleUsers = () => {
+    //     setUsersOpen((current) => !current);
+    //     setSettingsOpen(false);
+    // };
 
-    const toggleNotification = () => {
-        setNotificationOpen((current) => !current);
+    // const toggleNotification = () => {
+    //     setNotificationOpen((current) => !current);
 
-        setSettingsOpen(false);
-        setUsersOpen(false);
-        setProfileOpen(false);
-    };
+    //     setSettingsOpen(false);
+    //     setUsersOpen(false);
+    //     setProfileOpen(false);
+    // };
 
-    const toggleProfile = () => {
-        setProfileOpen((current) => !current);
+    // const toggleProfile = () => {
+    //     setProfileOpen((current) => !current);
 
-        setNotificationOpen(false);
-        setSettingsOpen(false);
-        setUsersOpen(false);
+    //     setNotificationOpen(false);
+    //     setSettingsOpen(false);
+    //     setUsersOpen(false);
+    // };
+
+    const toggleMenu = (menu: 'hotels' | 'users' | 'notification' | 'profile') => {
+        setHotelsOpen(menu === 'hotels' ? (current) => !current : false);
+        setUsersOpen(menu === 'users' ? (current) => !current : false);
+        setNotificationOpen(menu === 'notification' ? (current) => !current : false);
+        setProfileOpen(menu === 'profile' ? (current) => !current : false);
     };
 
     return (
@@ -157,23 +165,29 @@ export default function Authenticated({
                     {/* =================================================
                         DASHBOARD
                     ================================================== */}
-                    <AuthenticatedMenuDashboard url={url} />
+                    <AuthenticatedMenuDashboard />
+
+                    {/* =================================================
+                        SALES
+                    ================================================== */}
+                    <AuthenticatedMenuSales />
+
+                    {/* =================================================
+                        SETTINGS
+                    ================================================== */}
+                    <AuthenticatedMenuHotels url={url}
+                        open={hotelsOpen}
+                        onToggle={() => toggleMenu('hotels')}
+                        containerRef={hotelsRef}
+                    />
 
                     {/* =================================================
                         USERS
                     ================================================== */}
-                    <AuthenticatedMenuUsers url={url}
+                    <AuthenticatedMenuUsers
                         open={usersOpen}
-                        onToggle={toggleUsers}
+                        onToggle={() => toggleMenu('users')}
                         containerRef={usersRef}/>
-                    {/* =================================================
-                        SETTINGS
-                    ================================================== */}
-                    <AuthenticatedMenuSettings url={url}
-                        open={settingsOpen}
-                        onToggle={toggleSettings}
-                        containerRef={settingsRef}
-                    />
 
                 </nav>
 
@@ -225,7 +239,7 @@ export default function Authenticated({
                         {/* Notification */}
                         <AuthenticatedNotification
                             open={notificationOpen}
-                            onToggle={toggleNotification}
+                            onToggle={() => toggleMenu('notification')}
                             containerRef={notificationRef}
                         />
 
@@ -238,7 +252,7 @@ export default function Authenticated({
 
                         <AuthenticatedProfile
                             open={profileOpen}
-                            onToggle={toggleProfile}
+                            onToggle={() => toggleMenu('profile')}
                             containerRef={profileRef}
                             user={user}
                         />
@@ -256,36 +270,6 @@ export default function Authenticated({
                 </div>
             </main>
 
-            {/* =====================================================
-                MOBILE CLOSE BUTTON FOR OPEN FLYMENU
-            ====================================================== */}
-
-            {settingsOpen && (
-                <button
-                    type="button"
-                    aria-label="Close menu"
-                    onClick={() =>
-                        setSettingsOpen(false)
-                    }
-                    className="fixed inset-0 z-40 bg-transparent"
-                />
-            )}
-
-            {/* =====================================================
-                MOBILE FLYMENU CLOSE
-            ====================================================== */}
-
-            {settingsOpen && (
-                <button
-                    type="button"
-                    onClick={() =>
-                        setSettingsOpen(false)
-                    }
-                    className="fixed bottom-4 right-4 z-[100] flex h-10 w-10 items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-quaternary shadow-xl lg:hidden"
-                >
-                    <X size={17} />
-                </button>
-            )}
         </div>
     );
 }

@@ -7,14 +7,12 @@ import {
 import { Link } from '@inertiajs/react';
 
 interface AuthenticatedMenuUsersProps {
-    url: string;
     open: boolean;
     onToggle: () => void;
     containerRef: React.RefObject<HTMLDivElement>;
 }
 
 export default function AuthenticatedMenuUsers({
-    url,
     open,
     onToggle,
     containerRef,

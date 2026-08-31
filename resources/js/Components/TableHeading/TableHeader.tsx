@@ -33,12 +33,12 @@ export function TableHeader({
     dropdownActions = [],
 }: TableHeaderProps) {
     return (
-        <div className="flex items-center justify-between border-b border-[#F1F5F9] px-0 pb-4 w-full">
-            <div>
-                <h3 className="text-sm font-bold text-primary">
+        <div className="items-center w-full px-0 pb-4 md:flex md:justify-between">
+            <div className="mb-1 md:mb-0">
+                <h3 className="text-base font-bold text-primary">
                     {title}
                 </h3>
-                <p className="mt-0.5 text-[11px] text-quaternary">
+                <p className="mt-1 text-xs text-quaternary">
                     {subtitle}
                 </p>
             </div>

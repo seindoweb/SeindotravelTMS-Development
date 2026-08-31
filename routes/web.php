@@ -29,6 +29,26 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
     });
 
+    Route::prefix('sales')->name('sales.')->group(function () {
+        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('events')->name('events.')->group(function () {
+        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('hotels')->name('hotels.')->group(function () {
+        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('flights')->name('flights.')->group(function () {
+        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('tours')->name('tours.')->group(function () {
+        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+
     Route::prefix('user')->name('user.')->group(function () {
         Route::prefix('administrators')->name('administrators.')->group(function () {
             Route::match(['get', 'post'], '/', [AdministratorsController::class, 'index'])->name('index');

@@ -181,8 +181,10 @@ export default function AuthenticatedProfile({
 
                         {/* Sign Out */}
 
-                        <button
-                            type="button"
+                        <Link
+                            method="post"
+                            href={route('logout')}
+                            as="button"
                             className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium text-tertiary transition hover:bg-tertiary/5"
                         >
                             <LogOut
@@ -192,7 +194,7 @@ export default function AuthenticatedProfile({
                             <span>
                                 Sign Out
                             </span>
-                        </button>
+                        </Link>
 
                     </div>
 

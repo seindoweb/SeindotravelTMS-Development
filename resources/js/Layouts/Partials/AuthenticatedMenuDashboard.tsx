@@ -2,8 +2,8 @@ import { Link, usePage } from '@inertiajs/react';
 import { LayoutDashboard } from 'lucide-react'
 import React from 'react'
 
-export default function AuthenticatedMenuDashboard({url}: {url: string}) {
-    const isDashboard = url === '/dashboard';
+export default function AuthenticatedMenuDashboard() {
+    const isDashboard = route().current('dashboard.*');
     return (
     <Link
         href={route("dashboard.index")}

@@ -1,23 +1,25 @@
 import {
+    BedDouble,
     ChevronRight,
+    Hotel,
     Settings,
     UserRound,
 } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
-interface AuthenticatedMenuSettingsProps {
+interface AuthenticatedMenuHotelsProps {
     url: string;
     open: boolean;
     onToggle: () => void;
     containerRef: React.RefObject<HTMLDivElement>;
 }
 
-export default function AuthenticatedMenuSettings({
+export default function AuthenticatedMenuHotels({
     url,
     open,
     onToggle,
     containerRef,
-}: AuthenticatedMenuSettingsProps) {
+}: AuthenticatedMenuHotelsProps) {
     const isGeneralSettings =
         url === '/settings/general';
 
@@ -52,7 +54,7 @@ export default function AuthenticatedMenuSettings({
                         : 'text-quaternary-bright hover:bg-primary-bright hover:text-white',
                 ].join(' ')}
             >
-                <Settings
+                <Hotel
                     size={20}
                     strokeWidth={2}
                 />

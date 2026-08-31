@@ -5,7 +5,7 @@ import TablePaginate from '@/Components/TablePaginate';
 import { api } from '@/libs/http/api';
 import { Paginate, UserProps } from '@/types';
 import { router } from '@inertiajs/react';
-import { PlusIcon } from 'lucide-react';
+import { ArrowDownAZ, ArrowUpZA, PlusIcon } from 'lucide-react';
 
 export default function ListCustomerTable() {
     const [search, setSearch] = useState("");
@@ -44,26 +44,24 @@ export default function ListCustomerTable() {
 
         {/* Header */}
 
-        <div className="flex items-center justify-between border-b border-[#F1F5F9] px-5 py-4">
+        <div className="flex items-center justify-between border-b border-[#F1F5F9] px-5 pt-4">
 
            <TableHeader
-                title="List"
-                subtitle="These are all the regions listed."
+                title="Active Customers"
+                subtitle="Manage registered members and profiles"
                 searchValue={search}
                 onSearchChange={setSearch}
-                actions={[
+                dropdownLabel="Sort"
+                dropdownActions={[
                     {
-                        label: "New Data",
-                        icon: (
-                            <PlusIcon className="w-4 h-4" />
-                        ),
-                        variant: "primary",
-                        onClick: () =>
-                            router.get(
-                                route(
-                                    "settings.locations.region.create",
-                                ),
-                            ),
+                        label: "Name A-Z",
+                        icon: <ArrowDownAZ className="w-4 h-4" />,
+                        onClick: () => console.log("sort user A-Z"),
+                    },
+                    {
+                        label: "Name Z-A",
+                        icon: <ArrowUpZA className="w-4 h-4" />,
+                        onClick: () => console.log("sort user Z-A"),
                     },
                 ]}
             />
