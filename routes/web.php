@@ -12,6 +12,7 @@ Route::get('/', function () {
     if (app()->environment('production')) {
         return response('', 403);
     }
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -56,9 +57,9 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::prefix('customers')->name('customers.')->group(function () {
             Route::match(['get', 'post'], '/', [CustomersController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/retrieve-data', [CustomersController::class, 'retrieveData'])->name('retrieveData');
+            Route::get('/{tracking_code}', [CustomersController::class, 'show'])->name('show');
         });
     });
-
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -67,5 +68,5 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     });
 })->name('dashboard');
 
-require __DIR__ . '/auth.php';
-require __DIR__ . '/locale.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/locale.php';
