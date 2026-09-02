@@ -25,7 +25,108 @@ export type PageProps<
     auth: {
         user: UserProps;
     };
-};
+    };
+
+export interface CountryProps {
+    key?: string;
+    id: number;
+    name: string;
+    iso3: string | null;
+    numeric_code: string | null;
+    iso2: string | null;
+    phonecode: string | null;
+    capital: string | null;
+    currency: string | null;
+    currency_name: string | null;
+    currency_symbol: string | null;
+    tld: string | null;
+    native: string | null;
+    population: number | null;
+    gdp: string | null;
+    tld: string | null;
+    region: string | null;
+    region_id: number | null;
+    subregion: string | null;
+    subregion_id: number | null;
+    nationality: string | null;
+    area_sq_km: number | null;
+    postal_code_format: string | null;
+    postal_code_regex: string | null;
+    timezones: string | null;
+    translations: string | null;
+    latitude: string | null;
+    longitude: string | null;
+    emoji: string | null;
+    emojiU: string | null;
+    flag: string | null;
+    wikiDataId: string | null;
+}
+
+export interface StateProps {
+    key?: string;
+    id: number;
+    name: string;
+    country_id: number | null;
+    country_code: string | null;
+    fips_code: string | null;
+    iso2: string | null;
+    iso3166_2: string | null;
+    type: string | null;
+    level: number | null;
+    parent_id: number | null;
+    native: string | null;
+    latitude: string | null;
+    longitude: string | null;
+    timezone: string | null;
+    translations: string | null;
+    flag: string | null;
+    wikiDataId: string | null;
+    population: number | null;
+    countries: CountryProps | null;
+}
+
+export interface CityProps {
+    id: number;
+    index: string;
+    key: string;
+    name: string;
+    state_id: number | null;
+    state_code: string | null;
+    country_id: number | null;
+    country_code: string | null;
+    type: string | null;
+    level: number | null;
+    parent_id: number | null;
+    latitude: string | null;
+    longitude: string | null;
+    native: string | null;
+    population: number | null;
+    timezone: string | null;
+    translations: string | null;
+    flag: string | null;
+    wikiDataId: string | null;
+    states?: StateProps | null;
+}
+
+export interface RegionProps {
+    key?: string;
+    id: number;
+    name: string;
+    translations: string | null;
+    flag: string | null;
+    wikiDataId: string | null;
+}
+
+export interface SubregionProps {
+    key?: string;
+    id: number;
+    name: string;
+    translations: string | null;
+    region_id: number | null;
+    flag: string | null;
+    wikiDataId: string | null;
+    regions?: RegionProps | null;
+}
 
 export interface UserProps {
     index: string;
@@ -58,8 +159,15 @@ export interface UserProps {
     state_id?: number;
     city_id?: number;
 
+    countries?: CountryProps;
+    states?: StateProps;
+    cities?: CityProps;
+
     address?: string;
     zip_code?: string;
+
+    locale?: string;
+    currency?: string;
 
     password_reset_otp_expires_at?: string;
 

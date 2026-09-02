@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Pages\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Systems\TriadIdMask;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CustomersController extends Controller
 {
@@ -22,7 +24,7 @@ class CustomersController extends Controller
     /**
      * retrieveData
      *
-     * @param  mixed $request
+     * @param  mixed  $request
      * @return void
      */
     public function retrieveData(Request $request)
@@ -34,9 +36,26 @@ class CustomersController extends Controller
                     $qq->where('full_name', 'like', "%{$search}%");
                 });
             })
-            ->orderBy("full_name", "asc")
+            ->orderBy('full_name', 'asc')
             ->paginate(10)
             ->withQueryString();
+
         return response()->json($customers);
+    }
+
+    /**
+     * show
+     *
+     * @param  string  $tracking_code  
+     */
+    public function show(string $tracking_code): Response
+    {
+        $customer = User::with(['countries', 'states', 'cities'])
+            ->where('tracking_code', $tracking_code)
+            ->firstOrFail();
+
+        return Inertia::render('User/Customers/Show', [
+            'customer' => $customer,
+        ]);
     }
 }
