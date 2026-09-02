@@ -58,16 +58,17 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::prefix('customers')->name('customers.')->group(function () {
             Route::match(['get', 'post'], '/', [CustomersController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/retrieve-data', [CustomersController::class, 'retrieveData'])->name('retrieveData');
-            Route::get('/{tracking_code}', [CustomersController::class, 'show'])->name('show');
+            Route::match(['get', 'post'], '/{tracking_code}', [CustomersController::class, 'show'])->name('show');
         });
     });
 
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::name('profile.')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'show'])->name('show');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/profile/update', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('destroy');
     });
-})->name('dashboard');
+});
 
-require __DIR__.'/auth.php';
-require __DIR__.'/locale.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/locale.php';

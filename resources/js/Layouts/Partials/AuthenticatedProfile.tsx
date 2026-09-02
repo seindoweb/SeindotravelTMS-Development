@@ -145,7 +145,7 @@ export default function AuthenticatedProfile({
                         {/* Profile */}
 
                         <Link
-                            href="/settings/users"
+                            href={route('profile.show')}
                             className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium text-quaternary-dark transition hover:bg-secondary hover:text-primary"
                         >
                             <UserRound

@@ -14,6 +14,17 @@ use Inertia\Response;
 class ProfileController extends Controller
 {
     /**
+     * Display the user's profile details.
+     */
+    public function show(Request $request): Response
+    {
+        return Inertia::render('Profile/Show', [
+            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'status' => session('status'),
+        ]);
+    }
+
+    /**
      * Display the user's profile form.
      */
     public function edit(Request $request): Response

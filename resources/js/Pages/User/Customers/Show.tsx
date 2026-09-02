@@ -32,8 +32,8 @@ function InfoRow({ label, value }: { label: string; value?: React.ReactNode }) {
             <span className="text-[10px] font-bold uppercase tracking-wider text-quaternary pt-0.5">
                 {label}
             </span>
-            <span className="text-xs text-primary font-medium">
-                {value ?? <span className="italic text-quaternary-bright font-normal">—</span>}
+            <span className="text-xs font-medium text-primary">
+                {value ?? <span className="italic font-normal text-quaternary-bright">—</span>}
             </span>
         </div>
     );
@@ -51,10 +51,10 @@ function SectionCard({
     return (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white shadow-sm overflow-hidden transition-shadow hover:shadow-md w-full">
             <div className="flex items-center gap-2.5 border-b border-[#F1F5F9] bg-secondary/50 px-5 py-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm text-primary">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm text-primary">
                     <Icon size={16} />
                 </div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-primary">
+                <h3 className="text-xs font-bold tracking-wider uppercase text-primary">
                     {title}
                 </h3>
             </div>
@@ -117,28 +117,28 @@ export default function Show({ customer }: Props) {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    <div className="lg:col-span-4 xl:col-span-3 space-y-6">
+                <div className="grid items-start grid-cols-1 gap-6 lg:grid-cols-12">
+                    <div className="space-y-6 lg:col-span-4 xl:col-span-3">
                         <div className="rounded-2xl border border-[#E2E8F0] bg-white shadow-sm overflow-hidden relative h-auto">
-                            <div className="px-5 p-6">
-                                <div className="flex justify-center mt6 mb-4 relative z-10">
+                            <div className="p-6 px-5">
+                                <div className="relative z-10 flex justify-center mb-4 mt6">
                                     <div className="relative">
                                         <img
                                             src={customer.profile_photo_path}
                                             alt={customer.full_name}
-                                            className="h-24 w-24 rounded-2xl object-cover"
+                                            className="object-cover w-24 h-24 rounded-2xl"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="text-center mb-5">
+                                <div className="mb-5 text-center">
                                     <h1 className="text-lg font-bold tracking-tight text-primary">
                                         {customer.title ? `${customer.title} ` : ''}{customer.full_name}
                                     </h1>
                                     <p className="text-xs text-quaternary font-mono mt-0.5 tracking-wider">
                                         {customer.tracking_code}
                                     </p>
-                                    
+
                                     <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
                                         <Badge variant={customer.active ? 'green' : 'gray'}>
                                             {customer.active ? 'Active' : 'Inactive'}
@@ -147,8 +147,8 @@ export default function Show({ customer }: Props) {
                                 </div>
 
                                 <div className="space-y-3 border-t border-[#F1F5F9] pt-5">
-                                    <div className="flex items-center gap-3 text-xs text-primary mt-2">
-                                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-quaternary-dark">
+                                    <div className="flex items-center gap-3 mt-2 text-xs text-primary">
+                                        <div className="flex items-center justify-center rounded-full h-7 w-7 shrink-0 bg-secondary text-quaternary-dark">
                                             <Mail size={14} />
                                         </div>
                                         <div className="flex-1 truncate">
@@ -162,16 +162,16 @@ export default function Show({ customer }: Props) {
                                     </div>
 
                                     <div className="flex items-center gap-3 text-xs text-primary">
-                                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-quaternary-dark">
+                                        <div className="flex items-center justify-center rounded-full h-7 w-7 shrink-0 bg-secondary text-quaternary-dark">
                                             <Phone size={14} />
                                         </div>
-                                        <div className="flex-1 truncate font-medium">
+                                        <div className="flex-1 font-medium truncate">
                                             {fullPhone ?? <span className="italic text-quaternary-bright">No phone number</span>}
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-3 text-xs text-primary">
-                                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-quaternary-dark">
+                                        <div className="flex items-center justify-center rounded-full h-7 w-7 shrink-0 bg-secondary text-quaternary-dark">
                                             <Calendar size={14} />
                                         </div>
                                         <div className="flex-1 truncate">
@@ -184,7 +184,7 @@ export default function Show({ customer }: Props) {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-8 xl:col-span-9 space-y-6">
+                    <div className="space-y-6 lg:col-span-8 xl:col-span-9">
                         <div className="flex items-center gap-1 border-b border-[#E2E8F0] overflow-x-auto no-scrollbar">
                             {[
                                 { id: 'overview', label: 'Overview', icon: User },
@@ -200,8 +200,8 @@ export default function Show({ customer }: Props) {
                                         onClick={() => setActiveTab(tab.id as any)}
                                         className={clsx(
                                             "flex items-center gap-2 px-4 py-3 text-xs font-semibold border-b-2 transition-colors whitespace-nowrap",
-                                            isActive 
-                                                ? "border-primary text-primary" 
+                                            isActive
+                                                ? "border-primary text-primary"
                                                 : "border-transparent text-quaternary hover:text-primary hover:border-[#E2E8F0]"
                                         )}
                                     >
@@ -215,7 +215,7 @@ export default function Show({ customer }: Props) {
                         <div className="pt-2">
                             {activeTab === 'overview' && (
                                 <div>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                                <div className="grid items-start grid-cols-1 gap-6 lg:grid-cols-2">
                                         <SectionCard title="Personal Details" icon={User}>
                                             <InfoRow label="Gender" value={customer.gender} />
                                             <InfoRow label="Date of Birth" value={birthDate} />
@@ -276,8 +276,8 @@ export default function Show({ customer }: Props) {
                                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm mb-4 text-[#94A3B8]">
                                         <Briefcase size={28} />
                                     </div>
-                                    <h3 className="text-sm font-bold text-primary mb-1">No Bookings Yet</h3>
-                                    <p className="text-xs text-quaternary max-w-sm text-center mb-6">
+                                    <h3 className="mb-1 text-sm font-bold text-primary">No Bookings Yet</h3>
+                                    <p className="max-w-sm mb-6 text-xs text-center text-quaternary">
                                         This customer hasn't made any travel bookings yet. Once they do, their transaction history will appear here.
                                     </p>
                                     <button className="px-4 py-2 bg-white border border-[#E2E8F0] shadow-sm rounded-xl text-xs font-bold text-primary hover:bg-secondary transition-colors">
@@ -291,8 +291,8 @@ export default function Show({ customer }: Props) {
                                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm mb-4 text-[#94A3B8]">
                                         <SearchX size={28} />
                                     </div>
-                                    <h3 className="text-sm font-bold text-primary mb-1">No Documents Uploaded</h3>
-                                    <p className="text-xs text-quaternary max-w-sm text-center mb-6">
+                                    <h3 className="mb-1 text-sm font-bold text-primary">No Documents Uploaded</h3>
+                                    <p className="max-w-sm mb-6 text-xs text-center text-quaternary">
                                         Passports, visas, and other identity documents can be securely stored here.
                                     </p>
                                     <button className="px-4 py-2 bg-white border border-[#E2E8F0] shadow-sm rounded-xl text-xs font-bold text-primary hover:bg-secondary transition-colors">
@@ -306,8 +306,8 @@ export default function Show({ customer }: Props) {
                                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm mb-4 text-[#94A3B8]">
                                         <Activity size={28} />
                                     </div>
-                                    <h3 className="text-sm font-bold text-primary mb-1">No Recent Activity</h3>
-                                    <p className="text-xs text-quaternary max-w-sm text-center">
+                                    <h3 className="mb-1 text-sm font-bold text-primary">No Recent Activity</h3>
+                                    <p className="max-w-sm text-xs text-center text-quaternary">
                                         System logs and customer activities will be recorded here for auditing purposes.
                                     </p>
                                 </div>
