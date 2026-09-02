@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
     Route::prefix('hotels')->name('hotels.')->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
     });
 
     Route::prefix('flights')->name('flights.')->group(function () {

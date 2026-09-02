@@ -11,7 +11,10 @@ Route::get('/user', function (Request $request) {
 Route::middleware('api.client')->prefix('v2026')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('login', [V2026AuthController::class, 'login']);
-        Route::post('sign-up', [V2026AuthController::class, 'signUp']);
+        Route::post('register', [V2026AuthController::class, 'register']);
+        Route::post('logout', [V2026AuthController::class, 'logout'])->middleware('auth:sanctum');
     });
-    Route::middleware(['auth:sanctum'])->group(function () {});
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::prefix('/customer')->group(function () {});
+    });
 });

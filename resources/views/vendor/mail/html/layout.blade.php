@@ -204,8 +204,9 @@
     </style>
 </head>
 
-<body>
-    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+<body style="margin:0; padding:0; background-color: #f7f8f9; width: 100% !important;">
+    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation"
+        tyle="max-width: 700px; margin: 0 auto;">
         <tr>
             <td align="center">
                 <table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">

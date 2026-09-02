@@ -38,7 +38,7 @@ class EmailVerificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Email Verification Mail',
+            subject: 'Email Verification',
         );
     }
 
@@ -49,6 +49,11 @@ class EmailVerificationMail extends Mailable
     {
         return new Content(
             view: 'emails.html.email-verification',
+            with: [
+                'title' => 'Verify Your Account',
+                'description' => 'Hello, Travel Enthusiast! Thank you for joining ' . config('app.name') . '. Use the OTP code below to verify your account.',
+                'code' => $this->offerData['code'],
+            ],
         );
     }
 
