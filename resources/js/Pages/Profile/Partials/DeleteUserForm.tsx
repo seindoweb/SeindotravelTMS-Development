@@ -65,7 +65,10 @@ export default function DeleteUserForm({
             </header>
 
             <div className="pt-5 mt-6 border-t border-[#F1F5F9]">
-                <DangerButton onClick={confirmUserDeletion} className="shadow-sm capitalize tracking-normal">
+                <DangerButton
+                    onClick={confirmUserDeletion}
+                    className="tracking-normal shadow-sm w-full justify-center capitalize"
+                >
                     Delete Account
                 </DangerButton>
             </div>
@@ -99,7 +102,7 @@ export default function DeleteUserForm({
                             onChange={(e) =>
                                 setData('password', e.target.value)
                             }
-                            className="mt-1 block w-3/4"
+                            className="mt-1 block w-full"
                             isFocused
                             placeholder="Password"
                         />
@@ -110,12 +113,18 @@ export default function DeleteUserForm({
                         />
                     </div>
 
-                    <div className="mt-6 pt-5 border-t border-[#F1F5F9] flex justify-end">
-                        <SecondaryButton onClick={closeModal} className="shadow-sm capitalize tracking-normal">
+                    <div className="mt-6 pt-5 flex justify-end border-t border-[#F1F5F9]">
+                        <SecondaryButton
+                            onClick={closeModal}
+                            className="tracking-normal shadow-sm capitalize"
+                        >
                             Cancel
                         </SecondaryButton>
 
-                        <DangerButton className="ms-3 shadow-sm capitalize tracking-normal" disabled={processing}>
+                        <DangerButton
+                            className="tracking-normal shadow-sm ms-3 capitalize"
+                            disabled={processing}
+                        >
                             Delete Account
                         </DangerButton>
                     </div>

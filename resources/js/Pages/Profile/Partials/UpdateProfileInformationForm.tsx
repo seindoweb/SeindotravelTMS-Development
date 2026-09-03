@@ -47,7 +47,7 @@ export default function UpdateProfileInformation({
 
                     <TextInput
                         id="full_name"
-                        className="block w-full mt-1"
+                        className="mt-1 block w-full"
                         value={data.full_name}
                         onChange={(e) => setData('full_name', e.target.value)}
                         required
@@ -64,7 +64,7 @@ export default function UpdateProfileInformation({
                     <TextInput
                         id="email"
                         type="email"
-                        className="block w-full mt-1"
+                        className="mt-1 block w-full"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
                         required
@@ -82,7 +82,7 @@ export default function UpdateProfileInformation({
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                className="text-sm text-gray-600 rounded-md hover:text-gray-900 focus:ring-indigo-500 underline focus:ring-2 focus:ring-offset-2 focus:outline-none"
                             >
                                 Click here to re-send the verification email.
                             </Link>
@@ -97,20 +97,17 @@ export default function UpdateProfileInformation({
                     </div>
                 )}
 
-                <div className="flex items-center gap-4 pt-5 mt-6 border-t border-[#F1F5F9]">
-                    <PrimaryButton className="shadow-sm capitalize tracking-normal" disabled={processing}>Save Changes</PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
+                <div className="gap-4 pt-5 mt-6 flex items-center border-t border-[#F1F5F9]">
+                    <PrimaryButton
+                        className="px-5 py-2 tracking-normal shadow-sm w-full justify-center rounded-full capitalize"
+                        disabled={processing}
                     >
-                        <p className="text-sm text-gray-600">
-                            Saved.
-                        </p>
-                    </Transition>
+                        {processing
+                            ? 'Saving...'
+                            : recentlySuccessful
+                              ? 'Saved'
+                              : 'Save Changes'}
+                    </PrimaryButton>
                 </div>
             </form>
         </section>

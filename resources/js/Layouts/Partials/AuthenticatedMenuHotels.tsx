@@ -16,7 +16,7 @@ export default function AuthenticatedMenuHotels({
 }: AuthenticatedMenuHotelsProps) {
     const isHotelOrders = route().current('hotel.orders.*');
 
-    const isHotelBookings = url === '/hotels/bookings';
+    const isHotelBookings = route().current('hotel.bookings.*');
 
     const isHotelsPage = isHotelOrders || isHotelBookings;
 
@@ -159,7 +159,7 @@ export default function AuthenticatedMenuHotels({
                         ================================================== */}
 
                         <Link
-                            href="/hotels/bookings"
+                            href={route('hotel.bookings.index')}
                             className={[
                                 'group mt-1 gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pages\DashboardController;
+use App\Http\Controllers\Pages\Hotels\HotelBookingController;
 use App\Http\Controllers\Pages\Hotels\HotelOrderController;
 use App\Http\Controllers\Pages\Users\AdministratorsController;
 use App\Http\Controllers\Pages\Users\CustomersController;
@@ -45,7 +46,9 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::match(['get', 'post'], '/details', [HotelOrderController::class, 'orderDetails'])->name('orderDetails');
         });
 
-        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+        Route::prefix('bookings')->name('bookings.')->group(function () {
+            Route::match(['get', 'post'], '/', [HotelBookingController::class, 'index'])->name('index');
+        });
     });
 
     Route::prefix('flights')->name('flights.')->group(function () {

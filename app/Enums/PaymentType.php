@@ -7,7 +7,7 @@ enum PaymentType: string
     case CASH = 'CH';
     case TRANSFER_BANK = 'TF';
     case PAYMENT_GATEWAY = 'PG';
-    case SEINDO_CREDITS = 'SC';
+    case USER_CREDIT = 'UC';
 
     public function label(): string
     {
@@ -15,7 +15,7 @@ enum PaymentType: string
             self::CASH => 'CASH',
             self::TRANSFER_BANK => 'Transfer Bank',
             self::PAYMENT_GATEWAY => 'Payment Gateways',
-            self::SEINDO_CREDITS => 'Seindo Credits',
+            self::USER_CREDIT => 'User Credit',
         };
     }
 }

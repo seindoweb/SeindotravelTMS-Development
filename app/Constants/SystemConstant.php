@@ -30,5 +30,5 @@ final class SystemConstant
     public const PAYMENT_TYPE_CASH = 'CH';
     public const PAYMENT_TYPE_TRANSFER_BANK = 'TF';
     public const PAYMENT_TYPE_PAYMENT_GATEWAY = 'PG';
-    public const PAYMENT_TYPE_SEINDO_CREDITS = 'SC';
+    public const PAYMENT_TYPE_USER_CREDIT = 'UC';
 }
