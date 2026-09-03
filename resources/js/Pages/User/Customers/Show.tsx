@@ -121,7 +121,7 @@ export default function Show({ customer }: Props) {
                     <div className="space-y-6 lg:col-span-4 xl:col-span-3">
                         <div className="rounded-2xl border border-[#E2E8F0] bg-white shadow-sm overflow-hidden relative h-auto">
                             <div className="p-6 px-5">
-                                <div className="relative z-10 flex justify-center mb-4 mt6">
+                                <div className="relative z-10 flex justify-center mb-4 mt-6">
                                     <div className="relative">
                                         <img
                                             src={customer.profile_photo_path}
