@@ -51,11 +51,11 @@ export default function UpdatePasswordForm({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-bold tracking-tight text-primary">
                     Update Password
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-xs text-quaternary">
                     Ensure your account is using a long, random password to stay
                     secure.
                 </p>
@@ -125,8 +125,8 @@ export default function UpdatePasswordForm({
                     />
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                <div className="flex items-center gap-4 pt-5 mt-6 border-t border-[#F1F5F9]">
+                    <PrimaryButton className="shadow-sm capitalize tracking-normal" disabled={processing}>Update Password</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
