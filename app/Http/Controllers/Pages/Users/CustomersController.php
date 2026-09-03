@@ -36,7 +36,8 @@ class CustomersController extends Controller
                     $qq->where('full_name', 'like', "%{$search}%");
                 });
             })
-            ->orderBy('full_name', 'asc')
+            ->with(['upline', 'userCredits'])
+            ->orderBy('id', 'asc')
             ->paginate(10)
             ->withQueryString();
 
@@ -46,7 +47,7 @@ class CustomersController extends Controller
     /**
      * show
      *
-     * @param  string  $tracking_code  
+     * @param  string  $tracking_code
      */
     public function show(string $tracking_code): Response
     {

@@ -1,10 +1,4 @@
-import {
-    BedDouble,
-    ChevronRight,
-    Hotel,
-    Settings,
-    UserRound,
-} from 'lucide-react';
+import { BedDouble, ChevronRight, ClipboardList } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 interface AuthenticatedMenuHotelsProps {
@@ -20,155 +14,131 @@ export default function AuthenticatedMenuHotels({
     onToggle,
     containerRef,
 }: AuthenticatedMenuHotelsProps) {
-    const isGeneralSettings =
-        url === '/settings/general';
+    const isHotelOrders = route().current('hotel.orders.*');
 
-    const isUserSettings =
-        url === '/settings/users';
+    const isHotelBookings = url === '/hotels/bookings';
 
-    const isSettingsPage =
-        isGeneralSettings ||
-        isUserSettings;
+    const isHotelsPage = isHotelOrders || isHotelBookings;
 
     return (
-        <div
-            ref={containerRef}
-            className="relative"
-        >
-
+        <div ref={containerRef} className="relative">
             {/* =====================================================
-                SETTINGS BUTTON
+                HOTELS BUTTON
             ====================================================== */}
 
             <button
                 type="button"
                 onClick={onToggle}
-                aria-label="Settings"
+                aria-label="Hotels"
                 aria-expanded={open}
                 className={[
-                    'group relative flex h-11 w-11 items-center justify-center rounded-xl',
+                    'group h-11 w-11 rounded-xl relative flex items-center justify-center',
                     'transition-all duration-200',
 
-                    isSettingsPage || open
+                    isHotelsPage || open
                         ? 'bg-primary-bright text-white'
                         : 'text-quaternary-bright hover:bg-primary-bright hover:text-white',
                 ].join(' ')}
             >
-                <Hotel
-                    size={20}
-                    strokeWidth={2}
-                />
+                <BedDouble size={20} strokeWidth={2} />
 
                 {/* Active indicator */}
 
-                {isSettingsPage && (
-                    <span className="absolute -left-[9px] h-6 w-1 rounded-r-full bg-tertiary" />
+                {isHotelsPage && (
+                    <span className="h-6 w-1 bg-tertiary absolute -left-[9px] rounded-r-full" />
                 )}
 
                 {/* Tooltip */}
 
                 {!open && (
-                    <span className="pointer-events-none absolute left-[58px] top-1/2 z-[100] -translate-y-1/2 whitespace-nowrap rounded-lg bg-primary px-3 py-2 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100">
-                        Settings
+                    <span className="rounded-lg bg-primary px-3 py-2 font-semibold text-white shadow-xl pointer-events-none absolute top-1/2 left-[58px] z-[100] -translate-y-1/2 text-[11px] whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                        Hotels
                     </span>
                 )}
             </button>
 
-
             {/* =====================================================
-                SETTINGS FLYMENU
+                HOTELS FLYMENU
             ====================================================== */}
 
             <div
                 className={[
-                    'absolute left-[58px] top-0 z-[90] w-[230px]',
-                    'origin-left transition-all duration-200 ease-out',
+                    'top-0 absolute left-[58px] z-[90] w-[230px]',
+                    'ease-out origin-left transition-all duration-200',
 
                     open
-                        ? 'pointer-events-auto translate-x-0 scale-100 opacity-100'
-                        : 'pointer-events-none -translate-x-2 scale-95 opacity-0',
+                        ? 'translate-x-0 pointer-events-auto scale-100 opacity-100'
+                        : '-translate-x-2 pointer-events-none scale-95 opacity-0',
                 ].join(' ')}
             >
-                <div className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl">
-
+                <div className="rounded-2xl bg-white shadow-2xl overflow-hidden border border-[#E2E8F0]">
                     {/* =================================================
                         FLYMENU HEADER
                     ================================================== */}
 
-                    <div className="px-4 py-3 border-b border-secondary-dark bg-secondary">
-
-                        <div className="flex items-center gap-2">
-
-                            <div className="flex items-center justify-center w-8 h-8 text-white rounded-lg bg-primary">
-                                <Settings size={15} />
+                    <div className="px-4 py-3 border-secondary-dark bg-secondary border-b">
+                        <div className="gap-2 flex items-center">
+                            <div className="w-8 h-8 text-white rounded-lg bg-primary flex items-center justify-center">
+                                <BedDouble size={15} />
                             </div>
 
                             <div>
                                 <p className="text-xs font-bold text-primary">
-                                    Settings
+                                    Hotels
                                 </p>
 
-                                <p className="mt-0.5 text-[10px] text-quaternary-bright">
-                                    System configuration
+                                <p className="mt-0.5 text-quaternary-bright text-[10px]">
+                                    Hotel management
                                 </p>
                             </div>
-
                         </div>
-
                     </div>
-
 
                     {/* =================================================
                         MENU ITEMS
                     ================================================== */}
 
                     <div className="p-2">
-
                         {/* =================================================
-                            GENERAL SETTINGS
+                            HOTEL ORDERS
                         ================================================== */}
 
                         <Link
-                            href="/settings/general"
+                            href={route('hotel.orders.list')}
                             className={[
-                                'group flex items-center gap-3 rounded-xl px-3 py-3',
+                                'group gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',
 
-                                isGeneralSettings
+                                isHotelOrders
                                     ? 'bg-tertiary/10 text-tertiary'
                                     : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                             ].join(' ')}
                         >
-
                             {/* Icon */}
 
                             <div
                                 className={[
-                                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
+                                    'h-8 w-8 rounded-lg flex shrink-0 items-center justify-center',
 
-                                    isGeneralSettings
+                                    isHotelOrders
                                         ? 'bg-tertiary/10 text-tertiary'
                                         : 'bg-secondary-dark text-quaternary',
                                 ].join(' ')}
                             >
-                                <Settings size={16} />
+                                <ClipboardList size={16} />
                             </div>
-
 
                             {/* Text */}
 
-                            <div className="flex-1 min-w-0">
-
+                            <div className="min-w-0 flex-1">
                                 <p className="text-xs font-semibold">
-                                    General Settings
+                                    Hotel Orders
                                 </p>
 
-                                <p className="mt-0.5 text-[10px] text-quaternary-bright">
-                                    General configuration
+                                <p className="mt-0.5 text-quaternary-bright text-[10px]">
+                                    Manage hotel orders
                                 </p>
-
                             </div>
-
 
                             {/* Arrow */}
 
@@ -177,60 +147,53 @@ export default function AuthenticatedMenuHotels({
                                 className={[
                                     'shrink-0 transition-transform duration-150',
 
-                                    isGeneralSettings
+                                    isHotelOrders
                                         ? 'text-tertiary'
-                                        : 'text-[#CBD5E1] group-hover:translate-x-0.5',
+                                        : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                 ].join(' ')}
                             />
-
                         </Link>
 
-
                         {/* =================================================
-                            USER SETTINGS
+                            HOTEL BOOKINGS
                         ================================================== */}
 
                         <Link
-                            href="/settings/users"
+                            href="/hotels/bookings"
                             className={[
-                                'group mt-1 flex items-center gap-3 rounded-xl px-3 py-3',
+                                'group mt-1 gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',
 
-                                isUserSettings
+                                isHotelBookings
                                     ? 'bg-tertiary/10 text-tertiary'
                                     : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                             ].join(' ')}
                         >
-
                             {/* Icon */}
 
                             <div
                                 className={[
-                                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
+                                    'h-8 w-8 rounded-lg flex shrink-0 items-center justify-center',
 
-                                    isUserSettings
+                                    isHotelBookings
                                         ? 'bg-tertiary/10 text-tertiary'
                                         : 'bg-secondary-dark text-quaternary',
                                 ].join(' ')}
                             >
-                                <UserRound size={16} />
+                                <BedDouble size={16} />
                             </div>
-
 
                             {/* Text */}
 
-                            <div className="flex-1 min-w-0">
-
+                            <div className="min-w-0 flex-1">
                                 <p className="text-xs font-semibold">
-                                    User Settings
+                                    Hotel Bookings
                                 </p>
 
-                                <p className="mt-0.5 text-[10px] text-quaternary-bright">
-                                    Manage user preferences
+                                <p className="mt-0.5 text-quaternary-bright text-[10px]">
+                                    Manage hotel bookings
                                 </p>
-
                             </div>
-
 
                             {/* Arrow */}
 
@@ -239,19 +202,15 @@ export default function AuthenticatedMenuHotels({
                                 className={[
                                     'shrink-0 transition-transform duration-150',
 
-                                    isUserSettings
+                                    isHotelBookings
                                         ? 'text-tertiary'
-                                        : 'text-[#CBD5E1] group-hover:translate-x-0.5',
+                                        : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                 ].join(' ')}
                             />
-
                         </Link>
-
                     </div>
-
                 </div>
             </div>
-
         </div>
     );
 }

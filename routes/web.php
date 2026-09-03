@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pages\DashboardController;
+use App\Http\Controllers\Pages\Hotels\HotelOrderController;
 use App\Http\Controllers\Pages\Users\AdministratorsController;
 use App\Http\Controllers\Pages\Users\CustomersController;
 use App\Http\Controllers\ProfileController;
@@ -38,8 +39,12 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
     });
 
-    Route::prefix('hotels')->name('hotels.')->group(function () {
-        Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    Route::prefix('hotel')->name('hotel.')->group(function () {
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::match(['get', 'post'], '/list', [HotelOrderController::class, 'orderList'])->name('list');
+            Route::match(['get', 'post'], '/details', [HotelOrderController::class, 'orderDetails'])->name('orderDetails');
+        });
+
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
     });
 

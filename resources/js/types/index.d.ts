@@ -25,7 +25,7 @@ export type PageProps<
     auth: {
         user: UserProps;
     };
-    };
+};
 
 export interface CountryProps {
     key?: string;
@@ -177,10 +177,45 @@ export interface UserProps {
 
     active: boolean;
 
+    upline?: UserProps;
+    user_credits?: UserCreditProps | null;
     created_by?: number;
     updated_by?: number;
 
     created_at?: string;
     updated_at?: string;
     deleted_at?: string;
+}
+
+export interface UserCreditProps {
+    index: string;
+    key: string;
+    user_id: number;
+    balance: number;
+    currency: string;
+    is_active: boolean;
+
+    created_at?: string;
+    updated_at?: string;
+    created_by?: number;
+    updated_by?: number;
+}
+
+export interface UserCreditTransactionProps {
+    index: string;
+    key: string;
+    type: string;
+    user_credit_id: number;
+    amount: number;
+    used_before: number;
+    used_after: number;
+    source: string | null;
+    reference_type: string | null;
+    reference_id: number | null;
+    description: string | null;
+
+    created_at: string;
+    updated_at: string;
+    created_by: number | null;
+    updated_by: number | null;
 }
