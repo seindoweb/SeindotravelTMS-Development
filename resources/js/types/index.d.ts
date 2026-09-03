@@ -23,6 +23,7 @@ export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     auth: {
+        roles: string[] | undefined;
         user: UserProps;
     };
 };
