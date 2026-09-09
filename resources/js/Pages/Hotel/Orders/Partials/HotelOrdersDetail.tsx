@@ -298,14 +298,10 @@ function HotelOrdersDetail() {
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                                         <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-center items-center text-center">
                                             <span className="text-[10px] font-bold text-quaternary uppercase tracking-wider mb-1">Booking ID</span>
                                             <span className="font-bold text-primary">{order.voucher.bookingDetails.bookingId}</span>
-                                        </div>
-                                        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-center items-center text-center">
-                                            <span className="text-[10px] font-bold text-quaternary uppercase tracking-wider mb-1">Order Code</span>
-                                            <span className="font-bold text-primary">{order.voucher.orderCode}</span>
                                         </div>
                                         <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-center items-center text-center">
                                             <span className="text-[10px] font-bold text-quaternary uppercase tracking-wider mb-1">Rooms</span>
@@ -315,6 +311,11 @@ function HotelOrdersDetail() {
                                             <span className="text-[10px] font-bold text-quaternary uppercase tracking-wider mb-1">Guests</span>
                                             <span className="font-bold text-primary">{order.voucher.guestCountText}</span>
                                         </div>
+                                    </div>
+
+                                    <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Order Code</span>
+                                        <span className="font-mono font-bold text-primary text-lg break-all">{order.voucher.orderCode}</span>
                                     </div>
 
                                     <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden">
