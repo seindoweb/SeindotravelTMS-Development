@@ -1,5 +1,4 @@
 import { Popover, Transition } from '@headlessui/react';
-import clsx from 'clsx';
 import { Building, MapPin, Navigation } from 'lucide-react';
 import { Fragment } from 'react';
 
@@ -18,14 +17,13 @@ export default function DestinationPicker({ destination, setDestination }: Props
             {({ open, close }) => (
                 <>
                     <Popover.Button as="div" className="w-full focus:outline-none cursor-pointer">
-                        <div className={clsx(
-                            "flex flex-col relative w-full border rounded-xl px-4 py-2 transition-colors text-left bg-white",
+                        <div className={`flex flex-col relative w-full border rounded-xl px-4 py-2 transition-colors text-left bg-white ${
                             open ? "border-primary ring-1 ring-primary" : "border-[#E2E8F0] hover:border-gray-400"
-                        )}>
+                        }`}>
                             <span className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Destination / Hotel</span>
                             <div className="flex items-center gap-2 mt-0.5">
                                 <MapPin size={16} className={destination ? 'text-primary' : 'text-quaternary-bright'} />
-                                <span className={clsx("text-sm font-bold truncate", destination ? "text-primary" : "text-quaternary font-normal")}>
+                                <span className={`text-sm font-bold truncate ${destination ? "text-primary" : "text-quaternary font-normal"}`}>
                                     {destination || "Search city, region, or hotel name"}
                                 </span>
                             </div>

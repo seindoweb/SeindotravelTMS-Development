@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import ListHotelOrders from './Partials/ListHotelOrders';
 import { ChevronRight } from 'lucide-react';
+import HotelOrdersList from './Partials/HotelOrdersList';
 
 export default function OrderList() {
     return (
@@ -21,7 +21,7 @@ export default function OrderList() {
             </>
         }>
             <Head title="Hotel Orders" />
-           <ListHotelOrders/>
+           <HotelOrdersList/>
         </AuthenticatedLayout>
     );
 }

@@ -1,5 +1,4 @@
 import { Popover, Transition } from '@headlessui/react';
-import clsx from 'clsx';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Fragment, useState } from 'react';
 
@@ -111,22 +110,20 @@ export default function DateRangePicker({ checkIn, checkOut, setCheckIn, setChec
             {({ open, close }) => (
                 <>
                     <Popover.Button as="div" className="w-full focus:outline-none cursor-pointer">
-                        <div className={clsx(
-                            "flex relative w-full border rounded-xl transition-colors bg-white",
+                        <div className={`flex relative w-full border rounded-xl transition-colors bg-white ${
                             open ? "border-primary ring-1 ring-primary" : "border-[#E2E8F0] hover:border-gray-400"
-                        )}>
+                        }`}>
 
                             <div 
                                 onClick={() => setActiveDateTab('checkIn')}
-                                className={clsx(
-                                    "flex-1 px-4 py-2 flex flex-col border-r border-[#E2E8F0] transition-colors rounded-l-xl",
+                                className={`flex-1 px-4 py-2 flex flex-col border-r border-[#E2E8F0] transition-colors rounded-l-xl ${
                                     activeDateTab === 'checkIn' && open ? "bg-blue-50/50" : ""
-                                )}
+                                }`}
                             >
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Check-in</span>
                                 <div className="flex items-center gap-2 mt-0.5">
                                     <Calendar size={16} className={checkIn ? 'text-primary' : 'text-quaternary-bright'} />
-                                    <span className={clsx("text-sm truncate", checkIn ? "font-bold text-primary" : "text-quaternary font-normal")}>
+                                    <span className={`text-sm truncate ${checkIn ? "font-bold text-primary" : "text-quaternary font-normal"}`}>
                                         {formatDate(checkIn)}
                                     </span>
                                 </div>
@@ -134,14 +131,13 @@ export default function DateRangePicker({ checkIn, checkOut, setCheckIn, setChec
 
                             <div 
                                 onClick={() => setActiveDateTab('checkOut')}
-                                className={clsx(
-                                    "flex-1 px-4 py-2 flex flex-col pl-4 transition-colors rounded-r-xl",
+                                className={`flex-1 px-4 py-2 flex flex-col pl-4 transition-colors rounded-r-xl ${
                                     activeDateTab === 'checkOut' && open ? "bg-blue-50/50" : ""
-                                )}
+                                }`}
                             >
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Check-out</span>
                                 <div className="flex items-center gap-2 mt-0.5">
-                                    <span className={clsx("text-sm truncate", checkOut ? "font-bold text-primary" : "text-quaternary font-normal")}>
+                                    <span className={`text-sm truncate ${checkOut ? "font-bold text-primary" : "text-quaternary font-normal"}`}>
                                         {formatDate(checkOut)}
                                     </span>
                                 </div>
@@ -189,25 +185,14 @@ export default function DateRangePicker({ checkIn, checkOut, setCheckIn, setChec
                                         return (
                                             <div 
                                                 key={idx} 
-                                                className={clsx(
-                                                    "h-7 flex items-center justify-center relative",
-                                                    inRange && "bg-blue-50",
-                                                    isSelectedIn && checkOut && "bg-gradient-to-r from-transparent via-blue-50 to-blue-50",
-                                                    isSelectedOut && "bg-gradient-to-l from-transparent via-blue-50 to-blue-50",
-                                                )}
+                                                className={`h-7 flex items-center justify-center relative ${inRange ? "bg-blue-50" : ""} ${isSelectedIn && checkOut ? "bg-gradient-to-r from-transparent via-blue-50 to-blue-50" : ""} ${isSelectedOut ? "bg-gradient-to-l from-transparent via-blue-50 to-blue-50" : ""}`}
                                                 onMouseEnter={() => !isPast && setHoverDate(item.date)}
                                             >
                                                 <button
                                                     type="button"
                                                     disabled={isPast}
                                                     onClick={() => handleDateClick(item.date)}
-                                                    className={clsx(
-                                                        "w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-medium transition-colors z-10",
-                                                        !item.isCurrentMonth && !isSelected && "text-gray-300",
-                                                        item.isCurrentMonth && !isSelected && !isPast && "text-primary hover:bg-gray-100",
-                                                        isPast && "text-gray-200 cursor-not-allowed",
-                                                        isSelected && "bg-primary text-white font-bold shadow-sm"
-                                                    )}
+                                                    className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-medium transition-colors z-10 ${!item.isCurrentMonth && !isSelected ? "text-gray-300" : ""} ${item.isCurrentMonth && !isSelected && !isPast ? "text-primary hover:bg-gray-100" : ""} ${isPast ? "text-gray-200 cursor-not-allowed" : ""} ${isSelected ? "bg-primary text-white font-bold shadow-sm" : ""}`}
                                                 >
                                                     {item.date.getDate()}
                                                 </button>

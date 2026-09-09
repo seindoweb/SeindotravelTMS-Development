@@ -1,6 +1,5 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Link } from '@inertiajs/react';
-import clsx from 'clsx';
 import {
     Download,
     Edit,
@@ -96,8 +95,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     }
 
     return (
-        <div className={clsx("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold", colorClass)}>
-            <div className={clsx("w-1.5 h-1.5 rounded-full", dotClass)}></div>
+        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${colorClass}`}>
+            <div className={`w-1.5 h-1.5 rounded-full ${dotClass}`}></div>
             {status}
         </div>
     );
@@ -110,12 +109,12 @@ const PaymentStatusText = ({ status }: { status: string }) => {
     if (status === 'UNPAID') colorClass = "text-amber-500";
 
     return (
-        <span className={clsx("font-bold text-xs", colorClass)}>
+        <span className={`font-bold text-xs ${colorClass}`}>
             {status}
         </span>
     );
 };
-function ListHotelOrders() {
+function HotelOrdersList() {
     const [searchQuery, setSearchQuery] = useState("");
     
   return (
@@ -242,21 +241,15 @@ function ListHotelOrders() {
                                                             <div className="p-1">
                                                                 <Menu.Item>
                                                                     {({ active }) => (
-                                                                        <button className={clsx(
-                                                                            active ? 'bg-gray-50 text-primary' : 'text-gray-700',
-                                                                            'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors'
-                                                                        )}>
+                                                                        <Link href={route('hotel.orders.orderDetails', { id: order.id })} className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}>
                                                                             <Eye size={16} className="text-gray-400 group-hover:text-primary" />
                                                                             View Details
-                                                                        </button>
+                                                                        </Link>
                                                                     )}
                                                                 </Menu.Item>
                                                                 <Menu.Item>
                                                                     {({ active }) => (
-                                                                        <button className={clsx(
-                                                                            active ? 'bg-gray-50 text-primary' : 'text-gray-700',
-                                                                            'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors'
-                                                                        )}>
+                                                                        <button className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}>
                                                                             <Edit size={16} className="text-gray-400 group-hover:text-primary" />
                                                                             Edit Order
                                                                         </button>
@@ -266,12 +259,9 @@ function ListHotelOrders() {
                                                             <div className="p-1">
                                                                 <Menu.Item>
                                                                     {({ active }) => (
-                                                                        <button className={clsx(
-                                                                            active ? 'bg-gray-50 text-blue-600' : 'text-blue-600',
-                                                                            'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold transition-colors'
-                                                                        )}>
+                                                                        <button className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold transition-colors ${active ? 'bg-gray-50 text-blue-600' : 'text-blue-600'}`}>
                                                                             <Download size={16} className="text-blue-500" />
-                                                                            Voucher PDF
+                                                                            Download PDF
                                                                         </button>
                                                                     )}
                                                                 </Menu.Item>
@@ -305,4 +295,4 @@ function ListHotelOrders() {
   )
 }
 
-export default ListHotelOrders
+export default HotelOrdersList

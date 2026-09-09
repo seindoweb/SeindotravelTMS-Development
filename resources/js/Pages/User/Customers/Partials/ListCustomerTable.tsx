@@ -9,7 +9,6 @@ import { router } from '@inertiajs/react';
 import { ArrowDownAZ, ArrowUpZA, Eye, MoreVertical, Edit, Search } from 'lucide-react';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
-import clsx from 'clsx';
 
 export default function ListCustomerTable() {
     const [search, setSearch] = useState('');
@@ -88,10 +87,7 @@ export default function ListCustomerTable() {
                                             {({ active }) => (
                                                 <button
                                                     onClick={() => console.log('sort user A-Z')}
-                                                    className={clsx(
-                                                        active ? 'bg-gray-50 text-primary' : 'text-gray-700',
-                                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors'
-                                                    )}
+                                                    className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}
                                                 >
                                                     <ArrowDownAZ size={16} className="text-gray-400 group-hover:text-primary" />
                                                     Name A-Z
@@ -102,10 +98,7 @@ export default function ListCustomerTable() {
                                             {({ active }) => (
                                                 <button
                                                     onClick={() => console.log('sort user Z-A')}
-                                                    className={clsx(
-                                                        active ? 'bg-gray-50 text-primary' : 'text-gray-700',
-                                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors'
-                                                    )}
+                                                    className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}
                                                 >
                                                     <ArrowUpZA size={16} className="text-gray-400 group-hover:text-primary" />
                                                     Name Z-A
@@ -286,10 +279,7 @@ export default function ListCustomerTable() {
                                                                                 ),
                                                                             )
                                                                         }
-                                                                        className={clsx(
-                                                                            active ? 'bg-gray-50 text-primary' : 'text-gray-700',
-                                                                            'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors'
-                                                                        )}
+                                                                        className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}
                                                                     >
                                                                         <Eye size={16} className="text-gray-400 group-hover:text-primary" />
                                                                         View Profile

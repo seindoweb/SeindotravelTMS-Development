@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { Users, Minus, Plus } from 'lucide-react';
@@ -23,13 +22,12 @@ export default function GuestRoomPicker({
             {({ open, close }) => (
                 <>
                     <Popover.Button as="div" className="w-full focus:outline-none cursor-pointer">
-                        <div className={clsx(
-                            "flex flex-col relative w-full border rounded-xl px-4 py-2 transition-colors text-left bg-white",
+                        <div className={`flex flex-col relative w-full border rounded-xl px-4 py-2 transition-colors text-left bg-white ${
                             open ? "border-primary ring-1 ring-primary" : "border-[#E2E8F0] hover:border-gray-400"
-                        )}>
+                        }`}>
                             <span className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Rooms & Guests</span>
                             <div className="flex items-center gap-2 mt-0.5 overflow-hidden">
-                                <Users size={16} className={clsx("shrink-0", open ? 'text-primary' : 'text-primary')} />
+                                <Users size={16} className={`shrink-0 ${open ? 'text-primary' : 'text-primary'}`} />
                                 <div className="flex items-baseline gap-1.5 overflow-hidden">
                                     <span className="text-sm font-bold text-primary whitespace-nowrap">
                                         {rooms} Rm, {adults} Adult{adults > 1 ? 's' : ''}
