@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import clsx from "clsx";
 
 type BadgeVariant =
     | "gray"
@@ -33,11 +32,7 @@ const styles: Record<BadgeVariant, string> = {
 export function Badge({ children, variant = "gray", className }: BadgeProps) {
     return (
         <span
-            className={clsx(
-                "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
-                styles[variant],
-                className,
-            )}
+            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${styles[variant]} ${className || ""}`.trim()}
         >
             {children}
         </span>

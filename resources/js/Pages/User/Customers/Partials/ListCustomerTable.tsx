@@ -6,8 +6,9 @@ import { formatDate } from '@/helpers';
 import { api } from '@/libs/http/api';
 import { Paginate, UserProps } from '@/types';
 import { router } from '@inertiajs/react';
-import { ArrowDownAZ, ArrowUpZA, Eye } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ArrowDownAZ, ArrowUpZA, Eye, MoreVertical, Edit, Search } from 'lucide-react';
+import { Menu, Transition } from '@headlessui/react';
+import { Fragment, useEffect, useState } from 'react';
 
 export default function ListCustomerTable() {
     const [search, setSearch] = useState('');
@@ -42,61 +43,109 @@ export default function ListCustomerTable() {
 
     const items = page?.data ?? [];
     return (
-        <div className="rounded-2xl bg-white shadow-sm overflow-hidden border border-[#E2E8F0]">
-            <div className="px-5 pt-4 flex items-center justify-between border-b border-[#F1F5F9]">
-                <TableHeader
-                    title="Active Customers"
-                    subtitle="Manage registered members and profiles"
-                    searchValue={search}
-                    onSearchChange={setSearch}
-                    dropdownLabel="Sort"
-                    dropdownActions={[
-                        {
-                            label: 'Name A-Z',
-                            icon: <ArrowDownAZ className="w-4 h-4" />,
-                            onClick: () => console.log('sort user A-Z'),
-                        },
-                        {
-                            label: 'Name Z-A',
-                            icon: <ArrowUpZA className="w-4 h-4" />,
-                            onClick: () => console.log('sort user Z-A'),
-                        },
-                    ]}
-                />
+        <div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <div>
+                    <h1 className="text-2xl font-bold text-primary">Active Customers</h1>
+                    <p className="text-sm text-quaternary mt-1">Manage registered members and profiles</p>
+                </div>
             </div>
+
+            <div className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-[#E2E8F0] flex flex-col md:flex-row items-center gap-4 bg-gray-50/50">
+                    <div className="relative w-full md:w-96">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search size={16} className="text-gray-400" />
+                        </div>
+                        <input 
+                            type="text"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-primary focus:border-primary transition-colors bg-white"
+                            placeholder="Search Name, Email, Phone..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                    <div className="flex w-full md:w-auto items-center gap-2 mt-2 md:mt-0">
+                        <Menu as="div" className="relative inline-block text-left">
+                            <Menu.Button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                                <ArrowDownAZ size={14} />
+                                Sort
+                            </Menu.Button>
+                            
+                            <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-100"
+                                enterFrom="transform opacity-0 scale-95"
+                                enterTo="transform opacity-100 scale-100"
+                                leave="transition ease-in duration-75"
+                                leaveFrom="transform opacity-100 scale-100"
+                                leaveTo="transform opacity-0 scale-95"
+                            >
+                                <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right bg-white divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                                    <div className="p-1">
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <button
+                                                    onClick={() => console.log('sort user A-Z')}
+                                                    className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}
+                                                >
+                                                    <ArrowDownAZ size={16} className="text-gray-400 group-hover:text-primary" />
+                                                    Name A-Z
+                                                </button>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <button
+                                                    onClick={() => console.log('sort user Z-A')}
+                                                    className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}
+                                                >
+                                                    <ArrowUpZA size={16} className="text-gray-400 group-hover:text-primary" />
+                                                    Name Z-A
+                                                </button>
+                                            )}
+                                        </Menu.Item>
+                                    </div>
+                                </Menu.Items>
+                            </Transition>
+                        </Menu>
+                    </div>
+                </div>
 
             <div className="overflow-x-auto">
                 {loading ? (
                     <TableOnlySkeleton />
                 ) : (
                     <table className="w-full min-w-[860px] text-left">
-                        <thead className="bg-secondary">
+                        <thead className="bg-white">
                             <tr className="border-b border-[#E2E8F0]">
-                                <th className="px-5 py-3 font-bold tracking-wider text-quaternary text-[10px] uppercase">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-[10px] uppercase whitespace-nowrap">
                                     Customer
                                 </th>
 
-                                <th className="px-5 py-3 font-bold tracking-wider text-quaternary text-[10px] uppercase">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-[10px] uppercase whitespace-nowrap">
                                     Phone
                                 </th>
 
-                                <th className="px-5 py-3 font-bold tracking-wider text-quaternary text-right text-[10px] uppercase">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-right text-[10px] uppercase whitespace-nowrap">
                                     Credit Balance
                                 </th>
 
-                                <th className="px-5 py-3 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase whitespace-nowrap">
                                     Upline
                                 </th>
 
-                                <th className="px-5 py-3 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase whitespace-nowrap">
                                     Verified
                                 </th>
 
-                                <th className="px-5 py-3 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase whitespace-nowrap">
                                     Joined
                                 </th>
 
-                                <th className="px-5 py-3 font-bold tracking-wider text-quaternary text-[10px] uppercase"></th>
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-right text-[10px] uppercase whitespace-nowrap">
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
 
@@ -119,35 +168,33 @@ export default function ListCustomerTable() {
                                 items.map((val) => (
                                     <tr
                                         key={val.index}
-                                        className="hover:bg-secondary/50 transition-colors"
+                                        className="hover:bg-gray-50/50 transition-colors group border-b border-[#F1F5F9] last:border-0"
                                     >
-                                        <td className="px-5 py-2.5 whitespace-nowrap">
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="gap-3 flex items-center">
                                                 <img
                                                     src={val.profile_photo_path}
                                                     alt={val.full_name}
-                                                    className="w-8 h-8 flex-shrink-0 rounded-full object-cover"
+                                                    className="w-10 h-10 flex-shrink-0 rounded-full object-cover"
                                                 />
-                                                <div>
-                                                    <p className="text-xs font-medium text-primary">
-                                                        {val.title
-                                                            ? `${val.title} `
-                                                            : ''}
+                                                <div className="flex flex-col">
+                                                    <span className="font-bold text-sm text-primary">
+                                                        {val.title ? `${val.title} ` : ''}
                                                         {val.full_name}
-                                                    </p>
-                                                    <p className="mt-0.5 text-quaternary text-[10px]">
+                                                    </span>
+                                                    <span className="text-xs text-quaternary">
                                                         {val.email}
-                                                    </p>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </td>
 
-                                        <td className="px-5 py-2.5 whitespace-nowrap">
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             {val.phone_number ? (
-                                                <span className="text-xs text-quaternary-dark">
+                                                <span className="text-xs text-quaternary-dark font-medium">
                                                     {val.dial_code && (
-                                                        <span className="text-quaternary">
-                                                            {val.dial_code}{' '}
+                                                        <span className="text-quaternary mr-1">
+                                                            {val.dial_code}
                                                         </span>
                                                     )}
                                                     {val.phone_number}
@@ -159,62 +206,90 @@ export default function ListCustomerTable() {
                                             )}
                                         </td>
 
-                                        <td className="px-5 py-2.5 text-right whitespace-nowrap">
-                                            <span className="font-mono text-quaternary-dark tracking-wider text-[11px]">
-                                                {val.user_credits?.balance ??
-                                                    '—'}
-                                            </span>
+                                        <td className="px-6 py-4 text-right whitespace-nowrap">
+                                            <div className="inline-flex items-center px-2 py-1 bg-gray-100 rounded-md">
+                                                <span className="font-mono text-gray-600 font-medium text-xs">
+                                                    {val.user_credits?.balance ?? '—'}
+                                                </span>
+                                            </div>
                                         </td>
 
-                                        <td className="px-5 py-2.5 text-center whitespace-nowrap">
+                                        <td className="px-6 py-4 text-center whitespace-nowrap">
                                             {val.upline ? (
-                                                <span className="bg-tertiary-bright px-2.5 py-1 font-bold text-tertiary-dark inline-flex items-center rounded-full text-[10px]">
+                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                                                     Yes
-                                                </span>
+                                                </div>
                                             ) : (
-                                                <span className="bg-quaternary-bright px-2.5 py-1 font-bold text-quaternary-dark inline-flex items-center rounded-full text-[10px]">
+                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
                                                     No
-                                                </span>
+                                                </div>
                                             )}
                                         </td>
 
-                                        <td className="px-5 py-2.5 text-center whitespace-nowrap">
+                                        <td className="px-6 py-4 text-center whitespace-nowrap">
                                             {val.active ? (
-                                                <Badge variant="green">
+                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
                                                     Yes
-                                                </Badge>
+                                                </div>
                                             ) : (
-                                                <Badge>No</Badge>
+                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+                                                    No
+                                                </div>
                                             )}
                                         </td>
 
-                                        <td className="px-5 py-2.5 text-center whitespace-nowrap">
-                                            <span className="text-xs text-quaternary-dark">
-                                                {val.created_at
-                                                    ? formatDate(val.created_at)
-                                                    : '—'}
+                                        <td className="px-6 py-4 text-center whitespace-nowrap">
+                                            <span className="text-sm font-bold text-primary">
+                                                {val.created_at ? formatDate(val.created_at) : '—'}
                                             </span>
                                         </td>
 
-                                        <td className="px-5 py-2.5 text-right whitespace-nowrap">
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    router.visit(
-                                                        route(
-                                                            'user.customers.show',
-                                                            {
-                                                                tracking_code:
-                                                                    val.tracking_code,
-                                                            },
-                                                        ),
-                                                    )
-                                                }
-                                                className="gap-1.5 rounded-lg px-2.5 py-1.5 font-semibold text-quaternary-dark hover:bg-secondary inline-flex items-center border border-[#E2E8F0] text-[11px] transition hover:border-[#334155]"
-                                            >
-                                                <Eye size={14} />
-                                                View
-                                            </button>
+                                        <td className="px-6 py-4 text-right whitespace-nowrap">
+                                            <Menu as="div" className="relative inline-block text-left">
+                                                <Menu.Button className="p-2 rounded-lg hover:bg-gray-100 text-quaternary transition-colors">
+                                                    <MoreVertical size={16} />
+                                                </Menu.Button>
+                                                
+                                                <Transition
+                                                    as={Fragment}
+                                                    enter="transition ease-out duration-100"
+                                                    enterFrom="transform opacity-0 scale-95"
+                                                    enterTo="transform opacity-100 scale-100"
+                                                    leave="transition ease-in duration-75"
+                                                    leaveFrom="transform opacity-100 scale-100"
+                                                    leaveTo="transform opacity-0 scale-95"
+                                                >
+                                                    <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right bg-white divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                                                        <div className="p-1">
+                                                            <Menu.Item>
+                                                                {({ active }) => (
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            router.visit(
+                                                                                route(
+                                                                                    'user.customers.show',
+                                                                                    {
+                                                                                        tracking_code:
+                                                                                            val.tracking_code,
+                                                                                    },
+                                                                                ),
+                                                                            )
+                                                                        }
+                                                                        className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}
+                                                                    >
+                                                                        <Eye size={16} className="text-gray-400 group-hover:text-primary" />
+                                                                        View Profile
+                                                                    </button>
+                                                                )}
+                                                            </Menu.Item>
+                                                        </div>
+                                                    </Menu.Items>
+                                                </Transition>
+                                            </Menu>
                                         </td>
                                     </tr>
                                 ))
@@ -231,6 +306,7 @@ export default function ListCustomerTable() {
                     onNavigate={(url) => fetchPage(url)}
                 />
             )}
+            </div>
         </div>
     );
 }

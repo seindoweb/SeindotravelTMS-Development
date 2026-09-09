@@ -1,28 +1,28 @@
-import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
+import HotelBookingForm from './Partials/HotelBookingForm';
 
-export default function Index() {
+export default function BookingsIndex() {
     return (
         <AuthenticatedLayout
-            header={
-                <>
-                    <span className="text-sm font-bold text-primary truncate">
-                        Hotels
-                    </span>
-                    <ChevronRight
-                        size={14}
-                        className="sm:block hidden text-[#CBD5E1]"
-                    />
-                    <span className="text-sm font-bold text-primary truncate">
-                        Bookings
-                    </span>
-                </>
-            }
+          header={
+            <>
+                <span className="text-sm font-bold truncate text-primary">
+                    Hotel
+                </span>
+                <ChevronRight
+                    size={14}
+                    className="hidden text-[#CBD5E1] sm:block"
+                />
+                <span className="text-sm font-bold truncate text-primary">
+                    Hotel Bookings
+                </span>
+            </>
+        }
         >
             <Head title="Hotel Bookings" />
-            {/* <ListCustomerTable /> */}
+            <HotelBookingForm/>
         </AuthenticatedLayout>
     );
 }

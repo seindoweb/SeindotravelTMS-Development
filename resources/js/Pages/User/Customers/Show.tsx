@@ -20,7 +20,6 @@ import {
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Badge } from '@/Components/Badge';
 import { UserProps } from '@/types';
-import clsx from 'clsx';
 
 interface Props {
     customer: UserProps;
@@ -198,12 +197,11 @@ export default function Show({ customer }: Props) {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id as any)}
-                                        className={clsx(
-                                            "flex items-center gap-2 px-4 py-3 text-xs font-semibold border-b-2 transition-colors whitespace-nowrap",
+                                        className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold border-b-2 transition-colors whitespace-nowrap ${
                                             isActive
                                                 ? "border-primary text-primary"
                                                 : "border-transparent text-quaternary hover:text-primary hover:border-[#E2E8F0]"
-                                        )}
+                                        }`}
                                     >
                                         <Icon size={16} className={isActive ? 'text-primary' : 'text-quaternary'} />
                                         {tab.label}

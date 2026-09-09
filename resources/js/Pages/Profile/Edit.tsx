@@ -1,7 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
-import clsx from 'clsx';
 import { AlertTriangle, ChevronRight, Shield, User } from 'lucide-react';
 import { useState } from 'react';
 import DeleteUserForm from './Partials/DeleteUserForm';
@@ -81,20 +80,18 @@ export default function Edit({
                                         onClick={() =>
                                             setActiveTab(tab.id as any)
                                         }
-                                        className={clsx(
-                                            'gap-3 p-3 rounded-xl flex w-full items-start text-left transition-all',
+                                        className={`gap-3 p-3 rounded-xl flex w-full items-start text-left transition-all ${
                                             isActive
                                                 ? 'bg-primary text-white shadow-sm'
-                                                : 'text-primary hover:bg-[#F1F5F9]',
-                                        )}
+                                                : 'text-primary hover:bg-[#F1F5F9]'
+                                        }`}
                                     >
                                         <div
-                                            className={clsx(
-                                                'h-8 w-8 rounded-lg shadow-sm flex shrink-0 items-center justify-center',
+                                            className={`h-8 w-8 rounded-lg shadow-sm flex shrink-0 items-center justify-center ${
                                                 isActive
                                                     ? 'bg-white/20 text-white'
-                                                    : 'bg-white text-primary border border-[#E2E8F0]',
-                                            )}
+                                                    : 'bg-white text-primary border border-[#E2E8F0]'
+                                            }`}
                                         >
                                             <Icon size={16} />
                                         </div>
@@ -103,12 +100,11 @@ export default function Edit({
                                                 {tab.label}
                                             </div>
                                             <div
-                                                className={clsx(
-                                                    'mt-0.5 leading-tight text-[10px]',
+                                                className={`mt-0.5 leading-tight text-[10px] ${
                                                     isActive
                                                         ? 'text-white/80'
-                                                        : 'text-quaternary',
-                                                )}
+                                                        : 'text-quaternary'
+                                                }`}
                                             >
                                                 {tab.desc}
                                             </div>
