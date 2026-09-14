@@ -8,13 +8,24 @@ use Inertia\Inertia;
 
 class HotelMarkupController extends Controller
 {
+
     /**
-     * index
+     * indexByHotel
      *
      * @return void
      */
-    public function index()
+    public function indexByHotel()
     {
-        return Inertia::render('Hotel/Markups/Index');
+        return Inertia::render('Hotel/Markups/IndexByHotel/index');
+    }
+
+    /**
+     * indexByDestination
+     *
+     * @return void
+     */
+    public function indexByDestination()
+    {
+        return Inertia::render('Hotel/Markups/IndexByDestination/Index');
     }
 }

@@ -52,7 +52,19 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         });
 
         Route::prefix('markups')->name('markups.')->group(function () {
-            Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'index'])->name('index');
+            // Hotel Markup
+            Route::prefix('hotel')->name('hotel.')->group(function () {
+                Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'indexByHotel'])->name('index');
+                Route::match(['get', 'post'], '/create', [HotelMarkupController::class, 'createHotel'])->name('create');
+                Route::match(['get', 'post'], '/{id}/edit', [HotelMarkupController::class, 'editHotel'])->name('edit');
+            });
+
+            // Destination Markup
+            Route::prefix('destination')->name('destination.')->group(function () {
+                Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'indexByDestination'])->name('index');
+                Route::match(['get', 'post'], '/create', [HotelMarkupController::class, 'createDestination'])->name('create');
+                Route::match(['get', 'post'], '/{id}/edit', [HotelMarkupController::class, 'editDestination'])->name('edit');
+            });
         });
     });
 
