@@ -220,3 +220,21 @@ export interface UserCreditTransactionProps {
     created_by: number | null;
     updated_by: number | null;
 }
+
+export interface HotelProps {
+    id: number;
+    code: string;
+    hotelCode: string;
+    name: string;
+    rating: number;
+}
+
+export interface DestinationProps {
+    key: number;
+    code: string;
+    name: string;
+    destinationCode: string;
+    countryISO2: string;
+    score: number;
+    matchType: string;
+}
