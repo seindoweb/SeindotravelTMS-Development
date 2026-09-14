@@ -1,4 +1,9 @@
-import { BedDouble, ChevronRight, ClipboardList } from 'lucide-react';
+import {
+    BadgeDollarSign,
+    BedDouble,
+    ChevronRight,
+    ClipboardList,
+} from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 interface AuthenticatedMenuHotelsProps {
@@ -17,6 +22,8 @@ export default function AuthenticatedMenuHotels({
     const isHotelOrders = route().current('hotel.orders.*');
 
     const isHotelBookings = route().current('hotel.bookings.*');
+
+    const isHotelMarkups = route().current('hotel.markups.*');
 
     const isHotelsPage = isHotelOrders || isHotelBookings;
 
@@ -203,6 +210,61 @@ export default function AuthenticatedMenuHotels({
                                     'shrink-0 transition-transform duration-150',
 
                                     isHotelBookings
+                                        ? 'text-tertiary'
+                                        : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
+                                ].join(' ')}
+                            />
+                        </Link>
+
+                        {/* =================================================
+                            HOTEL MARKUPS
+                        ================================================== */}
+
+                        <Link
+                            href={route('hotel.markups.index')}
+                            className={[
+                                'group mt-1 gap-3 rounded-xl px-3 py-3 flex items-center',
+                                'transition-all duration-150',
+
+                                isHotelMarkups
+                                    ? 'bg-tertiary/10 text-tertiary'
+                                    : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
+                            ].join(' ')}
+                        >
+                            {/* Icon */}
+
+                            <div
+                                className={[
+                                    'h-8 w-8 rounded-lg flex shrink-0 items-center justify-center',
+
+                                    isHotelMarkups
+                                        ? 'bg-tertiary/10 text-tertiary'
+                                        : 'bg-secondary-dark text-quaternary',
+                                ].join(' ')}
+                            >
+                                <BadgeDollarSign size={16} />
+                            </div>
+
+                            {/* Text */}
+
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs font-semibold">
+                                    Hotel Markups
+                                </p>
+
+                                <p className="mt-0.5 text-quaternary-bright truncate text-[10px]">
+                                    Manage hotel price markups
+                                </p>
+                            </div>
+
+                            {/* Arrow */}
+
+                            <ChevronRight
+                                size={15}
+                                className={[
+                                    'shrink-0 transition-transform duration-150',
+
+                                    isHotelMarkups
                                         ? 'text-tertiary'
                                         : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                 ].join(' ')}

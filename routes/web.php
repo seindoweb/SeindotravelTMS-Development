@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Pages\DashboardController;
 use App\Http\Controllers\Pages\Hotels\HotelBookingController;
+use App\Http\Controllers\Pages\Hotels\HotelMarkupController;
 use App\Http\Controllers\Pages\Hotels\HotelOrderController;
 use App\Http\Controllers\Pages\Users\AdministratorsController;
 use App\Http\Controllers\Pages\Users\CustomersController;
@@ -48,6 +49,10 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
         Route::prefix('bookings')->name('bookings.')->group(function () {
             Route::match(['get', 'post'], '/', [HotelBookingController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('markups')->name('markups.')->group(function () {
+            Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'index'])->name('index');
         });
     });
 
