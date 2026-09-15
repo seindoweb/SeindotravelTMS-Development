@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Pages\DashboardController;
 use App\Http\Controllers\Pages\Hotels\HotelBookingController;
+use App\Http\Controllers\Pages\Hotels\HotelMarkupController;
 use App\Http\Controllers\Pages\Hotels\HotelOrderController;
 use App\Http\Controllers\Pages\Users\AdministratorsController;
 use App\Http\Controllers\Pages\Users\CustomersController;
@@ -48,6 +49,22 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
         Route::prefix('bookings')->name('bookings.')->group(function () {
             Route::match(['get', 'post'], '/', [HotelBookingController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('markups')->name('markups.')->group(function () {
+            // Hotel Markup
+            Route::prefix('hotel')->name('hotel.')->group(function () {
+                Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'indexByHotel'])->name('index');
+                Route::match(['get', 'post'], '/create', [HotelMarkupController::class, 'createHotel'])->name('create');
+                Route::match(['get', 'post'], '/{id}/edit', [HotelMarkupController::class, 'editHotel'])->name('edit');
+            });
+
+            // Destination Markup
+            Route::prefix('destination')->name('destination.')->group(function () {
+                Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'indexByDestination'])->name('index');
+                Route::match(['get', 'post'], '/create', [HotelMarkupController::class, 'createDestination'])->name('create');
+                Route::match(['get', 'post'], '/{id}/edit', [HotelMarkupController::class, 'editDestination'])->name('edit');
+            });
         });
     });
 

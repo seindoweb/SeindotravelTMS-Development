@@ -1,5 +1,14 @@
-import { BedDouble, ChevronRight, ClipboardList } from 'lucide-react';
+import {
+    BadgeDollarSign,
+    BedDouble,
+    ChevronDown,
+    ChevronRight,
+    ClipboardList,
+    Hotel,
+    MapPinned,
+} from 'lucide-react';
 import { Link } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
 interface AuthenticatedMenuHotelsProps {
     url: string;
@@ -14,11 +23,51 @@ export default function AuthenticatedMenuHotels({
     onToggle,
     containerRef,
 }: AuthenticatedMenuHotelsProps) {
+    /*
+    |--------------------------------------------------------------------------
+    | Active Routes
+    |--------------------------------------------------------------------------
+    */
+
     const isHotelOrders = route().current('hotel.orders.*');
 
     const isHotelBookings = route().current('hotel.bookings.*');
 
-    const isHotelsPage = isHotelOrders || isHotelBookings;
+    // Hotel Markup
+    const isHotelMarkup = route().current('hotel.markups.hotel.*');
+
+    // Destination Markup
+    const isDestinationMarkup = route().current('hotel.markups.destination.*');
+
+    // Apakah sedang berada di salah satu halaman markup?
+    const isMarkupPage = isHotelMarkup || isDestinationMarkup;
+
+    // Apakah sedang berada di halaman Hotels?
+    const isHotelsPage = isHotelOrders || isHotelBookings || isMarkupPage;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Markup Submenu
+    |--------------------------------------------------------------------------
+    */
+
+    const [markupOpen, setMarkupOpen] = useState(isMarkupPage);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Automatically Open Markup Submenu
+    |--------------------------------------------------------------------------
+    |
+    | Kalau user sedang berada di Hotel Markup atau Destination Markup,
+    | submenu otomatis terbuka.
+    |
+    */
+
+    useEffect(() => {
+        if (isMarkupPage) {
+            setMarkupOpen(true);
+        }
+    }, [isMarkupPage]);
 
     return (
         <div ref={containerRef} className="relative">
@@ -63,7 +112,7 @@ export default function AuthenticatedMenuHotels({
 
             <div
                 className={[
-                    'top-0 absolute left-[58px] z-[90] w-[230px]',
+                    'top-0 absolute left-[58px] z-[90] w-[250px]',
                     'ease-out origin-left transition-all duration-200',
 
                     open
@@ -114,8 +163,6 @@ export default function AuthenticatedMenuHotels({
                                     : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                             ].join(' ')}
                         >
-                            {/* Icon */}
-
                             <div
                                 className={[
                                     'h-8 w-8 rounded-lg flex shrink-0 items-center justify-center',
@@ -128,8 +175,6 @@ export default function AuthenticatedMenuHotels({
                                 <ClipboardList size={16} />
                             </div>
 
-                            {/* Text */}
-
                             <div className="min-w-0 flex-1">
                                 <p className="text-xs font-semibold">
                                     Hotel Orders
@@ -139,8 +184,6 @@ export default function AuthenticatedMenuHotels({
                                     Manage hotel orders
                                 </p>
                             </div>
-
-                            {/* Arrow */}
 
                             <ChevronRight
                                 size={15}
@@ -169,8 +212,6 @@ export default function AuthenticatedMenuHotels({
                                     : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                             ].join(' ')}
                         >
-                            {/* Icon */}
-
                             <div
                                 className={[
                                     'h-8 w-8 rounded-lg flex shrink-0 items-center justify-center',
@@ -183,8 +224,6 @@ export default function AuthenticatedMenuHotels({
                                 <BedDouble size={16} />
                             </div>
 
-                            {/* Text */}
-
                             <div className="min-w-0 flex-1">
                                 <p className="text-xs font-semibold">
                                     Hotel Bookings
@@ -194,8 +233,6 @@ export default function AuthenticatedMenuHotels({
                                     Manage hotel bookings
                                 </p>
                             </div>
-
-                            {/* Arrow */}
 
                             <ChevronRight
                                 size={15}
@@ -208,6 +245,176 @@ export default function AuthenticatedMenuHotels({
                                 ].join(' ')}
                             />
                         </Link>
+
+                        {/* =================================================
+                            MARKUPS PARENT
+                        ================================================== */}
+
+                        <button
+                            type="button"
+                            onClick={() => setMarkupOpen((value) => !value)}
+                            className={[
+                                'group mt-1 gap-3 rounded-xl px-3 py-3 flex w-full items-center',
+                                'transition-all duration-150',
+
+                                isMarkupPage || markupOpen
+                                    ? 'bg-tertiary/10 text-tertiary'
+                                    : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
+                            ].join(' ')}
+                        >
+                            {/* Icon */}
+
+                            <div
+                                className={[
+                                    'h-8 w-8 rounded-lg flex shrink-0 items-center justify-center',
+
+                                    isMarkupPage || markupOpen
+                                        ? 'bg-tertiary/10 text-tertiary'
+                                        : 'bg-secondary-dark text-quaternary',
+                                ].join(' ')}
+                            >
+                                <BadgeDollarSign size={16} />
+                            </div>
+
+                            {/* Text */}
+
+                            <div className="min-w-0 flex-1 text-left">
+                                <p className="text-xs font-semibold">Markups</p>
+
+                                <p className="mt-0.5 text-quaternary-bright truncate text-[10px]">
+                                    Manage hotel price markups
+                                </p>
+                            </div>
+
+                            {/* Arrow */}
+
+                            <ChevronDown
+                                size={15}
+                                className={[
+                                    'shrink-0 transition-transform duration-200',
+
+                                    markupOpen
+                                        ? 'text-tertiary rotate-180'
+                                        : 'text-[#CBD5E1]',
+                                ].join(' ')}
+                            />
+                        </button>
+
+                        {/* =================================================
+                            MARKUP SUBMENU
+                        ================================================== */}
+
+                        <div
+                            className={[
+                                'overflow-hidden transition-all duration-200',
+
+                                markupOpen
+                                    ? 'max-h-40 opacity-100'
+                                    : 'max-h-0 opacity-0',
+                            ].join(' ')}
+                        >
+                            <div className="ml-5 mt-1 pl-2 border-l border-[#E2E8F0]">
+                                {/* =========================================
+                                    HOTEL MARKUP
+                                ========================================== */}
+
+                                <Link
+                                    href={route('hotel.markups.hotel.index')}
+                                    className={[
+                                        'group gap-2 rounded-lg px-3 py-2.5 flex items-center',
+                                        'transition-all duration-150',
+
+                                        isHotelMarkup
+                                            ? 'bg-tertiary/10 text-tertiary'
+                                            : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
+                                    ].join(' ')}
+                                >
+                                    <div
+                                        className={[
+                                            'h-6 w-6 rounded-md flex shrink-0 items-center justify-center',
+
+                                            isHotelMarkup
+                                                ? 'bg-tertiary/10 text-tertiary'
+                                                : 'bg-secondary-dark text-quaternary',
+                                        ].join(' ')}
+                                    >
+                                        <Hotel size={13} />
+                                    </div>
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-semibold text-[11px]">
+                                            Hotel Markup
+                                        </p>
+
+                                        <p className="mt-0.5 text-quaternary-bright truncate text-[9px]">
+                                            Manage hotel markups
+                                        </p>
+                                    </div>
+
+                                    <ChevronRight
+                                        size={13}
+                                        className={[
+                                            'shrink-0 transition-transform duration-150',
+
+                                            isHotelMarkup
+                                                ? 'text-tertiary'
+                                                : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
+                                        ].join(' ')}
+                                    />
+                                </Link>
+
+                                {/* =========================================
+                                    DESTINATION MARKUP
+                                ========================================== */}
+
+                                <Link
+                                    href={route(
+                                        'hotel.markups.destination.index',
+                                    )}
+                                    className={[
+                                        'group mt-1 gap-2 rounded-lg px-3 py-2.5 flex items-center',
+                                        'transition-all duration-150',
+
+                                        isDestinationMarkup
+                                            ? 'bg-tertiary/10 text-tertiary'
+                                            : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
+                                    ].join(' ')}
+                                >
+                                    <div
+                                        className={[
+                                            'h-6 w-6 rounded-md flex shrink-0 items-center justify-center',
+
+                                            isDestinationMarkup
+                                                ? 'bg-tertiary/10 text-tertiary'
+                                                : 'bg-secondary-dark text-quaternary',
+                                        ].join(' ')}
+                                    >
+                                        <MapPinned size={13} />
+                                    </div>
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-semibold text-[11px]">
+                                            Destination Markup
+                                        </p>
+
+                                        <p className="mt-0.5 text-quaternary-bright truncate text-[9px]">
+                                            Manage destination markups
+                                        </p>
+                                    </div>
+
+                                    <ChevronRight
+                                        size={13}
+                                        className={[
+                                            'shrink-0 transition-transform duration-150',
+
+                                            isDestinationMarkup
+                                                ? 'text-tertiary'
+                                                : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
+                                        ].join(' ')}
+                                    />
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
