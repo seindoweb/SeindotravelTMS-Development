@@ -238,3 +238,10 @@ export interface DestinationProps {
     score: number;
     matchType: string;
 }
+
+export interface RoomGuestProps {
+    adults: number;
+    children: number;
+    childAges: number[];
+    extraBed: boolean;
+}

@@ -119,7 +119,32 @@ export default function DestinationPicker({ destination, setDestination }: Props
                                         <span className="text-xs font-bold uppercase tracking-wider">Searching...</span>
                                     </div>
                                 ) : (
-                                    <>
+                                        <>
+                                             {hotels.length > 0 && (
+                                            <div className="px-3 py-2 mt-2">
+                                                <div className="text-[10px] font-bold uppercase tracking-wider text-quaternary mb-1 border-b border-gray-100 pb-1">Hotels</div>
+                                                {hotels.map(hotel => (
+                                                    <button 
+                                                        key={hotel.code}
+                                                        onClick={() => { 
+                                                            setLocalSearch(hotel.name);
+                                                            setDestination(hotel.name); 
+                                                            close(); 
+                                                        }}
+                                                        className="w-full flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-[#F8FAFC] text-left transition-colors group"
+                                                    >
+                                                        <Building size={16} className="text-quaternary group-hover:text-primary shrink-0" />
+                                                        <div>
+                                                            <div className="text-sm font-bold text-primary group-hover:text-primary-bright">{hotel.name}</div>
+                                                            <div className="text-[10px] text-quaternary flex items-center gap-1 font-medium uppercase tracking-wider">
+                                                                <span className="text-amber-500 font-bold">{hotel.rating} Stars</span> &bull; {hotel.hotelCode}
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            )}
+                                            
                                         {destinations.length > 0 && (
                                             <div className="px-3 py-2 mt-2">
                                                 <div className="text-[10px] font-bold uppercase tracking-wider text-quaternary mb-1 border-b border-gray-100 pb-1">Destinations</div>
@@ -143,30 +168,7 @@ export default function DestinationPicker({ destination, setDestination }: Props
                                             </div>
                                         )}
 
-                                        {hotels.length > 0 && (
-                                            <div className="px-3 py-2 mt-2">
-                                                <div className="text-[10px] font-bold uppercase tracking-wider text-quaternary mb-1 border-b border-gray-100 pb-1">Hotels</div>
-                                                {hotels.map(hotel => (
-                                                    <button 
-                                                        key={hotel.code}
-                                                        onClick={() => { 
-                                                            setLocalSearch(hotel.name);
-                                                            setDestination(hotel.name); 
-                                                            close(); 
-                                                        }}
-                                                        className="w-full flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-[#F8FAFC] text-left transition-colors group"
-                                                    >
-                                                        <Building size={16} className="text-quaternary group-hover:text-primary shrink-0" />
-                                                        <div>
-                                                            <div className="text-sm font-bold text-primary group-hover:text-primary-bright">{hotel.name}</div>
-                                                            <div className="text-[10px] text-quaternary flex items-center gap-1 font-medium uppercase tracking-wider">
-                                                                <span className="text-amber-500 font-bold">{hotel.rating} Stars</span> &bull; {hotel.hotelCode}
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
+                                       
 
                                         {!isSearching && debouncedSearch.length >= 3 && destinations.length === 0 && hotels.length === 0 && (
                                             <div className="p-8 text-center text-sm font-bold text-quaternary">

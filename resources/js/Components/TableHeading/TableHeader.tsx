@@ -11,8 +11,8 @@ type TableHeaderAction = {
 };
 
 type TableHeaderProps = {
-    title?: string;
-    subtitle?: string;
+    title?: React.ReactNode;
+    subtitle?: React.ReactNode;
 
     searchValue?: string;
     onSearchChange?: (value: string) => void;
@@ -20,6 +20,7 @@ type TableHeaderProps = {
     actions?: TableHeaderAction[];
 
     dropdownLabel?: string;
+    dropdownIcon?: React.ReactNode;
     dropdownActions?: TableDropdownAction[];
 };
 
@@ -30,15 +31,16 @@ export function TableHeader({
     onSearchChange,
     actions = [],
     dropdownLabel = "More",
+    dropdownIcon,
     dropdownActions = [],
 }: TableHeaderProps) {
     return (
-        <div className="items-center w-full px-0 pb-4 md:flex md:justify-between">
-            <div className="mb-1 md:mb-0">
-                <h3 className="text-base font-bold text-primary">
+        <div className="items-center w-full px-4 pt-4 pb-4 border-b border-[#E2E8F0] md:flex md:justify-between bg-white">
+            <div className="mb-4 md:mb-0">
+                <h3 className="text-xl font-bold text-primary">
                     {title}
                 </h3>
-                <p className="mt-1 text-xs text-quaternary">
+                <p className="mt-1 text-sm text-quaternary">
                     {subtitle}
                 </p>
             </div>
@@ -89,6 +91,7 @@ export function TableHeader({
                 {dropdownActions.length > 0 && (
                     <TableDropdown
                         label={dropdownLabel}
+                        buttonIcon={dropdownIcon}
                         actions={dropdownActions}
                     />
                 )}
