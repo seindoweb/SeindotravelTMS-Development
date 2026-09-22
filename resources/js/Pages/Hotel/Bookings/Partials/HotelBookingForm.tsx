@@ -11,7 +11,7 @@ function HotelBookingForm() {
     const [checkOut, setCheckOut] = useState<Date | null>(null);
     const [rooms, setRooms] = useState<RoomGuestProps[]>([{ adults: 2, children: 0, childAges: [], extraBed: false }]);
   return (
-       <div>
+       <div className='mt-6'>
                 <div className="bg-white p-4 rounded-2xl shadow-sm border border-[#E2E8F0]">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div>

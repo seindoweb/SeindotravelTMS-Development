@@ -1,14 +1,12 @@
+import TableActionMenu from '@/Components/TableActionMenu';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
-import { Menu, Transition } from '@headlessui/react';
-import { Link } from '@inertiajs/react';
 import {
     Download,
     Edit,
     Eye,
     Filter,
-    MoreVertical
 } from 'lucide-react';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 const DUMMY_ORDERS = [
     {
@@ -117,7 +115,7 @@ function HotelOrdersList() {
     const [searchQuery, setSearchQuery] = useState("");
     
   return (
-      <div>
+      <div className='mt-6'>
         <div className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm overflow-hidden">
             <TableHeader 
                 title="Hotel Orders List"
@@ -133,7 +131,7 @@ function HotelOrdersList() {
                 ]}
             />
 
-                        <div className="overflow-x-auto">
+              <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="border-b border-[#E2E8F0] bg-white">
@@ -199,52 +197,31 @@ function HotelOrdersList() {
                                             </td>
 
                                             <td className="py-4 px-6 text-right">
-                                                <Menu as="div" className="relative inline-block text-left">
-                                                    <Menu.Button className="p-2 rounded-lg hover:bg-gray-100 text-quaternary transition-colors">
-                                                        <MoreVertical size={16} />
-                                                    </Menu.Button>
-                                                    
-                                                    <Transition
-                                                        as={Fragment}
-                                                        enter="transition ease-out duration-100"
-                                                        enterFrom="transform opacity-0 scale-95"
-                                                        enterTo="transform opacity-100 scale-100"
-                                                        leave="transition ease-in duration-75"
-                                                        leaveFrom="transform opacity-100 scale-100"
-                                                        leaveTo="transform opacity-0 scale-95"
-                                                    >
-                                                        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                                                            <div className="p-1">
-                                                                <Menu.Item>
-                                                                    {({ active }) => (
-                                                                        <Link href={route('hotel.orders.orderDetails', { id: order.id })} className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}>
-                                                                            <Eye size={16} className="text-gray-400 group-hover:text-primary" />
-                                                                            View Details
-                                                                        </Link>
-                                                                    )}
-                                                                </Menu.Item>
-                                                                <Menu.Item>
-                                                                    {({ active }) => (
-                                                                        <button className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}>
-                                                                            <Edit size={16} className="text-gray-400 group-hover:text-primary" />
-                                                                            Edit Order
-                                                                        </button>
-                                                                    )}
-                                                                </Menu.Item>
-                                                            </div>
-                                                            <div className="p-1">
-                                                                <Menu.Item>
-                                                                    {({ active }) => (
-                                                                        <button className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold transition-colors ${active ? 'bg-gray-50 text-blue-600' : 'text-blue-600'}`}>
-                                                                            <Download size={16} className="text-blue-500" />
-                                                                            Download PDF
-                                                                        </button>
-                                                                    )}
-                                                                </Menu.Item>
-                                                            </div>
-                                                        </Menu.Items>
-                                                    </Transition>
-                                                </Menu>
+                                                <TableActionMenu
+                                                    menuWidth="w-48"
+                                                    groups={[
+                                                        [
+                                                            {
+                                                                label: 'View Details',
+                                                                icon: <Eye size={16} />,
+                                                                href: route('hotel.orders.orderDetails', { id: order.id }),
+                                                            },
+                                                            {
+                                                                label: 'Edit Order',
+                                                                icon: <Edit size={16} />,
+                                                                onClick: () => console.log('Edit order', order.id),
+                                                            },
+                                                        ],
+                                                        [
+                                                            {
+                                                                label: 'Download PDF',
+                                                                icon: <Download size={16} />,
+                                                                variant: 'info',
+                                                                onClick: () => console.log('Download PDF', order.id),
+                                                            },
+                                                        ],
+                                                    ]}
+                                                />
                                             </td>
                                         </tr>
                                     ))}

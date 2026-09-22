@@ -1,9 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
-import MarkUpHotelLists from './Partials/MarkUpHotelLists';
+import CreateMarkUpHotelForm from './Partials/CreateMarkUpHotelForm';
 
-export default function index() {
+export default function Create() {
     return (
         <AuthenticatedLayout
             header={
@@ -25,11 +25,18 @@ export default function index() {
                     <span className="text-sm font-bold text-primary truncate">
                         Hotel
                     </span>
+                    <ChevronRight
+                        size={14}
+                        className="sm:block hidden text-[#CBD5E1]"
+                    />
+                    <span className="text-sm font-bold text-primary truncate">
+                        Create
+                    </span>
                 </>
             }
         >
             <Head title="Hotel Markup" />
-            <MarkUpHotelLists />
+            <CreateMarkUpHotelForm/>
         </AuthenticatedLayout>
     );
 }

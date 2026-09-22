@@ -10,11 +10,16 @@ type BadgeVariant =
     | "blue"
     | "indigo"
     | "purple"
-    | "pink";
+    | "pink"
+    | "success"
+    | "danger"
+    | "warning"
+    | "info";
 
 type BadgeProps = {
     children: React.ReactNode;
     variant?: BadgeVariant;
+    type?: BadgeVariant;
     className?: string;
 };
 
@@ -27,12 +32,17 @@ const styles: Record<BadgeVariant, string> = {
     indigo: "bg-indigo-50 text-indigo-700 inset-ring inset-ring-indigo-700/10",
     purple: "bg-purple-50 text-purple-700 inset-ring inset-ring-purple-700/10",
     pink: "bg-pink-50 text-pink-700 inset-ring inset-ring-pink-700/10",
+    success: "bg-green-50 text-green-700 inset-ring inset-ring-green-600/20",
+    danger: "bg-red-50 text-red-700 inset-ring inset-ring-red-600/10",
+    warning: "bg-yellow-50 text-yellow-800 inset-ring inset-ring-yellow-600/20",
+    info: "bg-blue-50 text-blue-700 inset-ring inset-ring-blue-700/10",
 };
 
-export function Badge({ children, variant = "gray", className }: BadgeProps) {
+export function Badge({ children, variant, type, className }: BadgeProps) {
+    const finalVariant = type || variant || "gray";
     return (
         <span
-            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${styles[variant]} ${className || ""}`.trim()}
+            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${styles[finalVariant]} ${className || ""}`.trim()}
         >
             {children}
         </span>

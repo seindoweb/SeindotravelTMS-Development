@@ -1,6 +1,5 @@
-import React from 'react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react'
+import { Head } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
 import ListCustomerTable from './Partials/ListCustomerTable';
 

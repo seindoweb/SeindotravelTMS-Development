@@ -1,7 +1,7 @@
-import React from 'react';
-import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
+import MarkUpDestinationLists from './Partials/MarkUpDestinationLists';
 
 export default function index() {
     return (
@@ -29,6 +29,7 @@ export default function index() {
             }
         >
             <Head title="Destination Markup" />
+            <MarkUpDestinationLists />
         </AuthenticatedLayout>
     );
 }

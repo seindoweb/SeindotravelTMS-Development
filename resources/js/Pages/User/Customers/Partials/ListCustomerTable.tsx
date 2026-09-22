@@ -1,14 +1,12 @@
-import { Badge } from '@/Components/Badge';
 import TableOnlySkeleton from '@/Components/Skeleton/TableOnlySkeleton';
+import TableActionMenu from '@/Components/TableActionMenu';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import TablePaginate from '@/Components/TablePaginate';
 import { formatDate } from '@/helpers';
 import { api } from '@/libs/http/api';
 import { Paginate, UserProps } from '@/types';
-import { router } from '@inertiajs/react';
-import { ArrowDownAZ, ArrowUpZA, Eye, MoreVertical, Edit, Search } from 'lucide-react';
-import { Menu, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
+import { ArrowDownAZ, ArrowUpZA, Eye } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function ListCustomerTable() {
     const [search, setSearch] = useState('');
@@ -42,6 +40,7 @@ export default function ListCustomerTable() {
     }, [search]);
 
     const items = page?.data ?? [];
+
     return (
         <div>
         <div className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm overflow-hidden">
@@ -56,7 +55,7 @@ export default function ListCustomerTable() {
                     { label: "Name Z-A", icon: <ArrowUpZA size={16} />, onClick: () => console.log('sort user Z-A') },
                 ]}
             />
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto min-h-[300px]">
                 {loading ? (
                     <TableOnlySkeleton />
                 ) : (
@@ -193,47 +192,19 @@ export default function ListCustomerTable() {
                                         </td>
 
                                         <td className="px-6 py-4 text-right whitespace-nowrap">
-                                            <Menu as="div" className="relative inline-block text-left">
-                                                <Menu.Button className="p-2 rounded-lg hover:bg-gray-100 text-quaternary transition-colors">
-                                                    <MoreVertical size={16} />
-                                                </Menu.Button>
-                                                
-                                                <Transition
-                                                    as={Fragment}
-                                                    enter="transition ease-out duration-100"
-                                                    enterFrom="transform opacity-0 scale-95"
-                                                    enterTo="transform opacity-100 scale-100"
-                                                    leave="transition ease-in duration-75"
-                                                    leaveFrom="transform opacity-100 scale-100"
-                                                    leaveTo="transform opacity-0 scale-95"
-                                                >
-                                                    <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right bg-white divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                                                        <div className="p-1">
-                                                            <Menu.Item>
-                                                                {({ active }) => (
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            router.visit(
-                                                                                route(
-                                                                                    'user.customers.show',
-                                                                                    {
-                                                                                        tracking_code:
-                                                                                            val.tracking_code,
-                                                                                    },
-                                                                                ),
-                                                                            )
-                                                                        }
-                                                                        className={`group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active ? 'bg-gray-50 text-primary' : 'text-gray-700'}`}
-                                                                    >
-                                                                        <Eye size={16} className="text-gray-400 group-hover:text-primary" />
-                                                                        View Profile
-                                                                    </button>
-                                                                )}
-                                                            </Menu.Item>
-                                                        </div>
-                                                    </Menu.Items>
-                                                </Transition>
-                                            </Menu>
+                                            <TableActionMenu
+                                                groups={[
+                                                    [
+                                                        {
+                                                            label: 'View Profile',
+                                                            icon: <Eye size={16} />,
+                                                            href: route('user.customers.show', {
+                                                                tracking_code: val.tracking_code,
+                                                            }),
+                                                        },
+                                                    ],
+                                                ]}
+                                            />
                                         </td>
                                     </tr>
                                 ))

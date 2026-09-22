@@ -245,3 +245,38 @@ export interface RoomGuestProps {
     childAges: number[];
     extraBed: boolean;
 }
+
+export interface MarkupHotelProps {
+    key: string;
+    id: number;
+    name: string;
+    description: string;
+    scopeType: string;
+    scopeCode: string;
+    markupType: 'fixed' | 'percent';
+    markupValue: number;
+    isActive: boolean;
+    validFrom: string | null;
+    validUntil: string | null;
+    createdByEmail: string | null;
+    updatedByEmail: string | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+}
+
+export interface MarkupDestinationProps {
+    key: number;
+    name: string;
+    description: string;
+    scopeType: string;
+    scopeCode: string;
+    markupType: 'fixed' | 'percent';
+    markupValue: number;
+    isActive: boolean;
+    validFrom: string | null;
+    validUntil: string | null;
+    createdByEmail: string | null;
+    updatedByEmail: string | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+}
