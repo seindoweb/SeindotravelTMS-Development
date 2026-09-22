@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::prefix('hotel')->name('hotel.')->group(function () {
                 Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'indexByHotel'])->name('index');
                 Route::match(['get', 'post'], '/create', [HotelMarkupController::class, 'createHotel'])->name('create');
-                Route::match(['get', 'post'], '/{id}/edit', [HotelMarkupController::class, 'editHotel'])->name('edit');
+                Route::match(['get', 'post'], '/edit/{id}', [HotelMarkupController::class, 'editHotel'])->name('edit');
             });
 
             // Destination Markup

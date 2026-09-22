@@ -24,7 +24,8 @@ const months = [
   'Dec',
 ];
 
-function formatDate(datetime: string | Date): string {
+function formatDate(datetime: string | Date | null): string {
+  if (!datetime) return '-';
   const date = new Date(datetime);
   const day = date.getDate().toString().padStart(2, '0');
   const month = months[date.getMonth()];
@@ -33,7 +34,13 @@ function formatDate(datetime: string | Date): string {
   return `${day} ${month} ${year}`;
 }
 
+const formatNumber = (value: number | string) => {
+    if (value === null || value === undefined || value === "") return "";
+    return Number(value).toLocaleString("en-US");
+};
+
 export {
     formatDate,
-    useT,
+  useT,
+    formatNumber,
 };
