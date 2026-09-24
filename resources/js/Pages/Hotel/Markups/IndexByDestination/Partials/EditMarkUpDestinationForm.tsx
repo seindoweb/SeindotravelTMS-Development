@@ -4,10 +4,12 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SelectOption, { useSelectOption } from '@/Components/SelectOption';
 import TextInput from '@/Components/TextInput';
+import InputAutoComplete from '@/Components/InputAutoComplete';
+import { useDebounce } from '@/Hooks/useDebounce';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
 import { MarkupDestinationProps, PageProps } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const markupTypes = [
     { id: 'fixed', name: 'Fixed Amount' },
@@ -49,6 +51,39 @@ export default function EditMarkUpDestinationForm({ initialData }: { initialData
     const { auth } = usePage<PageProps>().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [apiError, setApiError] = useState<string | null>(null);
+    const [searchDestination, setSearchDestination] = useState('');
+    const debouncedSearchDestination = useDebounce(searchDestination, 500);
+    const [destinations, setDestinations] = useState<any[]>([]);
+    const [selectedDestinationName, setSelectedDestinationName] = useState(
+        initialData.name || initialData.scopeCode || '',
+    );
+
+    useEffect(() => {
+        if (initialData.name || initialData.scopeCode) {
+            setSelectedDestinationName(initialData.name || initialData.scopeCode);
+        }
+    }, [initialData.name, initialData.scopeCode]);
+
+    useEffect(() => {
+        if (!debouncedSearchDestination || debouncedSearchDestination.length < 3) {
+            setDestinations([]);
+            return;
+        }
+
+        let isMounted = true;
+        hotelMicroserviceApi
+            .get(`/find-destination?search=${debouncedSearchDestination}`)
+            .then((res) => {
+                if (isMounted) {
+                    setDestinations(res.data?.data || []);
+                }
+            })
+            .catch((err) => console.error('Failed to fetch destinations:', err));
+
+        return () => {
+            isMounted = false;
+        };
+    }, [debouncedSearchDestination]);
 
     const { selected: selectedMarkupType, onChange: onMarkupTypeChange } = useSelectOption<MarkupFormProps>(
         markupTypes,
@@ -122,16 +157,32 @@ export default function EditMarkUpDestinationForm({ initialData }: { initialData
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div className="sm:col-span-2">
-                        <InputLabel htmlFor="scopeCode" value="Destination Code (Scope Code)" />
-                        <TextInput
-                            id="scopeCode"
+                        <InputAutoComplete
                             name="scopeCode"
-                            type="text"
-                            value={data.scopeCode}
-                            className="mt-1 block w-full bg-gray-50 text-gray-500"
-                            onChange={handleChange}
-                            required
-                            readOnly
+                            label="Destination"
+                            placeholder="Type destination name to search..."
+                            setSearch={setSearchDestination}
+                            value={selectedDestinationName}
+                            setValue={(selectedItem: any) => {
+                                setData('scopeCode', selectedItem.destinationCode);
+                                setSelectedDestinationName(
+                                    selectedItem.destinationCode
+                                        ? `${selectedItem.name} — ${selectedItem.destinationCode}`
+                                        : selectedItem.name,
+                                );
+                            }}
+                            data={destinations}
+                            dataShow="name"
+                            dataSubShow="destinationCode"
+                            dataUnique="destinationCode"
+                            dataKey={data.scopeCode}
+                            checkIcon={true}
+                            allowManualInput={true}
+                            onManualInput={(val) => {
+                                // Allow typing destination code directly
+                                setData('scopeCode', val);
+                                setSelectedDestinationName(val);
+                            }}
                         />
                         <InputError message={errors.scopeCode} className="mt-2" />
                     </div>
