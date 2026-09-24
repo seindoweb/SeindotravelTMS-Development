@@ -48,7 +48,10 @@ export default function CreateMarkUpDestinationForm() {
     const [selectedDestinationName, setSelectedDestinationName] = useState('');
 
     useEffect(() => {
-        if (!debouncedSearchDestination || debouncedSearchDestination.length < 3) {
+        if (
+            !debouncedSearchDestination ||
+            debouncedSearchDestination.length < 3
+        ) {
             setDestinations([]);
             return;
         }
@@ -61,7 +64,9 @@ export default function CreateMarkUpDestinationForm() {
                     setDestinations(res.data?.data || []);
                 }
             })
-            .catch((err) => console.error('Failed to fetch destinations:', err));
+            .catch((err) =>
+                console.error('Failed to fetch destinations:', err),
+            );
 
         return () => {
             isMounted = false;
@@ -123,7 +128,7 @@ export default function CreateMarkUpDestinationForm() {
                 );
             }
         } catch (error: any) {
-            console.error("failed to update markup:", error);
+            console.error('failed to update markup:', error);
 
             const errData = error?.response?.data?.data?.errors;
             if (errData && typeof errData === 'object') {
@@ -134,7 +139,7 @@ export default function CreateMarkUpDestinationForm() {
             } else {
                 setApiError(
                     error?.response?.data?.meta?.message ||
-                    'An error occurred while updating the markup rule.',
+                        'An error occurred while updating the markup rule.',
                 );
             }
         } finally {
@@ -149,8 +154,8 @@ export default function CreateMarkUpDestinationForm() {
             </h2>
 
             <form onSubmit={submit} className="space-y-6">
-                  {apiError && (
-                    <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 border border-red-100 whitespace-pre-line">
+                {apiError && (
+                    <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 border-red-100 border whitespace-pre-line">
                         {apiError}
                     </div>
                 )}
@@ -164,7 +169,10 @@ export default function CreateMarkUpDestinationForm() {
                             setSearch={setSearchDestination}
                             value={selectedDestinationName}
                             setValue={(selectedItem: any) => {
-                                setData('scopeCode', selectedItem.destinationCode);
+                                setData(
+                                    'scopeCode',
+                                    selectedItem.destinationCode,
+                                );
                                 setSelectedDestinationName(
                                     selectedItem.destinationCode
                                         ? `${selectedItem.name} — ${selectedItem.destinationCode}`
@@ -179,7 +187,6 @@ export default function CreateMarkUpDestinationForm() {
                             checkIcon={true}
                             allowManualInput={true}
                             onManualInput={(val) => {
-                                // Allow typing destination code directly
                                 setData('scopeCode', val);
                                 setSelectedDestinationName(val);
                             }}

@@ -122,7 +122,7 @@ export default function CreateMarkUpHotelForm() {
                 );
             }
         } catch (error: any) {
-         console.error("failed to update markup:", error);
+            console.error('failed to update markup:', error);
 
             const errData = error?.response?.data?.data?.errors;
             if (errData && typeof errData === 'object') {
@@ -133,7 +133,7 @@ export default function CreateMarkUpHotelForm() {
             } else {
                 setApiError(
                     error?.response?.data?.meta?.message ||
-                    'An error occurred while updating the markup rule.',
+                        'An error occurred while updating the markup rule.',
                 );
             }
         } finally {
@@ -148,8 +148,8 @@ export default function CreateMarkUpHotelForm() {
             </h2>
 
             <form onSubmit={submit} className="space-y-6">
-               {apiError && (
-                    <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 border border-red-100 whitespace-pre-line">
+                {apiError && (
+                    <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 border-red-100 border whitespace-pre-line">
                         {apiError}
                     </div>
                 )}
@@ -178,7 +178,6 @@ export default function CreateMarkUpHotelForm() {
                             checkIcon={true}
                             allowManualInput={true}
                             onManualInput={(val) => {
-                                // Allow typing hotel code directly
                                 setData('scopeCode', val);
                                 setSelectedHotelName(val);
                             }}

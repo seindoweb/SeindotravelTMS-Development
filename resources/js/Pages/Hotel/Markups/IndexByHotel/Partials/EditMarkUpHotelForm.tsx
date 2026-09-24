@@ -37,20 +37,17 @@ export default function EditMarkUpHotelForm({
 }: {
     initialData: MarkupHotelProps;
 }) {
-    const { data, setData, errors } =
-        useForm<MarkupFormProps>({
+    const { data, setData, errors } = useForm<MarkupFormProps>({
         key: Number(initialData.key),
-            markupType: initialData.markupType || 'fixed',
-            description: initialData.description || '',
-            scopeCode: initialData.scopeCode || '',
-            markupValue: initialData.markupValue || '',
-            isActive:
-                initialData.isActive !== undefined
-                    ? initialData.isActive
-                    : true,
-            validFrom: formatForInput(initialData.validFrom),
-            validUntil: formatForInput(initialData.validUntil),
-        });
+        markupType: initialData.markupType || 'fixed',
+        description: initialData.description || '',
+        scopeCode: initialData.scopeCode || '',
+        markupValue: initialData.markupValue || '',
+        isActive:
+            initialData.isActive !== undefined ? initialData.isActive : true,
+        validFrom: formatForInput(initialData.validFrom),
+        validUntil: formatForInput(initialData.validUntil),
+    });
 
     const { auth } = usePage<PageProps>().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -139,7 +136,9 @@ export default function EditMarkUpHotelForm({
             if (res.data?.meta?.code === 200) {
                 router.visit(route('hotel.markups.hotel.index'));
             } else {
-                setApiError(res.data?.meta?.message || 'Failed to update markup rule.');
+                setApiError(
+                    res.data?.meta?.message || 'Failed to update markup rule.',
+                );
             }
         } catch (error: any) {
             console.error('failed to update markup:', error);
@@ -153,7 +152,7 @@ export default function EditMarkUpHotelForm({
             } else {
                 setApiError(
                     error?.response?.data?.meta?.message ||
-                    'An error occurred while updating the markup rule.',
+                        'An error occurred while updating the markup rule.',
                 );
             }
         } finally {
@@ -198,7 +197,6 @@ export default function EditMarkUpHotelForm({
                             checkIcon={true}
                             allowManualInput={true}
                             onManualInput={(val) => {
-                                // Allow typing hotel code directly
                                 setData('scopeCode', val);
                                 setSelectedHotelName(val);
                             }}
