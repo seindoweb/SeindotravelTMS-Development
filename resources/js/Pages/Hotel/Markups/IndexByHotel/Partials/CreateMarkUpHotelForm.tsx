@@ -4,10 +4,12 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SelectOption, { useSelectOption } from '@/Components/SelectOption';
 import TextInput from '@/Components/TextInput';
+import InputAutoComplete from '@/Components/InputAutoComplete';
+import { useDebounce } from '@/Hooks/useDebounce';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
 import { PageProps } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const markupTypes = [
     { id: 'fixed', name: 'Fixed Amount' },
@@ -39,6 +41,32 @@ export default function CreateMarkUpHotelForm() {
     const { auth } = usePage<PageProps>().props;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [apiError, setApiError] = useState<string | null>(null);
+    const [searchHotel, setSearchHotel] = useState('');
+    const debouncedSearchHotel = useDebounce(searchHotel, 500);
+    const [hotels, setHotels] = useState<any[]>([]);
+    const [selectedHotelName, setSelectedHotelName] = useState('');
+
+    useEffect(() => {
+        if (!debouncedSearchHotel || debouncedSearchHotel.length < 3) {
+            setHotels([]);
+            return;
+        }
+
+        let isMounted = true;
+        hotelMicroserviceApi
+            .get(`/find-hotel?search=${debouncedSearchHotel}`)
+            .then((res) => {
+                if (isMounted) {
+                    setHotels(res.data?.data || []);
+                }
+            })
+            .catch((err) => console.error('Failed to fetch hotels:', err));
+
+        return () => {
+            isMounted = false;
+        };
+    }, [debouncedSearchHotel]);
 
     const { selected: selectedMarkupType, onChange: onMarkupTypeChange } =
         useSelectOption<MarkupFormProps>(
@@ -94,15 +122,20 @@ export default function CreateMarkUpHotelForm() {
                 );
             }
         } catch (error: any) {
-            console.error('failed to create markup:', error);
-            // console.log("resp api:", error?.response?.data);
+            console.error('failed to update markup:', error);
 
-            const errorMessage =
-                error?.response?.data?.meta?.message ||
-                error?.response?.data?.data?.errors?.body ||
-                'An error occurred while creating the markup rule.';
-
-            setError(errorMessage);
+            const errData = error?.response?.data?.data?.errors;
+            if (errData && typeof errData === 'object') {
+                const messages = Object.entries(errData)
+                    .map(([field, msg]) => `${field}: ${msg}`)
+                    .join('\n');
+                setApiError(messages);
+            } else {
+                setApiError(
+                    error?.response?.data?.meta?.message ||
+                        'An error occurred while updating the markup rule.',
+                );
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -115,27 +148,39 @@ export default function CreateMarkUpHotelForm() {
             </h2>
 
             <form onSubmit={submit} className="space-y-6">
-                {errors && Object.keys(errors).length > 0 && (
-                    <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 border-red-100 border">
-                        {Object.values(errors)[0]}
+                {apiError && (
+                    <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 border-red-100 border whitespace-pre-line">
+                        {apiError}
                     </div>
                 )}
 
                 <div className="gap-6 sm:grid-cols-2 grid grid-cols-1">
                     <div className="sm:col-span-2">
-                        <InputLabel
-                            htmlFor="scopeCode"
-                            value="Hotel Code (Scope Code)"
-                        />
-                        <TextInput
-                            id="scopeCode"
+                        <InputAutoComplete
                             name="scopeCode"
-                            type="text"
-                            value={data.scopeCode}
-                            className="mt-1 block w-full"
-                            onChange={handleChange}
-                            required
-                            placeholder="e.g. ID10000888"
+                            label="Hotel"
+                            placeholder="Type hotel name to search..."
+                            setSearch={setSearchHotel}
+                            value={selectedHotelName}
+                            setValue={(selectedItem: any) => {
+                                setData('scopeCode', selectedItem.hotelCode);
+                                setSelectedHotelName(
+                                    selectedItem.hotelCode
+                                        ? `${selectedItem.name} — ${selectedItem.hotelCode}`
+                                        : selectedItem.name,
+                                );
+                            }}
+                            data={hotels}
+                            dataShow="name"
+                            dataSubShow="hotelCode"
+                            dataUnique="hotelCode"
+                            dataKey={data.scopeCode}
+                            checkIcon={true}
+                            allowManualInput={true}
+                            onManualInput={(val) => {
+                                setData('scopeCode', val);
+                                setSelectedHotelName(val);
+                            }}
                         />
                         <InputError
                             message={errors.scopeCode}

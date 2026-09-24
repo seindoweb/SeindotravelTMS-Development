@@ -4,10 +4,12 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SelectOption, { useSelectOption } from '@/Components/SelectOption';
 import TextInput from '@/Components/TextInput';
+import InputAutoComplete from '@/Components/InputAutoComplete';
+import { useDebounce } from '@/Hooks/useDebounce';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
 import { MarkupHotelProps, PageProps } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const markupTypes = [
     { id: 'fixed', name: 'Fixed Amount' },
@@ -35,24 +37,54 @@ export default function EditMarkUpHotelForm({
 }: {
     initialData: MarkupHotelProps;
 }) {
-    const { data, setData, errors } =
-        useForm<MarkupFormProps>({
+    const { data, setData, errors } = useForm<MarkupFormProps>({
         key: Number(initialData.key),
-            markupType: initialData.markupType || 'fixed',
-            description: initialData.description || '',
-            scopeCode: initialData.scopeCode || '',
-            markupValue: initialData.markupValue || '',
-            isActive:
-                initialData.isActive !== undefined
-                    ? initialData.isActive
-                    : true,
-            validFrom: formatForInput(initialData.validFrom),
-            validUntil: formatForInput(initialData.validUntil),
-        });
+        markupType: initialData.markupType || 'fixed',
+        description: initialData.description || '',
+        scopeCode: initialData.scopeCode || '',
+        markupValue: initialData.markupValue || '',
+        isActive:
+            initialData.isActive !== undefined ? initialData.isActive : true,
+        validFrom: formatForInput(initialData.validFrom),
+        validUntil: formatForInput(initialData.validUntil),
+    });
 
     const { auth } = usePage<PageProps>().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [apiError, setApiError] = useState<string | null>(null);
+    const [searchHotel, setSearchHotel] = useState('');
+    const debouncedSearchHotel = useDebounce(searchHotel, 500);
+    const [hotels, setHotels] = useState<any[]>([]);
+    const [selectedHotelName, setSelectedHotelName] = useState(
+        initialData.name || initialData.scopeCode || '',
+    );
+
+    useEffect(() => {
+        if (initialData.name || initialData.scopeCode) {
+            setSelectedHotelName(initialData.name || initialData.scopeCode);
+        }
+    }, [initialData.name, initialData.scopeCode]);
+
+    useEffect(() => {
+        if (!debouncedSearchHotel || debouncedSearchHotel.length < 3) {
+            setHotels([]);
+            return;
+        }
+
+        let isMounted = true;
+        hotelMicroserviceApi
+            .get(`/find-hotel?search=${debouncedSearchHotel}`)
+            .then((res) => {
+                if (isMounted) {
+                    setHotels(res.data?.data || []);
+                }
+            })
+            .catch((err) => console.error('Failed to fetch hotels:', err));
+
+        return () => {
+            isMounted = false;
+        };
+    }, [debouncedSearchHotel]);
 
     const { selected: selectedMarkupType, onChange: onMarkupTypeChange } =
         useSelectOption<MarkupFormProps>(
@@ -104,7 +136,9 @@ export default function EditMarkUpHotelForm({
             if (res.data?.meta?.code === 200) {
                 router.visit(route('hotel.markups.hotel.index'));
             } else {
-                setApiError(res.data?.meta?.message || 'Failed to update markup rule.');
+                setApiError(
+                    res.data?.meta?.message || 'Failed to update markup rule.',
+                );
             }
         } catch (error: any) {
             console.error('failed to update markup:', error);
@@ -118,7 +152,7 @@ export default function EditMarkUpHotelForm({
             } else {
                 setApiError(
                     error?.response?.data?.meta?.message ||
-                    'An error occurred while updating the markup rule.',
+                        'An error occurred while updating the markup rule.',
                 );
             }
         } finally {
@@ -141,19 +175,31 @@ export default function EditMarkUpHotelForm({
 
                 <div className="gap-6 sm:grid-cols-2 grid grid-cols-1">
                     <div className="sm:col-span-2">
-                        <InputLabel
-                            htmlFor="scopeCode"
-                            value="Hotel Code (Scope Code)"
-                        />
-                        <TextInput
-                            id="scopeCode"
+                        <InputAutoComplete
                             name="scopeCode"
-                            type="text"
-                            value={data.scopeCode}
-                            className="mt-1 bg-gray-50 text-gray-500 block w-full"
-                            onChange={handleChange}
-                            required
-                            readOnly
+                            label="Hotel"
+                            placeholder="Type hotel name to search..."
+                            setSearch={setSearchHotel}
+                            value={selectedHotelName}
+                            setValue={(selectedItem: any) => {
+                                setData('scopeCode', selectedItem.hotelCode);
+                                setSelectedHotelName(
+                                    selectedItem.hotelCode
+                                        ? `${selectedItem.name} — ${selectedItem.hotelCode}`
+                                        : selectedItem.name,
+                                );
+                            }}
+                            data={hotels}
+                            dataShow="name"
+                            dataSubShow="hotelCode"
+                            dataUnique="hotelCode"
+                            dataKey={data.scopeCode}
+                            checkIcon={true}
+                            allowManualInput={true}
+                            onManualInput={(val) => {
+                                setData('scopeCode', val);
+                                setSelectedHotelName(val);
+                            }}
                         />
                         <InputError
                             message={errors.scopeCode}

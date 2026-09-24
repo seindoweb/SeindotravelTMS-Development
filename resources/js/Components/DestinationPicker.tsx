@@ -66,6 +66,9 @@ export default function DestinationPicker({
         };
     }, [debouncedSearch]);
 
+    console.log('hotels', hotels);
+    console.log('destinations', destinations);
+
     return (
         <Popover className="relative w-full">
             {({ open, close }) => (
