@@ -1,0 +1,25 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head } from '@inertiajs/react';
+import { ChevronRight } from 'lucide-react';
+import HotelBookingForm from './Partials/HotelBookingForm';
+
+export default function SearchDst() {
+    return (
+        <AuthenticatedLayout
+            header={
+                <>
+                    <span className="text-sm font-bold text-primary truncate">
+                        Hotel
+                    </span>
+                    <ChevronRight
+                        size={14}
+                        className="sm:block hidden text-[#CBD5E1]"
+                    />
+                    <span className="text-sm font-bold text-primary truncate"></span>
+                </>
+            }
+        >
+            <div>SearchDst</div>
+        </AuthenticatedLayout>
+    );
+}
