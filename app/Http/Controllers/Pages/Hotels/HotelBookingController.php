@@ -30,6 +30,22 @@ class HotelBookingController extends Controller
      */
     public function search(Request $request)
     {
-        return Inertia::render('Hotel/Bookings/SearchDst');
+        $params = [
+            'type' => $request->query('type', 'dst'),
+            'country' => $request->query('country', ''),
+            'code' => $request->query('code', ''),
+            'checkIn' => $request->query('checkIn', ''),
+            'checkOut' => $request->query('checkOut', ''),
+            'room' => $request->query('room', ''),
+            'page' => (int) $request->query('page', 1),
+        ];
+
+        $type = $params['type'];
+
+        if ($type === 'htl') {
+            return Inertia::render('Hotel/Bookings/SearchHtl', $params);
+        }
+
+        return Inertia::render('Hotel/Bookings/SearchDst', $params);
     }
 }

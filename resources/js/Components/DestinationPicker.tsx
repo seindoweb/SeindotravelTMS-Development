@@ -1,13 +1,13 @@
 import { useDebounce } from '@/Hooks/useDebounce';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
-import { DestinationProps, HotelProps } from '@/types';
+import { DestinationProps, HotelProps, SearchSelectionProps } from '@/types';
 import { Popover, Transition } from '@headlessui/react';
 import { Building, Loader2, MapPin, Navigation } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
 
 interface Props {
-    destination: string;
-    setDestination: (val: string) => void;
+    selection: SearchSelectionProps | null;
+    onSelect: (val: SearchSelectionProps) => void;
 }
 
 const topDestinations = [
@@ -18,19 +18,16 @@ const topDestinations = [
     'Tokyo',
 ];
 
-export default function DestinationPicker({
-    destination,
-    setDestination,
-}: Props) {
-    const [localSearch, setLocalSearch] = useState(destination);
+export default function DestinationPicker({ selection, onSelect }: Props) {
+    const [localSearch, setLocalSearch] = useState(selection?.name ?? '');
     const debouncedSearch = useDebounce(localSearch, 500);
     const [hotels, setHotels] = useState<HotelProps[]>([]);
     const [destinations, setDestinations] = useState<DestinationProps[]>([]);
     const [isSearching, setIsSearching] = useState(false);
 
     useEffect(() => {
-        setLocalSearch(destination);
-    }, [destination]);
+        setLocalSearch(selection?.name ?? '');
+    }, [selection]);
 
     useEffect(() => {
         if (!debouncedSearch || debouncedSearch.length < 3) {
@@ -66,8 +63,7 @@ export default function DestinationPicker({
         };
     }, [debouncedSearch]);
 
-    console.log('hotels', hotels);
-    console.log('destinations', destinations);
+    const displayName = selection?.name ?? '';
 
     return (
         <Popover className="relative w-full">
@@ -91,15 +87,15 @@ export default function DestinationPicker({
                                 <MapPin
                                     size={16}
                                     className={
-                                        destination
+                                        displayName
                                             ? 'text-primary'
                                             : 'text-quaternary-bright'
                                     }
                                 />
                                 <span
-                                    className={`text-sm font-bold truncate ${destination ? 'text-primary' : 'text-quaternary font-normal'}`}
+                                    className={`text-sm font-bold truncate ${displayName ? 'text-primary' : 'text-quaternary font-normal'}`}
                                 >
-                                    {destination ||
+                                    {displayName ||
                                         'Search city, region, or hotel name'}
                                 </span>
                             </div>
@@ -124,7 +120,6 @@ export default function DestinationPicker({
                                     value={localSearch}
                                     onChange={(e) => {
                                         setLocalSearch(e.target.value);
-                                        setDestination(e.target.value);
                                     }}
                                     autoFocus
                                 />
@@ -132,8 +127,12 @@ export default function DestinationPicker({
                             <div className="p-2 max-h-80 overflow-y-auto">
                                 <button
                                     onClick={() => {
-                                        setLocalSearch('Near Me');
-                                        setDestination('Near Me');
+                                        onSelect({
+                                            type: 'dst',
+                                            name: 'Near Me',
+                                            code: 'NEAR_ME',
+                                            country: '',
+                                        });
                                         close();
                                     }}
                                     className="gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 group flex w-full items-center text-left transition-colors"
@@ -173,12 +172,12 @@ export default function DestinationPicker({
                                                     <button
                                                         key={hotel.code}
                                                         onClick={() => {
-                                                            setLocalSearch(
-                                                                hotel.name,
-                                                            );
-                                                            setDestination(
-                                                                hotel.name,
-                                                            );
+                                                            onSelect({
+                                                                type: 'htl',
+                                                                name: hotel.name,
+                                                                code: hotel.hotelCode,
+                                                                country: '',
+                                                            });
                                                             close();
                                                         }}
                                                         className="gap-3 px-2 py-2.5 rounded-lg group flex w-full items-center text-left transition-colors hover:bg-[#F8FAFC]"
@@ -218,12 +217,15 @@ export default function DestinationPicker({
                                                     <button
                                                         key={dest.code}
                                                         onClick={() => {
-                                                            setLocalSearch(
-                                                                dest.name,
-                                                            );
-                                                            setDestination(
-                                                                dest.name,
-                                                            );
+                                                            const countryCode =
+                                                                dest.countryCode ??
+                                                                '';
+                                                            onSelect({
+                                                                type: 'dst',
+                                                                name: dest.name,
+                                                                code: dest.destinationCode,
+                                                                country: countryCode,
+                                                            });
                                                             close();
                                                         }}
                                                         className="gap-3 px-2 py-2.5 rounded-lg group flex w-full items-center text-left transition-colors hover:bg-[#F8FAFC]"
@@ -242,7 +244,7 @@ export default function DestinationPicker({
                                                                 }{' '}
                                                                 &bull;{' '}
                                                                 {
-                                                                    dest.countryISO2
+                                                                    dest.countryCode
                                                                 }
                                                             </div>
                                                         </div>
@@ -274,13 +276,7 @@ export default function DestinationPicker({
                                                     <button
                                                         key={city}
                                                         onClick={() => {
-                                                            setLocalSearch(
-                                                                city,
-                                                            );
-                                                            setDestination(
-                                                                city,
-                                                            );
-                                                            // close();
+                                                            setLocalSearch(city);
                                                         }}
                                                         className="gap-3 px-2 py-2.5 rounded-lg group flex w-full items-center text-left transition-colors hover:bg-[#F8FAFC]"
                                                     >
