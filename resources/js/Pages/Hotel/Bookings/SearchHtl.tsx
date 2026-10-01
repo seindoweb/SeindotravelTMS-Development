@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
 import HotelBookingForm from './Partials/HotelBookingForm';
 
-interface SearchDstProps {
+interface SearchHtlProps {
     type: 'dst' | 'htl';
     country: string;
     code: string;
@@ -38,7 +38,7 @@ function parseDate(dateStr: string): Date | null {
     return isNaN(d.getTime()) ? null : d;
 }
 
-export default function SearchDst({
+export default function SearchHtl({
     type,
     country,
     code,
@@ -46,7 +46,7 @@ export default function SearchDst({
     checkOut,
     room,
     page,
-}: SearchDstProps) {
+}: SearchHtlProps) {
     const rooms = decodeRooms(room);
 
     const storedName = sessionStorage.getItem('searchSelectionName') || code;
@@ -59,7 +59,7 @@ export default function SearchDst({
               country,
           }
         : null;
-
+console.log(initialSelection)
     return (
         <AuthenticatedLayout
             header={
@@ -79,13 +79,12 @@ export default function SearchDst({
                         className="sm:block hidden text-[#CBD5E1]"
                     />
                     <span className="text-sm font-bold text-primary truncate">
-                        Destination
+                        Hotel
                     </span>
                 </>
             }
         >
-            <Head title="Hotel Search — Destination" />
-
+            <Head title="Hotel Search — Hotel" />
             <HotelBookingForm
                 initialSelection={initialSelection}
                 initialCheckIn={parseDate(checkIn)}

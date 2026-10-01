@@ -234,7 +234,7 @@ export interface DestinationProps {
     code: string;
     name: string;
     destinationCode: string;
-    countryISO2: string;
+    countryCode?: string;
     score: number;
     matchType: string;
 }
@@ -244,6 +244,13 @@ export interface RoomGuestProps {
     children: number;
     childAges: number[];
     extraBed: boolean;
+}
+
+export interface SearchSelectionProps {
+    type: 'dst' | 'htl';
+    name: string;
+    code: string;
+    country: string;
 }
 
 export interface MarkupHotelProps {
