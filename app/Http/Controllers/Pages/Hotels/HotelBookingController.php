@@ -24,9 +24,16 @@ class HotelBookingController extends Controller
      * @param Request $request
      * @return void
      * only 1 room
-     * link: ?type="dst"&country=ID&code=ID-CGK&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false&page=1
+     * Destinasi
+     * link: ?type="dst"&country=ID&destination=ID-CGK&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false&page=1
+     * Hotel
+     * link: ?type="dst"&country=ID&destination=ID-CGK&hotel=ID10009800&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false&page=1
+     *
      * more 1 room
-     * link: ?type="dst"&country=ID&code=ID-CGK&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false,2-2-1-2-0-false&page=1
+     * Destinasi
+     * link: ?type="dst"&country=ID&destination=ID-CGK&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false,2-2-1-2-0-false&page=1
+     * Hotel
+     * link: ?type="dst"&country=ID&destination=ID-CGK&hotel=ID10009800&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false,2-2-1-2-0-false&page=1
      */
     public function search(Request $request)
     {
@@ -44,8 +51,10 @@ class HotelBookingController extends Controller
 
         if ($type === 'htl') {
             return Inertia::render('Hotel/Bookings/SearchHtl', $params);
+        } else if ($type === 'dst') {
+            return Inertia::render('Hotel/Bookings/SearchDst', $params);
+        } else {
+            return Inertia::render('Hotel/Bookings/Index');
         }
-
-        return Inertia::render('Hotel/Bookings/SearchDst', $params);
     }
 }

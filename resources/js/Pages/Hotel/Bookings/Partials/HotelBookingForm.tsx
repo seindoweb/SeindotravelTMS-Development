@@ -61,6 +61,8 @@ function HotelBookingForm({
             return;
         }
 
+        console.log(selection);
+
         const roomStr = encodeRooms(rooms);
         const query = [
             `type=${selection.type}`,
@@ -91,7 +93,7 @@ function HotelBookingForm({
                 </div>
 
                 {error && (
-                    <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm font-medium text-red-600 border-red-100 border">
+                    <div className="p-3 mb-4 text-sm font-medium text-red-600 border-red-100 rounded-lg bg-red-50 border">
                         {error}
                     </div>
                 )}
