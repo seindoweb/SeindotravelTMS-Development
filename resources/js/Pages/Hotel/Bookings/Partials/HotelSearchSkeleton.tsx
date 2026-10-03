@@ -1,7 +1,6 @@
 export default function HotelSearchSkeleton() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-pulse">
-            {/* Sidebar Skeleton */}
             <div className="lg:col-span-1 space-y-4">
                 <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] space-y-5">
                     <div className="h-5 bg-gray-200 rounded w-1/2"></div>
@@ -29,7 +28,6 @@ export default function HotelSearchSkeleton() {
                 </div>
             </div>
 
-            {/* Hotel Cards Skeleton */}
             <div className="lg:col-span-3 space-y-4">
                 <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E2E8F0]">
                     <div className="h-5 bg-gray-200 rounded w-1/4"></div>
@@ -41,10 +39,7 @@ export default function HotelSearchSkeleton() {
                         key={i}
                         className="bg-white rounded-2xl border border-[#E2E8F0] p-4 sm:p-5 flex flex-col md:flex-row gap-5"
                     >
-                        {/* Image Skeleton */}
                         <div className="w-full md:w-64 h-48 bg-gray-200 rounded-xl shrink-0"></div>
-
-                        {/* Content Skeleton */}
                         <div className="flex-1 flex flex-col justify-between py-1">
                             <div className="space-y-2.5">
                                 <div className="flex gap-2 items-center">
@@ -60,7 +55,6 @@ export default function HotelSearchSkeleton() {
                                 </div>
                             </div>
 
-                            {/* Price / CTA Skeleton */}
                             <div className="mt-4 pt-4 border-t border-gray-100 flex items-end justify-between">
                                 <div className="space-y-1">
                                     <div className="h-3 bg-gray-100 rounded w-24"></div>

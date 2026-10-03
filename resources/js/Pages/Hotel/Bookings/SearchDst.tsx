@@ -1,3 +1,4 @@
+import Pagination from '@/Components/Pagination';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
 import {
@@ -14,7 +15,6 @@ import { Head } from '@inertiajs/react';
 import {
     AlertCircle,
     Building,
-    ChevronLeft,
     ChevronRight,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -275,79 +275,14 @@ export default function SearchDst({
                                         />
                                     ))}
 
-                                    {searchData.last_page > 1 && (
-                                        <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex items-center justify-between mt-6 shadow-sm">
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    handlePageChange(searchData.page - 1)
-                                                }
-                                                disabled={!searchData.has_prev}
-                                                className="flex items-center gap-1 text-xs font-bold text-primary disabled:text-gray-300 disabled:cursor-not-allowed hover:text-primary-bright px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
-                                            >
-                                                <ChevronLeft size={16} />
-                                                <span>Sebelumnya</span>
-                                            </button>
-
-                                            <div className="flex items-center gap-1.5">
-                                                {Array.from(
-                                                    { length: searchData.last_page },
-                                                    (_, i) => i + 1,
-                                                )
-                                                    .filter((p) => {
-                                                        const current = searchData.page;
-                                                        return (
-                                                            p === 1 ||
-                                                            p === searchData.last_page ||
-                                                            Math.abs(p - current) <= 1
-                                                        );
-                                                    })
-                                                    .map((p, idx, arr) => {
-                                                        const prev = arr[idx - 1];
-                                                        const showEllipsis =
-                                                            prev && p - prev > 1;
-
-                                                        return (
-                                                            <div
-                                                                key={p}
-                                                                className="flex items-center gap-1.5"
-                                                            >
-                                                                {showEllipsis && (
-                                                                    <span className="text-xs text-gray-400 px-1">
-                                                                        ...
-                                                                    </span>
-                                                                )}
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() =>
-                                                                        handlePageChange(p)
-                                                                    }
-                                                                    className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
-                                                                        searchData.page === p
-                                                                            ? 'bg-primary text-white shadow-sm'
-                                                                            : 'hover:bg-gray-100 text-gray-700'
-                                                                    }`}
-                                                                >
-                                                                    {p}
-                                                                </button>
-                                                            </div>
-                                                        );
-                                                    })}
-                                            </div>
-
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    handlePageChange(searchData.page + 1)
-                                                }
-                                                disabled={!searchData.has_next}
-                                                className="flex items-center gap-1 text-xs font-bold text-primary disabled:text-gray-300 disabled:cursor-not-allowed hover:text-primary-bright px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
-                                            >
-                                                <span>Selanjutnya</span>
-                                                <ChevronRight size={16} />
-                                            </button>
-                                        </div>
-                                    )}
+                                    <Pagination
+                                        currentPage={searchData.page}
+                                        totalPages={searchData.last_page}
+                                        hasPrev={searchData.has_prev}
+                                        hasNext={searchData.has_next}
+                                        onPageChange={handlePageChange}
+                                        className="mt-6"
+                                    />
                                 </div>
                             ) : (
                                 <div className="bg-white rounded-2xl border border-[#E2E8F0] p-12 text-center shadow-sm">

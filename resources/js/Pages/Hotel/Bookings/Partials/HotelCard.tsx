@@ -7,7 +7,7 @@ interface Props {
     onSelect?: (hotel: HotelSearchResultItem) => void;
 }
 
-export const formatRupiah = (amount: number | string) => {
+const formatRupiah = (amount: number | string) => {
     const num = typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',

@@ -87,7 +87,6 @@ export default function HotelSearchFilterSidebar({
 
     return (
         <div className="bg-white rounded-2xl border border-[#E2E8F0] p-5 shadow-sm space-y-6">
-            {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                     <Filter size={16} className="text-primary" />
@@ -109,7 +108,6 @@ export default function HotelSearchFilterSidebar({
                 )}
             </div>
 
-            {/* Price Range Filter */}
             <div className="space-y-3">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
                     Kisaran Harga (IDR)
@@ -144,7 +142,6 @@ export default function HotelSearchFilterSidebar({
                 </div>
             </div>
 
-            {/* Star Rating Filter */}
             <div className="space-y-2.5 pt-4 border-t border-gray-100">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
                     Bintang Hotel
@@ -187,7 +184,6 @@ export default function HotelSearchFilterSidebar({
                 </div>
             </div>
 
-            {/* Areas Filter */}
             {availableFilters?.areas && availableFilters.areas.length > 0 && (
                 <div className="space-y-2.5 pt-4 border-t border-gray-100">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
@@ -217,7 +213,6 @@ export default function HotelSearchFilterSidebar({
                 </div>
             )}
 
-            {/* Meal Plans Filter */}
             {availableFilters?.mealPlans && availableFilters.mealPlans.length > 0 && (
                 <div className="space-y-2.5 pt-4 border-t border-gray-100">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
@@ -247,7 +242,6 @@ export default function HotelSearchFilterSidebar({
                 </div>
             )}
 
-            {/* Facilities Filter */}
             {facilitiesList.length > 0 && (
                 <div className="space-y-2.5 pt-4 border-t border-gray-100">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
