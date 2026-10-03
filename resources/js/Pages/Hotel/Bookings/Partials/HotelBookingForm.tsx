@@ -2,8 +2,9 @@ import DateRangePicker from '@/Components/DateRangePicker';
 import DestinationPicker from '@/Components/DestinationPicker';
 import GuestRoomPicker from '@/Components/GuestRoomPicker';
 import { RoomGuestProps, SearchSelectionProps } from '@/types';
+import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
     initialSelection?: SearchSelectionProps | null;
@@ -49,6 +50,24 @@ function HotelBookingForm({
     );
     const [error, setError] = useState<string | null>(null);
 
+    useEffect(() => {
+        setSelection(initialSelection);
+    }, [initialSelection]);
+
+    useEffect(() => {
+        setCheckIn(initialCheckIn);
+    }, [initialCheckIn]);
+
+    useEffect(() => {
+        setCheckOut(initialCheckOut);
+    }, [initialCheckOut]);
+
+    useEffect(() => {
+        if (initialRooms && initialRooms.length > 0) {
+            setRooms(initialRooms);
+        }
+    }, [initialRooms]);
+
     const handleSearch = () => {
         setError(null);
 
@@ -61,21 +80,40 @@ function HotelBookingForm({
             return;
         }
 
-        console.log(selection);
-
+        console.log('Search selection:', selection);
         const roomStr = encodeRooms(rooms);
-        const query = [
-            `type=${selection.type}`,
-            `country=${selection.country}`,
-            `code=${selection.code}`,
+
+        const isHotel = selection.type === 'htl' || Boolean(selection.hotel);
+        const destinationVal = isHotel
+            ? (selection.destination || '')
+            : (selection.destination || selection.code);
+        const countryVal = selection.country || 'ID';
+
+        const queryParams = [
+            `type="dst"`,
+            `country=${encodeURIComponent(countryVal)}`,
+            `destination=${encodeURIComponent(destinationVal)}`,
+        ];
+
+        if (isHotel) {
+            queryParams.push(
+                `hotel=${encodeURIComponent(selection.hotel || selection.code)}`
+            );
+        }
+
+        queryParams.push(
             `checkIn=${formatDate(checkIn)}`,
             `checkOut=${formatDate(checkOut)}`,
             `room=${roomStr}`,
-            `page=1`,
-        ].join('&');
+            `page=1`
+        );
+
+        const query = queryParams.join('&');
 
         sessionStorage.setItem('searchSelectionName', selection.name);
-        window.location.href = `/hotel/bookings/search?${query}`;
+        router.visit(`/hotel/bookings/search?${query}`, {
+            preserveState: false,
+        });
     };
 
     return (
@@ -121,6 +159,7 @@ function HotelBookingForm({
 
                     <div className="xl:w-auto flex w-full items-stretch self-stretch">
                         <button
+                            type="button"
                             onClick={handleSearch}
                             className="gap-2 bg-primary hover:bg-primary-bright text-white px-8 rounded-xl font-bold shadow-sm hover:shadow-md flex w-full items-center justify-center transition-all active:scale-[0.98]"
                         >

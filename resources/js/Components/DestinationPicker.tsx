@@ -175,8 +175,14 @@ export default function DestinationPicker({ selection, onSelect }: Props) {
                                                             onSelect({
                                                                 type: 'htl',
                                                                 name: hotel.name,
-                                                                code: hotel.hotelCode,
-                                                                country: '',
+                                                                code: hotel.hotelCode || hotel.code,
+                                                                hotel: hotel.hotelCode || hotel.code,
+                                                                destination:
+                                                                    hotel.destinationCode ||
+                                                                    '',
+                                                                country:
+                                                                    hotel.countryCode ||
+                                                                    'ID',
                                                             });
                                                             close();
                                                         }}
@@ -224,6 +230,8 @@ export default function DestinationPicker({ selection, onSelect }: Props) {
                                                                 type: 'dst',
                                                                 name: dest.name,
                                                                 code: dest.destinationCode,
+                                                                destination:
+                                                                    dest.destinationCode,
                                                                 country: countryCode,
                                                             });
                                                             close();

@@ -21,7 +21,6 @@ class HotelBookingController extends Controller
     /**
      * search
      *
-     * @param Request $request
      * @return void
      * only 1 room
      * Destinasi
@@ -37,24 +36,39 @@ class HotelBookingController extends Controller
      */
     public function search(Request $request)
     {
+        $rawType = (string) $request->query('type', 'dst');
+        $type = trim($rawType, '"\' ');
+        $hotel = (string) ($request->query('hotel') ?: $request->query('code', ''));
+        $destination = (string) ($request->query('destination') ?: $request->query('destinasi', ''));
+        if (empty($destination) && empty($hotel)) {
+            $destination = (string) $request->query('code', '');
+        }
+        $country = (string) $request->query('country', 'ID');
+        $checkIn = (string) $request->query('checkIn', '');
+        $checkOut = (string) $request->query('checkOut', '');
+        $room = (string) $request->query('room', '');
+        $page = (int) $request->query('page', 1);
+
         $params = [
-            'type' => $request->query('type', 'dst'),
-            'country' => $request->query('country', ''),
-            'code' => $request->query('code', ''),
-            'checkIn' => $request->query('checkIn', ''),
-            'checkOut' => $request->query('checkOut', ''),
-            'room' => $request->query('room', ''),
-            'page' => (int) $request->query('page', 1),
+            'type' => $type,
+            'country' => $country,
+            'destination' => $destination,
+            'checkIn' => $checkIn,
+            'checkOut' => $checkOut,
+            'room' => $room,
+            'page' => $page,
         ];
 
-        $type = $params['type'];
+        if (! empty($hotel) || $type === 'htl') {
+            $params['hotel'] = $hotel;
 
-        if ($type === 'htl') {
             return Inertia::render('Hotel/Bookings/SearchHtl', $params);
-        } else if ($type === 'dst') {
-            return Inertia::render('Hotel/Bookings/SearchDst', $params);
-        } else {
-            return Inertia::render('Hotel/Bookings/Index');
         }
+
+        if (! empty($destination) || $type === 'dst') {
+            return Inertia::render('Hotel/Bookings/SearchDst', $params);
+        }
+
+        return Inertia::render('Hotel/Bookings/Index');
     }
 }

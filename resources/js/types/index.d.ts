@@ -226,7 +226,9 @@ export interface HotelProps {
     code: string;
     hotelCode: string;
     name: string;
-    rating: number;
+    rating: number | string;
+    destinationCode?: string;
+    countryCode?: string;
 }
 
 export interface DestinationProps {
@@ -250,6 +252,8 @@ export interface SearchSelectionProps {
     type: 'dst' | 'htl';
     name: string;
     code: string;
+    destination?: string;
+    hotel?: string;
     country: string;
 }
 
@@ -286,4 +290,118 @@ export interface MarkupDestinationProps {
     updatedByEmail: string | null;
     createdAt: string | null;
     updatedAt: string | null;
+}
+
+export interface PriceSearchRoomReq {
+    RoomNo: string;
+    NoOfAdults: string;
+    NoOfChild: string;
+    Child1Age: string;
+    Child2Age: string;
+    ExtraBed: boolean;
+}
+
+export interface PriceSearchFilterReq {
+    minPrice?: string;
+    maxPrice?: string;
+    minRating?: number;
+    areas?: string[];
+    facilities?: string[];
+    mealPlans?: string[];
+}
+
+export interface PriceSearchDestinationReq {
+    country: string;
+    destination: string;
+    checkIn: string;
+    checkOut: string;
+    rooms: PriceSearchRoomReq[];
+    filter?: PriceSearchFilterReq;
+    page: number;
+}
+
+export interface HotelPriceInfo {
+    ntaPrice: string;
+    ntaPricePerNight: string;
+    sellingPrice: string;
+    sellingPricePerNight: string;
+    roomName: string;
+    mealPlanName: string;
+}
+
+export interface HotelFacility {
+    name: string;
+    type: string;
+}
+
+export interface HotelImage {
+    url: string;
+    source: string;
+}
+
+export interface HotelSearchResultItem {
+    key: string;
+    name: string;
+    hotelCode: string;
+    code: string;
+    rating: string;
+    currency: string;
+    thumbnail: string;
+    thumbnailSource: string;
+    minPrices: HotelPriceInfo;
+    maxPrices: HotelPriceInfo;
+    geoLocations: {
+        latitude: string;
+        longitude: string;
+    };
+    locations: {
+        addressMain: string;
+        addressAlternative: string;
+        zipCode: string;
+        area: string;
+        landmark: string;
+        cityName: string;
+        cityCode: string;
+        countryName: string;
+        countryCode: string;
+        countryNameNative: string;
+        region: string;
+        subRegion: string;
+    };
+    facilities: HotelFacility[];
+    images: HotelImage[];
+}
+
+export interface PriceSearchFiltersResponse {
+    ratings: number[];
+    areas: string[];
+    facilities: string[];
+    mealPlans: string[];
+}
+
+export interface PriceSearchPaginationLabel {
+    label: string;
+    active: boolean;
+}
+
+export interface PriceSearchDestinationData {
+    filters: PriceSearchFiltersResponse;
+    params: Record<string, unknown>;
+    results: HotelSearchResultItem[];
+    page: number;
+    per_page: number;
+    total: number;
+    last_page: number;
+    has_next: boolean;
+    has_prev: boolean;
+    labels: PriceSearchPaginationLabel[];
+}
+
+export interface PriceSearchDestinationResponse {
+    meta: {
+        message: string;
+        code: number;
+        status: string;
+    };
+    data: PriceSearchDestinationData;
 }
