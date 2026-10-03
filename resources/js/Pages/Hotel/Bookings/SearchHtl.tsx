@@ -5,13 +5,12 @@ import { ChevronRight } from 'lucide-react';
 import HotelBookingForm from './Partials/HotelBookingForm';
 
 interface SearchHtlProps {
-    type: 'dst' | 'htl';
     country: string;
-    code: string;
+    destination?: string;
+    hotel?: string;
     checkIn: string;
     checkOut: string;
     room: string;
-    page: number;
 }
 
 function decodeRooms(roomStr: string): RoomGuestProps[] {
@@ -34,32 +33,42 @@ function decodeRooms(roomStr: string): RoomGuestProps[] {
 
 function parseDate(dateStr: string): Date | null {
     if (!dateStr) return null;
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+    }
     const d = new Date(dateStr);
     return isNaN(d.getTime()) ? null : d;
 }
 
 export default function SearchHtl({
-    type,
     country,
-    code,
+    destination,
+    hotel,
     checkIn,
     checkOut,
     room,
-    page,
 }: SearchHtlProps) {
+    const hotelCode = hotel || '';
+    const destinationCode = destination || '';
     const rooms = decodeRooms(room);
 
-    const storedName = sessionStorage.getItem('searchSelectionName') || code;
+    const storedName = sessionStorage.getItem('searchSelectionName') || hotelCode;
 
-    const initialSelection: SearchSelectionProps | null = code
+    const initialSelection: SearchSelectionProps | null = hotelCode
         ? {
-              type,
+              type: 'htl',
               name: storedName,
-              code,
+              code: hotelCode,
+              hotel: hotelCode,
+              destination: destinationCode,
               country,
           }
         : null;
-console.log(initialSelection)
+
     return (
         <AuthenticatedLayout
             header={
@@ -91,7 +100,6 @@ console.log(initialSelection)
                 initialCheckOut={parseDate(checkOut)}
                 initialRooms={rooms}
             />
-
         </AuthenticatedLayout>
     );
 }
