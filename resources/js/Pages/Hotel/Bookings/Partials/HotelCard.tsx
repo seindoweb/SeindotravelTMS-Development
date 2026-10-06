@@ -16,7 +16,7 @@ const formatRupiah = (amount: number | string) => {
         maximumFractionDigits: 0,
     })
         .format(num)
-        .replace('Rp', 'Rp ');
+        .replace('Rp', '');
 };
 
 export default function HotelCard({ hotel, onSelect }: Props) {
@@ -28,24 +28,24 @@ export default function HotelCard({ hotel, onSelect }: Props) {
         .map((f) => f.type)
         .filter((val, idx, arr) => arr.indexOf(val) === idx)
         .slice(0, 4);
-    
+
     const markup = hotel.minPrices.sellingPrice - hotel.minPrices.ntaPrice;
     // const markUpPersen = hotel.minPrices.sellingPrice / hotel.minPrices.ntaPrice * 100;
 
     return (
         <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 sm:p-5 flex flex-col md:flex-row gap-5 hover:shadow-md hover:border-gray-300 transition-all duration-200">
-            <div className="relative w-full md:w-64 h-52 shrink-0 rounded-xl overflow-hidden bg-gray-100 border border-gray-100">
+            <div className="relative w-full overflow-hidden bg-gray-100 border border-gray-100 md:w-64 h-52 shrink-0 rounded-xl">
                 {hotel.thumbnail && !imageError ? (
                     <img
                         src={hotel.thumbnail}
                         alt={hotel.name}
                         onError={() => setImageError(true)}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
                 ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50">
-                        <Building size={36} className="text-gray-300 mb-1" />
+                    <div className="flex flex-col items-center justify-center w-full h-full text-gray-400 bg-gray-50">
+                        <Building size={36} className="mb-1 text-gray-300" />
                         <span className="text-xs font-medium">No Image</span>
                     </div>
                 )}
@@ -58,11 +58,11 @@ export default function HotelCard({ hotel, onSelect }: Props) {
                 )}
             </div>
 
-            <div className="flex-1 flex flex-col justify-between">
+            <div className="flex flex-col justify-between flex-1">
                 <div>
                     <div className="flex items-start justify-between gap-2">
                         <div>
-                            <h2 className="text-lg sm:text-xl font-bold text-primary leading-snug">
+                            <h2 className="text-lg font-bold leading-snug sm:text-xl text-primary">
                                 {hotel.name}
                             </h2>
                             <div className="flex items-center gap-1.5 text-xs text-quaternary mt-1">
@@ -84,7 +84,7 @@ export default function HotelCard({ hotel, onSelect }: Props) {
                             {hotel.minPrices.mealPlanName && (
                                 <>
                                     <span className="text-gray-300">•</span>
-                                    <span className="text-emerald-700 font-medium flex items-center gap-1">
+                                    <span className="flex items-center gap-1 font-medium text-emerald-700">
                                         <Coffee size={12} />
                                         {hotel.minPrices.mealPlanName}
                                     </span>
@@ -107,26 +107,26 @@ export default function HotelCard({ hotel, onSelect }: Props) {
                     )}
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                <div className="flex flex-col justify-between gap-3 pt-4 mt-4 border-t border-gray-100 sm:flex-row sm:items-end">
                     <div>
                         <span className="text-[11px] uppercase tracking-wider text-quaternary font-bold block">
-                            Mulai Dari
+                            Starts from
                         </span>
                         <div className="flex items-center gap-1 mt-0.5">
-                            <span className="text-xl sm:text-2xl font-black text-primary">
-                                {formatRupiah(hotel.minPrices?.sellingPricePerNight || 0)}
+                            <span className="text-xl font-black sm:text-2xl text-primary">
+                              {hotel.currency}{formatRupiah(hotel.minPrices.sellingPrice)}
                             </span>
                             <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-semibold px-2 py-0.5 rounded-md">
                                 <TrendingUp size={11} className="text-emerald-600" />
-                                <span>Markup:  {formatRupiah(markup)} / malam</span>
+                                <span>Includes markup: {hotel.currency}  {formatRupiah(markup)}</span>
                             </span>
 
                         </div>
                         {hotel.minPrices?.sellingPrice && (
                             <>
-                         
-                            <span className="text-xs text-quaternary font-medium block mt-2">
-                                Total: {formatRupiah(hotel.minPrices.sellingPrice)} (termasuk pajak)
+
+                            <span className="block mt-2 text-xs font-medium text-quaternary">
+                                Or {formatRupiah(hotel.minPrices?.sellingPricePerNight || 0)}/night basic rate
                             </span>
                             </>
                         )}

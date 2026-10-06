@@ -42,9 +42,8 @@ export default function ListCustomerTable() {
     const items = page?.data ?? [];
 
     return (
-        <div>
         <div className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm overflow-hidden">
-            <TableHeader 
+            <TableHeader
                 title="Active Customers"
                 subtitle="Manage registered members and profiles"
                 searchValue={search}
@@ -97,9 +96,9 @@ export default function ListCustomerTable() {
                                 <tr>
                                     <td className="py-3 text-right" colSpan={7}>
                                         <div className="flex justify-center">
-                                            <p className="text-xs font-medium text-quaternary-bright italic">
+                                            <p className="text-xs italic font-medium text-quaternary-bright">
                                                 No data available
-                                                <span className="sm:inline hidden">
+                                                <span className="hidden sm:inline">
                                                     {' '}
                                                     in table
                                                 </span>
@@ -114,14 +113,14 @@ export default function ListCustomerTable() {
                                         className="hover:bg-gray-50/50 transition-colors group border-b border-[#F1F5F9] last:border-0"
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="gap-3 flex items-center">
+                                            <div className="flex items-center gap-3">
                                                 <img
                                                     src={val.profile_photo_path}
                                                     alt={val.full_name}
-                                                    className="w-10 h-10 flex-shrink-0 rounded-full object-cover"
+                                                    className="flex-shrink-0 object-cover w-10 h-10 rounded-full"
                                                 />
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-xs text-primary">
+                                                    <span className="text-xs font-bold text-primary">
                                                         {val.title ? `${val.title} ` : ''}
                                                         {val.full_name}
                                                     </span>
@@ -134,9 +133,9 @@ export default function ListCustomerTable() {
 
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {val.phone_number ? (
-                                                <span className="text-xs text-quaternary-dark font-medium">
+                                                <span className="text-xs font-medium text-quaternary-dark">
                                                     {val.dial_code && (
-                                                        <span className="text-quaternary mr-1">
+                                                        <span className="mr-1 text-quaternary">
                                                             {val.dial_code}
                                                         </span>
                                                     )}
@@ -151,7 +150,7 @@ export default function ListCustomerTable() {
 
                                         <td className="px-6 py-4 text-right whitespace-nowrap">
                                             <div className="inline-flex items-center px-2 py-1 bg-gray-100 rounded-md">
-                                                <span className="font-mono text-gray-600 font-medium text-xs">
+                                                <span className="font-mono text-xs font-medium text-gray-600">
                                                     {val.user_credits?.balance ?? '—'}
                                                 </span>
                                             </div>
@@ -221,7 +220,6 @@ export default function ListCustomerTable() {
                     onNavigate={(url) => fetchPage(url)}
                 />
             )}
-            </div>
         </div>
     );
 }

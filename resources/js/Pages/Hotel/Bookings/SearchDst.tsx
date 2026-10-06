@@ -174,7 +174,7 @@ export default function SearchDst({
 
     const handleFilterChange = (filters: PriceSearchFilterReq) => {
         setActiveFilters(filters);
-        setCurrentPage(1); 
+        setCurrentPage(1);
     };
 
     const handleResetFilters = () => {
@@ -193,21 +193,21 @@ export default function SearchDst({
         <AuthenticatedLayout
             header={
                 <>
-                    <span className="text-sm font-bold text-primary truncate">
+                    <span className="text-sm font-bold truncate text-primary">
                         Hotel
                     </span>
                     <ChevronRight
                         size={14}
                         className="sm:block hidden text-[#CBD5E1]"
                     />
-                    <span className="text-sm font-bold text-primary truncate">
+                    <span className="text-sm font-bold truncate text-primary">
                         Search
                     </span>
                     <ChevronRight
                         size={14}
                         className="sm:block hidden text-[#CBD5E1]"
                     />
-                    <span className="text-sm font-bold text-primary truncate">
+                    <span className="text-sm font-bold truncate text-primary">
                         {destinationTitle}
                     </span>
                 </>
@@ -222,25 +222,25 @@ export default function SearchDst({
                 initialRooms={rooms}
             />
 
-            <div className="mt-8 mb-12">
+            <div className="mt-4 mb-12">
                 {loading ? (
                     <HotelSearchSkeleton />
                 ) : error ? (
-                    <div className="bg-white rounded-2xl border border-red-200 p-8 text-center max-w-xl mx-auto my-8 shadow-sm">
-                        <AlertCircle className="mx-auto text-red-500 mb-3" size={36} />
-                        <h3 className="text-base font-bold text-gray-900 mb-1">
+                    <div className="max-w-xl p-8 mx-auto my-8 text-center bg-white border border-red-200 shadow-sm rounded-2xl">
+                        <AlertCircle className="mx-auto mb-3 text-red-500" size={36} />
+                        <h3 className="mb-1 text-base font-bold text-gray-900">
                             Gagal Memuat Hasil Pencarian
                         </h3>
-                        <p className="text-sm text-gray-600 mb-4">{error}</p>
+                        <p className="mb-4 text-sm text-gray-600">{error}</p>
                         <button
                             onClick={fetchDestinationPrices}
-                            className="bg-primary hover:bg-primary-bright text-white px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
+                            className="px-5 py-2 text-xs font-bold text-white transition-all shadow-sm bg-primary hover:bg-primary-bright rounded-xl"
                         >
                             Coba Lagi
                         </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
                         <div className="lg:col-span-1">
                             <HotelSearchFilterSidebar
                                 availableFilters={searchData?.filters || null}
@@ -250,7 +250,7 @@ export default function SearchDst({
                             />
                         </div>
 
-                        <div className="lg:col-span-3 space-y-4">
+                        <div className="space-y-4 lg:col-span-3">
                             <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
                                 <div>
                                     <h2 className="text-base font-bold text-primary">
@@ -288,12 +288,12 @@ export default function SearchDst({
                                 <div className="bg-white rounded-2xl border border-[#E2E8F0] p-12 text-center shadow-sm">
                                     <Building
                                         size={44}
-                                        className="mx-auto text-gray-300 mb-3"
+                                        className="mx-auto mb-3 text-gray-300"
                                     />
-                                    <h3 className="text-base font-bold text-gray-800 mb-1">
+                                    <h3 className="mb-1 text-base font-bold text-gray-800">
                                         Tidak Ada Hotel Ditemukan
                                     </h3>
-                                    <p className="text-xs text-quaternary max-w-md mx-auto mb-4">
+                                    <p className="max-w-md mx-auto mb-4 text-xs text-quaternary">
                                         Kami tidak menemukan hotel yang sesuai dengan
                                         kriteria pencarian atau filter yang Anda pilih.
                                         Coba sesuaikan filter atau ubah tanggal
@@ -303,7 +303,7 @@ export default function SearchDst({
                                         <button
                                             type="button"
                                             onClick={handleResetFilters}
-                                            className="bg-primary hover:bg-primary-bright text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-sm"
+                                            className="px-4 py-2 text-xs font-bold text-white transition-all shadow-sm bg-primary hover:bg-primary-bright rounded-xl"
                                         >
                                             Reset Filter
                                         </button>
