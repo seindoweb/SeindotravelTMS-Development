@@ -321,9 +321,9 @@ export interface PriceSearchDestinationReq {
 }
 
 export interface HotelPriceInfo {
-    ntaPrice: string;
+    ntaPrice: number;
     ntaPricePerNight: string;
-    sellingPrice: string;
+    sellingPrice: number;
     sellingPricePerNight: string;
     roomName: string;
     mealPlanName: string;

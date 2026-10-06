@@ -1,5 +1,5 @@
 import { HotelSearchResultItem } from '@/types';
-import { Building, Coffee, MapPin, Star } from 'lucide-react';
+import { Building, Coffee, MapPin, Star, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 
 interface Props {
@@ -28,6 +28,9 @@ export default function HotelCard({ hotel, onSelect }: Props) {
         .map((f) => f.type)
         .filter((val, idx, arr) => arr.indexOf(val) === idx)
         .slice(0, 4);
+    
+    const markup = hotel.minPrices.sellingPrice - hotel.minPrices.ntaPrice;
+    // const markUpPersen = hotel.minPrices.sellingPrice / hotel.minPrices.ntaPrice * 100;
 
     return (
         <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 sm:p-5 flex flex-col md:flex-row gap-5 hover:shadow-md hover:border-gray-300 transition-all duration-200">
@@ -109,18 +112,23 @@ export default function HotelCard({ hotel, onSelect }: Props) {
                         <span className="text-[11px] uppercase tracking-wider text-quaternary font-bold block">
                             Mulai Dari
                         </span>
-                        <div className="flex items-baseline gap-1 mt-0.5">
+                        <div className="flex items-center gap-1 mt-0.5">
                             <span className="text-xl sm:text-2xl font-black text-primary">
                                 {formatRupiah(hotel.minPrices?.sellingPricePerNight || 0)}
                             </span>
-                            <span className="text-xs text-quaternary font-medium">
-                                / malam
+                            <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-semibold px-2 py-0.5 rounded-md">
+                                <TrendingUp size={11} className="text-emerald-600" />
+                                <span>Markup:  {formatRupiah(markup)} / malam</span>
                             </span>
+
                         </div>
                         {hotel.minPrices?.sellingPrice && (
-                            <span className="text-xs text-quaternary font-medium block mt-0.5">
+                            <>
+                         
+                            <span className="text-xs text-quaternary font-medium block mt-2">
                                 Total: {formatRupiah(hotel.minPrices.sellingPrice)} (termasuk pajak)
                             </span>
+                            </>
                         )}
                     </div>
 
