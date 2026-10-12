@@ -1,10 +1,11 @@
 import { HotelSearchResultItem } from '@/types';
-import { Building, Coffee, MapPin, Star, TrendingUp } from 'lucide-react';
+import { Building, Check, Coffee, Copy, Loader2, MapPin, Star, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 
 interface Props {
     hotel: HotelSearchResultItem;
     onSelect?: (hotel: HotelSearchResultItem) => void;
+    isLoading?: boolean;
 }
 
 const formatRupiah = (amount: number | string) => {
@@ -19,8 +20,29 @@ const formatRupiah = (amount: number | string) => {
         .replace('Rp', '');
 };
 
-export default function HotelCard({ hotel, onSelect }: Props) {
+export default function HotelCard({ hotel, onSelect, isLoading = false }: Props) {
     const [imageError, setImageError] = useState(false);
+    const [copiedPrice, setCopiedPrice] = useState(false);
+
+    const handleCopyPrice = (e?: React.MouseEvent) => {
+        e?.stopPropagation();
+        const priceText = `${(hotel.currency || 'IDR').trim()} ${formatRupiah(hotel.minPrices.sellingPrice).trim()}`.replace(/\s+/g, ' ').trim();
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(priceText);
+        } else {
+            const textArea = document.createElement('textarea');
+            textArea.value = priceText;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            document.execCommand('copy');
+            textArea.remove();
+        }
+        setCopiedPrice(true);
+        setTimeout(() => setCopiedPrice(false), 500);
+    };
 
     const ratingNum = parseInt(hotel.rating, 10) || 0;
 
@@ -62,7 +84,12 @@ export default function HotelCard({ hotel, onSelect }: Props) {
                 <div>
                     <div className="flex items-start justify-between gap-2">
                         <div>
-                            <h2 className="text-lg font-bold leading-snug sm:text-xl text-primary">
+                            <h2
+                                onClick={() => onSelect?.(hotel)}
+                                className={`text-lg font-bold leading-snug sm:text-xl text-primary transition-colors ${
+                                    onSelect ? 'hover:text-primary-bright cursor-pointer' : ''
+                                }`}
+                            >
                                 {hotel.name}
                             </h2>
                             <div className="flex items-center gap-1.5 text-xs text-quaternary mt-1">
@@ -112,15 +139,41 @@ export default function HotelCard({ hotel, onSelect }: Props) {
                         <span className="text-[11px] uppercase tracking-wider text-quaternary font-bold block">
                             Starts from
                         </span>
-                        <div className="flex items-center gap-1 mt-0.5">
-                            <span className="text-xl font-black sm:text-2xl text-primary">
-                              {hotel.currency}{formatRupiah(hotel.minPrices.sellingPrice)}
-                            </span>
+                        <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                            <div className="flex items-center gap-1.5">
+                                <span
+                                    onClick={handleCopyPrice}
+                                    title="Click to copy price"
+                                    className="text-xl font-black sm:text-2xl text-primary cursor-pointer hover:text-primary-bright transition-colors select-all"
+                                >
+                                    {hotel.currency}{formatRupiah(hotel.minPrices.sellingPrice)}
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={handleCopyPrice}
+                                    title={copiedPrice ? 'Price copied successfully!' : 'Copy price'}
+                                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-semibold rounded-md border transition-all cursor-pointer ${
+                                        copiedPrice
+                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-300 scale-105'
+                                            : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 hover:text-primary'
+                                    }`}
+                                >
+                                    {copiedPrice ? (
+                                        <>
+                                            <Check size={11} className="text-emerald-600 stroke-[2.5]" />
+                                            <span className="text-[10px]">Copied!</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Copy size={11} className="text-gray-400 group-hover:text-primary" />
+                                        </>
+                                    )}
+                                </button>
+                            </div>
                             <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-semibold px-2 py-0.5 rounded-md">
                                 <TrendingUp size={11} className="text-emerald-600" />
                                 <span>Includes markup: {hotel.currency}  {formatRupiah(markup)}</span>
                             </span>
-
                         </div>
                         {hotel.minPrices?.sellingPrice && (
                             <>
@@ -135,9 +188,17 @@ export default function HotelCard({ hotel, onSelect }: Props) {
                     <button
                         type="button"
                         onClick={() => onSelect?.(hotel)}
-                        className="bg-primary hover:bg-primary-bright text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+                        disabled={isLoading}
+                        className="bg-primary hover:bg-primary-bright text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                        <span>Pilih Hotel</span>
+                        {isLoading ? (
+                            <>
+                                <Loader2 size={16} className="animate-spin" />
+                                <span>Loading...</span>
+                            </>
+                        ) : (
+                            <span>Select Hotel</span>
+                        )}
                     </button>
                 </div>
             </div>

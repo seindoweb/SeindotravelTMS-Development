@@ -405,3 +405,111 @@ export interface PriceSearchDestinationResponse {
     };
     data: PriceSearchDestinationData;
 }
+
+export interface PriceSearchHotelReq {
+    country: string;
+    destination: string;
+    hotel: string;
+    checkIn: string;
+    checkOut: string;
+    rooms: PriceSearchRoomReq[];
+}
+
+export interface HotelRoomCancellationPolicy {
+    type?: string;
+    fromDate: string;
+    toDate: string;
+    value?: string;
+    percent?: string | number;
+}
+
+export interface HotelRoomPhoto {
+    url: string;
+    isMain: boolean;
+}
+
+export interface HotelRoomMoreInformations {
+    roomCode: string;
+    roomName: string;
+    roomSize: string;
+    maxOccupancy: number;
+    maxAdults: number;
+    maxChildren: number;
+    isSmokingAllowed: boolean;
+    roomDescription: {
+        content: string;
+        cDataContent?: { '#cdata-section': string }[];
+    };
+    amenities: {
+        amenityGroupName: string;
+        amenitiesTypeList: string[] | null;
+    };
+    photo: {
+        image: HotelRoomPhoto[];
+    } | null;
+}
+
+export interface HotelRoomInformations {
+    thumbnail: string;
+    thumbnailSource: string;
+    moreInformations: HotelRoomMoreInformations;
+}
+
+export interface HotelRoomDetail {
+    key: string;
+    roomCode: string;
+    name: string;
+    mealPlanCode: string;
+    mealPlanName: string;
+    currency?: string;
+    ntaPrice: number;
+    ntaPricePerNight: string;
+    sellingPrice: number;
+    sellingPricePerNight: string;
+    maxOccupancy: number;
+    extraBedAllowed: boolean;
+    cancellationPolicies: HotelRoomCancellationPolicy[];
+    refundable: boolean;
+    specialRequest: string;
+    remarks: string;
+    message?: string | null;
+    roomInformations?: HotelRoomInformations;
+}
+
+export interface HotelDetailInfo {
+    hotelCode: string;
+    name: string;
+    destinationCode: string;
+    countryCode: string;
+    currency: string;
+    rating: string;
+    thumbnail: string;
+    locations: {
+        addressMain: string;
+        addressAlternative: string;
+        zipCode: string;
+        area: string;
+        landmark: string;
+        cityName: string;
+        cityCode: string;
+        countryName: string;
+        countryCode: string;
+    };
+    facilities: HotelFacility[];
+    roomDetails: HotelRoomDetail[];
+    images?: HotelImage[];
+}
+
+export interface PriceSearchHotelData {
+    params: Record<string, unknown>;
+    results: HotelDetailInfo;
+}
+
+export interface PriceSearchHotelResponse {
+    meta: {
+        message: string;
+        code: number;
+        status: string;
+    };
+    data: PriceSearchHotelData;
+}

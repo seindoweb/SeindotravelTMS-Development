@@ -110,7 +110,7 @@ export default function HotelSearchFilterSidebar({
 
             <div className="space-y-3">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
-                    Kisaran Harga (IDR)
+                    Price Range (IDR)
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
                     <div>
@@ -144,7 +144,7 @@ export default function HotelSearchFilterSidebar({
 
             <div className="space-y-2.5 pt-4 border-t border-gray-100">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
-                    Bintang Hotel
+                   Hotel Star
                 </h4>
                 <div className="space-y-1.5">
                     {[5, 4, 3, 2, 1].map((star) => {
@@ -170,7 +170,7 @@ export default function HotelSearchFilterSidebar({
                                             />
                                         ))}
                                     </div>
-                                    <span>{star} Bintang</span>
+                                    <span>{star} Star</span>
                                 </div>
                                 <input
                                     type="radio"
@@ -187,7 +187,7 @@ export default function HotelSearchFilterSidebar({
             {availableFilters?.areas && availableFilters.areas.length > 0 && (
                 <div className="space-y-2.5 pt-4 border-t border-gray-100">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
-                        Area / Wilayah
+                        Area / Location
                     </h4>
                     <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                         {availableFilters.areas.map((area) => {
@@ -216,7 +216,7 @@ export default function HotelSearchFilterSidebar({
             {availableFilters?.mealPlans && availableFilters.mealPlans.length > 0 && (
                 <div className="space-y-2.5 pt-4 border-t border-gray-100">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
-                        Tipe Sarapan / Meal Plan
+                        Breakfast Type / Meal Plan
                     </h4>
                     <div className="space-y-1.5">
                         {availableFilters.mealPlans.map((plan) => {
@@ -245,7 +245,7 @@ export default function HotelSearchFilterSidebar({
             {facilitiesList.length > 0 && (
                 <div className="space-y-2.5 pt-4 border-t border-gray-100">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
-                        Fasilitas
+                        Facilities
                     </h4>
                     <div className="space-y-1.5">
                         {displayedFacilities.map((fac) => {
@@ -274,8 +274,8 @@ export default function HotelSearchFilterSidebar({
                                 className="text-[11px] font-bold text-primary hover:underline pt-1 block"
                             >
                                 {showAllFacilities
-                                    ? 'Sembunyikan'
-                                    : `+ ${facilitiesList.length - 6} Lainnya`}
+                                    ? 'Hide'
+                                    : `+ ${facilitiesList.length - 6} More`}
                             </button>
                         )}
                     </div>
