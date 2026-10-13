@@ -11,7 +11,7 @@ import {
     RoomGuestProps,
     SearchSelectionProps,
 } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
     Building,
@@ -21,7 +21,7 @@ import { useCallback, useEffect, useState } from 'react';
 import HotelBookingForm from './Partials/HotelBookingForm';
 import HotelCard from './Partials/HotelCard';
 import HotelSearchFilterSidebar from './Partials/HotelSearchFilterSidebar';
-import HotelSearchSkeleton from './Partials/HotelSearchSkeleton';
+import DestinationSearchSkeleton from './Partials/DestinationSearchSkeleton';
 
 interface SearchDstProps {
     type: string;
@@ -76,7 +76,6 @@ function parseDate(dateStr: string): Date | null {
 }
 
 export default function SearchDst({
-    type,
     country,
     destination,
     checkIn,
@@ -106,6 +105,7 @@ export default function SearchDst({
     );
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectingHotelCode, setSelectingHotelCode] = useState<string | null>(null);
 
     useEffect(() => {
         setCurrentPage(initialPage || 1);
@@ -187,6 +187,32 @@ export default function SearchDst({
         window.scrollTo({ top: 300, behavior: 'smooth' });
     };
 
+    const handleSelectHotel = (selectedHotel: HotelSearchResultItem) => {
+        const hotelCode = selectedHotel.hotelCode || selectedHotel.code;
+        setSelectingHotelCode(hotelCode);
+
+        const destCode = destinationCode || selectedHotel.locations?.cityCode || '';
+        const countryCode = country || selectedHotel.locations?.countryCode || 'ID';
+
+        const queryParams = [
+            `type="htl"`,
+            `country=${encodeURIComponent(countryCode)}`,
+            `destination=${encodeURIComponent(destCode)}`,
+            `hotel=${encodeURIComponent(hotelCode)}`,
+            `checkIn=${encodeURIComponent(checkIn)}`,
+            `checkOut=${encodeURIComponent(checkOut)}`,
+            `room=${encodeURIComponent(room)}`,
+            `page=1`,
+        ];
+
+        sessionStorage.setItem('searchSelectionName', selectedHotel.name);
+
+        router.visit(`/hotel/bookings/search?${queryParams.join('&')}`, {
+            preserveState: false,
+            onFinish: () => setSelectingHotelCode(null),
+        });
+    };
+
     const destinationTitle = storedName || 'Destination';
 
     return (
@@ -224,19 +250,19 @@ export default function SearchDst({
 
             <div className="mt-4 mb-12">
                 {loading ? (
-                    <HotelSearchSkeleton />
+                    <DestinationSearchSkeleton />
                 ) : error ? (
                     <div className="max-w-xl p-8 mx-auto my-8 text-center bg-white border border-red-200 shadow-sm rounded-2xl">
                         <AlertCircle className="mx-auto mb-3 text-red-500" size={36} />
                         <h3 className="mb-1 text-base font-bold text-gray-900">
-                            Gagal Memuat Hasil Pencarian
+                            Failed to Load Search Results
                         </h3>
                         <p className="mb-4 text-sm text-gray-600">{error}</p>
                         <button
                             onClick={fetchDestinationPrices}
                             className="px-5 py-2 text-xs font-bold text-white transition-all shadow-sm bg-primary hover:bg-primary-bright rounded-xl"
                         >
-                            Coba Lagi
+                            Try Again
                         </button>
                     </div>
                 ) : (
@@ -254,14 +280,14 @@ export default function SearchDst({
                             <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
                                 <div>
                                     <h2 className="text-base font-bold text-primary">
-                                        Hotel di {destinationTitle}
+                                        Hotels in {destinationTitle}
                                     </h2>
                                     <p className="text-xs text-quaternary mt-0.5">
-                                        Menampilkan{' '}
+                                        Showing{' '}
                                         <span className="font-bold text-primary">
                                             {searchData?.total ?? 0}
                                         </span>{' '}
-                                        hotel tersedia
+                                        hotels available
                                     </p>
                                 </div>
                             </div>
@@ -272,6 +298,11 @@ export default function SearchDst({
                                         <HotelCard
                                             key={hotel.key || hotel.hotelCode}
                                             hotel={hotel}
+                                            onSelect={handleSelectHotel}
+                                            isLoading={
+                                                selectingHotelCode ===
+                                                (hotel.hotelCode || hotel.code)
+                                            }
                                         />
                                     ))}
 
@@ -291,13 +322,11 @@ export default function SearchDst({
                                         className="mx-auto mb-3 text-gray-300"
                                     />
                                     <h3 className="mb-1 text-base font-bold text-gray-800">
-                                        Tidak Ada Hotel Ditemukan
+                                        No Hotel Found
                                     </h3>
                                     <p className="max-w-md mx-auto mb-4 text-xs text-quaternary">
-                                        Kami tidak menemukan hotel yang sesuai dengan
-                                        kriteria pencarian atau filter yang Anda pilih.
-                                        Coba sesuaikan filter atau ubah tanggal
-                                        menginap.
+                                        We did not find any hotels that match your search criteria or filters.
+                                        Try adjusting the filters or changing the dates.
                                     </p>
                                     {Object.keys(activeFilters).length > 0 && (
                                         <button
