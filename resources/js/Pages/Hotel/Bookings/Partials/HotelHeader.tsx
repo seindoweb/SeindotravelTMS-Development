@@ -195,10 +195,10 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-72 sm:h-80 md:h-96 rounded-2xl overflow-hidden">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full rounded-2xl overflow-hidden">
                         <div
                             onClick={() => setLightboxIndex(0)}
-                            className="relative md:col-span-2 h-52 sm:h-64 md:h-full rounded-2xl overflow-hidden bg-gray-100 cursor-pointer group shadow-2xs"
+                            className="relative md:col-span-2 h-full rounded-2xl overflow-hidden bg-gray-100 cursor-pointer group shadow-2xs"
                         >
                             <img
                                 src={allPhotos[0].url}

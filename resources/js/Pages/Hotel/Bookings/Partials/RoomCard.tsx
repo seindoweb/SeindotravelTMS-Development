@@ -166,7 +166,7 @@ export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetai
 
                     <div className="flex flex-col justify-between items-end gap-3 sm:min-w-[180px]">
                         <div className="text-right w-full sm:w-auto">
-                            <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                            <div className="flex items-center justify-end gap-1.5">
                                 <span
                                     onClick={handleCopyPrice}
                                     title="Click to copy price"
@@ -196,15 +196,18 @@ export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetai
                                     )}
                                 </button>
                             </div>
-                            {markup > 0 && (
-                                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-semibold px-2 py-0.5 rounded-md mt-1">
-                                    <TrendingUp size={11} className="text-emerald-600" />
-                                    Markup: {hotel.currency}{formatRupiah(markup)}
+
+                            <div className="flex flex-col items-end gap-1 mt-1.5">
+                                <span className="text-xs font-medium text-quaternary">
+                                    Base: {hotel.currency}{formatRupiah(room.ntaPrice)}/night
                                 </span>
-                            )}
-                            <span className="block mt-1 text-xs font-medium text-quaternary">
-                                {hotel.currency}{formatRupiah(room.sellingPricePerNight)}/night
-                            </span>
+                                {markup > 0 && (
+                                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-semibold px-2 py-0.5 rounded-md">
+                                        <TrendingUp size={11} className="text-emerald-600" />
+                                        Markup: {hotel.currency}{formatRupiah(markup)}
+                                    </span>
+                                )}
+                            </div>
                         </div>
 
                         <button
