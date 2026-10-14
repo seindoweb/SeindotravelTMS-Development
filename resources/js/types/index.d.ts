@@ -466,6 +466,8 @@ export interface HotelRoomDetail {
     ntaPricePerNight: string;
     sellingPrice: number;
     sellingPricePerNight: string;
+    markupPrice: number;
+    markupPricePerNight: number;
     maxOccupancy: number;
     extraBedAllowed: boolean;
     cancellationPolicies: HotelRoomCancellationPolicy[];

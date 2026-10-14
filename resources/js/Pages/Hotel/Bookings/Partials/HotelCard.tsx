@@ -179,7 +179,7 @@ export default function HotelCard({ hotel, onSelect, isLoading = false }: Props)
                             <>
 
                             <span className="block mt-2 text-xs font-medium text-quaternary">
-                                Or {formatRupiah(hotel.minPrices?.sellingPricePerNight || 0)}/night basic rate
+                                Base Price: {hotel.currency} {formatRupiah(hotel.minPrices?.ntaPrice || 0)}/night
                             </span>
                             </>
                         )}
