@@ -50,6 +50,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::prefix('bookings')->name('bookings.')->group(function () {
             Route::match(['get', 'post'], '/', [HotelBookingController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/search', [HotelBookingController::class, 'search'])->name('search');
+            Route::match(['get', 'post'], '/guest', [HotelBookingController::class, 'guest'])->name('guest');
         });
 
         Route::prefix('markups')->name('markups.')->group(function () {
