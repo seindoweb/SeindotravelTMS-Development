@@ -2,7 +2,6 @@ export default function GuestSkeleton() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start animate-pulse">
             <div className="lg:col-span-8 space-y-6">
-                {/* 0. DATA PEMESAN (CUSTOMER) SKELETON */}
                 <div className="bg-white rounded-2xl border border-[#E2E8F0] p-5 sm:p-6 shadow-2xs space-y-4">
                     <div className="flex items-center justify-between pb-3 border-b border-gray-100">
                         <div className="space-y-1.5">
