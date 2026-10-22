@@ -16,17 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(WorldSqlSeeder::class);
-        $this->call(UsersTableSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(UserMoreSeeder::class);
         $this->call(RolePermissionSeeder::class);
         $this->call(ProductAttributesTableSeeder::class);
+        $this->call(TravellerSeeder::class);
 
-        User::factory(300)->create();
-
-        // User::factory()->create([
-        //     'first_name' => 'Test',
-        //     'last_name' => 'User',
-        //     'email' => 'test@example.com',
-        // ]);
 
         $this->call(UserCreditsTableSeeder::class);
     }
