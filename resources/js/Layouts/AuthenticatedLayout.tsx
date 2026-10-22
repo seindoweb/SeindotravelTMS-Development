@@ -14,14 +14,16 @@ import AuthenticatedNotification from './Partials/AuthenticatedNotification';
 import AuthenticatedProfile from './Partials/AuthenticatedProfile';
 import AuthenticatedMenuSales from './Partials/AuthenticatedMenuSales';
 import AuthenticatedMenuHotels from './Partials/AuthenticatedMenuHotels';
+import AuthenticatedMenuVouchers from './Partials/AuthenticatedMenuVouchers';
 
 export default function Authenticated({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
-    const { url } = usePage();
     const user = usePage().props.auth.user;
+    const { url } = usePage();
     const [hotelsOpen, setHotelsOpen] = useState(false);
+    const [vouchersOpen, setVouchersOpen] = useState(false);
     const [usersOpen, setUsersOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
@@ -32,6 +34,7 @@ export default function Authenticated({
     |--------------------------------------------------------------------------
     */
     const hotelsRef = useRef<HTMLDivElement>(null);
+    const vouchersRef = useRef<HTMLDivElement>(null);
     const usersRef = useRef<HTMLDivElement>(null);
     const notificationRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
@@ -39,6 +42,7 @@ export default function Authenticated({
     useEffect(() => {
         setHotelsOpen(false);
         setUsersOpen(false);
+        setVouchersOpen(false);
         setNotificationOpen(false);
         setProfileOpen(false);
     }, [url]);
@@ -51,11 +55,9 @@ export default function Authenticated({
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             const target = event.target as Node;
-
             const clickedInsideHotels = hotelsRef.current?.contains(target);
-
+            const clickedInsideVouchers = vouchersRef.current?.contains(target);
             const clickedInsideUsers = usersRef.current?.contains(target);
-
             const clickedInsideNotification =
                 notificationRef.current?.contains(target);
 
@@ -63,11 +65,13 @@ export default function Authenticated({
 
             if (
                 !clickedInsideHotels &&
+                !clickedInsideVouchers &&
                 !clickedInsideUsers &&
                 !clickedInsideNotification &&
                 !clickedInsideProfile
             ) {
                 setHotelsOpen(false);
+                setVouchersOpen(false);
                 setUsersOpen(false);
                 setNotificationOpen(false);
                 setProfileOpen(false);
@@ -87,9 +91,10 @@ export default function Authenticated({
     |--------------------------------------------------------------------------
     */
     const toggleMenu = (
-        menu: 'hotels' | 'users' | 'notification' | 'profile',
+        menu: 'hotels' | 'vouchers' | 'users' | 'notification' | 'profile',
     ) => {
         setHotelsOpen(menu === 'hotels' ? (current) => !current : false);
+        setVouchersOpen(menu === 'vouchers' ? (current) => !current : false);
         setUsersOpen(menu === 'users' ? (current) => !current : false);
         setNotificationOpen(
             menu === 'notification' ? (current) => !current : false,
@@ -125,13 +130,23 @@ export default function Authenticated({
                     <AuthenticatedMenuSales />
 
                     {/* =================================================
-                        SETTINGS
+                        HOTELS
                     ================================================== */}
                     <AuthenticatedMenuHotels
                         url={url}
                         open={hotelsOpen}
                         onToggle={() => toggleMenu('hotels')}
                         containerRef={hotelsRef}
+                    />
+
+                    {/* =================================================
+                        VOUCHERS
+                    ================================================== */}
+                    <AuthenticatedMenuVouchers
+                        url={url}
+                        open={vouchersOpen}
+                        onToggle={() => toggleMenu('vouchers')}
+                        containerRef={vouchersRef}
                     />
 
                     {/* =================================================

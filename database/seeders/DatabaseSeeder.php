@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call(WorldSqlSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(RolePermissionSeeder::class);
+        $this->call(ProductAttributesTableSeeder::class);
+
         User::factory(300)->create();
 
         // User::factory()->create([

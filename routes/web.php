@@ -6,6 +6,7 @@ use App\Http\Controllers\Pages\Hotels\HotelMarkupController;
 use App\Http\Controllers\Pages\Hotels\HotelOrderController;
 use App\Http\Controllers\Pages\Users\AdministratorsController;
 use App\Http\Controllers\Pages\Users\CustomersController;
+use App\Http\Controllers\Pages\Users\TravellersController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -82,10 +83,18 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::prefix('administrators')->name('administrators.')->group(function () {
             Route::match(['get', 'post'], '/', [AdministratorsController::class, 'index'])->name('index');
         });
+
         Route::prefix('customers')->name('customers.')->group(function () {
             Route::match(['get', 'post'], '/', [CustomersController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/retrieve-data', [CustomersController::class, 'retrieveData'])->name('retrieveData');
             Route::match(['get', 'post'], '/{tracking_code}', [CustomersController::class, 'show'])->name('show');
+        });
+
+        Route::prefix('travellers')->name('travellers.')->group(function () {
+            Route::match(['get', 'post'], '/', [TravellersController::class, 'index'])->name('index');
+            Route::match(['get', 'post'], '/retrieve-data', [TravellersController::class, 'retrieveData'])->name('retrieveData');
+            Route::match(['get', 'post'], '/create', [TravellersController::class, 'createDestination'])->name('create');
+            Route::match(['get', 'post'], '/{id}/edit', [TravellersController::class, 'editDestination'])->name('edit');
         });
     });
 
