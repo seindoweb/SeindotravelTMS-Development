@@ -457,10 +457,13 @@ export interface HotelRoomInformations {
 
 export interface HotelRoomDetail {
     key: string;
+    code?: string;
     roomCode: string;
     name: string;
     mealPlanCode: string;
     mealPlanName: string;
+    cancellationPolicyType?: string;
+    packageRate?: boolean;
     currency?: string;
     ntaPrice: number;
     ntaPricePerNight: string;
@@ -479,6 +482,7 @@ export interface HotelRoomDetail {
 }
 
 export interface HotelDetailInfo {
+    sessionID?: string;
     hotelCode: string;
     name: string;
     destinationCode: string;
@@ -515,3 +519,19 @@ export interface PriceSearchHotelResponse {
     };
     data: PriceSearchHotelData;
 }
+
+export interface PrebookRoomReq {
+    country: string;
+    destination: string;
+    hotel: string;
+    checkIn: string;
+    checkOut: string;
+    sessionId: string;
+    roomDetails: {
+        code: string;
+        mealPlan: string;
+        cancellationPolicyType: string;
+        packageRate: boolean;
+    };
+}
+
