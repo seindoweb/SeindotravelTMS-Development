@@ -22,11 +22,11 @@ class HotelBookingController extends Controller
      * search
      *
      * @return void
-     * only 1 room
-     * Destinasi
-     * link: ?type="dst"&country=ID&destination=ID-CGK&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false&page=1
-     * Hotel
-     * link: ?type="dst"&country=ID&destination=ID-CGK&hotel=ID10009800&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false&page=1
+     *              only 1 room
+     *              Destinasi
+     *              link: ?type="dst"&country=ID&destination=ID-CGK&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false&page=1
+     *              Hotel
+     *              link: ?type="dst"&country=ID&destination=ID-CGK&hotel=ID10009800&checkIn=2026-10-13&checkOut=2026-10-14&room=1-1-0-0-0-false&page=1
      *
      * more 1 room
      * Destinasi
@@ -76,12 +76,12 @@ class HotelBookingController extends Controller
      * guest
      *
      * @return void
-     * only 1 room
-     * Guest
-     * ?country=ID&destination=ID-CGK&hotel=ID10000117&checkIn=2026-10-13&checkOut=2026-10-14&sessionId=1AF58339-6815-49CB-ACB6-3F720310968A&code=RM_3142_1&mealPlan=BDBF&cancellationPolicyType=Flexi&packageRate=false
+     *              only 1 room
+     *              Guest
+     *              ?country=ID&destination=ID-CGK&hotel=ID10000117&checkIn=2026-10-13&checkOut=2026-10-14&sessionId=1AF58339-6815-49CB-ACB6-3F720310968A&code=RM_3142_1&mealPlan=BDBF&cancellationPolicyType=Flexi&packageRate=false
      */
     public function guest(Request $request)
     {
-        return Inertia::render('Hotel/Bookings/Guest');
+        return Inertia::render('Hotel/Bookings/Guest', $request->all());
     }
 }

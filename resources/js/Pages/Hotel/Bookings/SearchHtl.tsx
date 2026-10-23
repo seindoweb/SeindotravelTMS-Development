@@ -209,7 +209,20 @@ export default function SearchHtl({
                                     </p>
                                 </div>
                                 {roomDetails.map((room) => (
-                                    <RoomCard key={room.key} room={room} hotel={hotelDetail} nights={nights} />
+                                    <RoomCard
+                                        key={room.key || room.code}
+                                        room={room}
+                                        hotel={hotelDetail}
+                                        nights={nights}
+                                        searchParams={{
+                                            country: country || hotelDetail.countryCode || 'ID',
+                                            destination: destination || hotelDetail.destinationCode || '',
+                                            hotel: hotel || hotelDetail.hotelCode || '',
+                                            checkIn,
+                                            checkOut,
+                                            sessionId: hotelDetail.sessionID || (searchData as any)?.results?.sessionID || '',
+                                        }}
+                                    />
                                 ))}
                             </div>
                         ) : (

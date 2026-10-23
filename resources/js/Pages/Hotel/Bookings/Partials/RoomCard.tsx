@@ -1,4 +1,6 @@
-import { HotelRoomDetail } from '@/types';
+import { HotelRoomDetail, PrebookRoomReq } from '@/types';
+import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
+import { router } from '@inertiajs/react';
 import {
     AlertCircle,
     BedDouble,
@@ -8,6 +10,7 @@ import {
     CigaretteOff,
     Coffee,
     Copy,
+    Loader2,
     ShieldCheck,
     TrendingUp,
     XCircle
@@ -27,12 +30,28 @@ const formatRupiah = (amount: number | string) => {
         .replace('Rp', '');
 };
 
-export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetail; hotel: any; nights: number }) {
+interface RoomCardProps {
+    room: HotelRoomDetail;
+    hotel: any;
+    nights: number;
+    searchParams?: {
+        country?: string;
+        destination?: string;
+        hotel?: string;
+        checkIn?: string;
+        checkOut?: string;
+        sessionId?: string;
+    };
+}
+
+export default function RoomCard({ room, hotel, nights, searchParams }: RoomCardProps) {
     const markup = room.sellingPrice - room.ntaPrice;
     const isRefundable = room.refundable;
     const [imgError, setImgError] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [copiedPrice, setCopiedPrice] = useState(false);
+    const [isBooking, setIsBooking] = useState(false);
+    const [bookingError, setBookingError] = useState<string | null>(null);
 
     const handleCopyPrice = (e?: React.MouseEvent) => {
         e?.stopPropagation();
@@ -51,7 +70,81 @@ export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetai
             textArea.remove();
         }
         setCopiedPrice(true);
-        setTimeout(() => setCopiedPrice(false), 500);
+        setTimeout(() => setCopiedPrice(false), 2000);
+    };
+
+    const handleBookRoom = async () => {
+        setIsBooking(true);
+        setBookingError(null);
+
+        const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+        const country = searchParams?.country || hotel?.countryCode || urlParams?.get('country') || 'ID';
+        const destination = searchParams?.destination || hotel?.destinationCode || urlParams?.get('destination') || '';
+        const hotelCode = searchParams?.hotel || hotel?.hotelCode || urlParams?.get('hotel') || '';
+        const checkIn = searchParams?.checkIn || urlParams?.get('checkIn') || '';
+        const checkOut = searchParams?.checkOut || urlParams?.get('checkOut') || '';
+        const sessionId = searchParams?.sessionId || (hotel as any)?.sessionID || '';
+
+        const roomCode = room.code || room.roomCode || '';
+        const mealPlan = room.mealPlanCode || '';
+        const cancellationPolicyType = room.cancellationPolicyType || 'Flexi';
+        const packageRate = room.packageRate ?? false;
+
+        const payload: PrebookRoomReq = {
+            country,
+            destination,
+            hotel: hotelCode,
+            checkIn,
+            checkOut,
+            sessionId,
+            roomDetails: {
+                code: roomCode,
+                mealPlan,
+                cancellationPolicyType,
+                packageRate,
+            },
+        };
+
+        try {
+            const res = await hotelMicroserviceApi.post('/prebook-room', payload);
+            console.log('res pre book:', res)
+
+            if (res.data?.data) {
+                sessionStorage.setItem('hotelPrebookData', JSON.stringify({
+                    ...res.data.data,
+                    selectedRoom: room,
+                    hotelInfo: hotel,
+                }));
+            }
+
+            const queryParams = new URLSearchParams({
+                cancellationPolicyType,
+                checkIn,
+                checkOut,
+                code: roomCode,
+                country,
+                destination,
+                hotel: hotelCode,
+                mealPlan,
+                packageRate: String(packageRate),
+                sessionId,
+            });
+
+            router.visit(`/hotel/bookings/guest?${queryParams.toString()}`);
+        } catch (err: unknown) {
+            console.error('Prebook room error:', err);
+            const errObj = err as {
+                response?: { data?: { meta?: { message?: string }; message?: string } };
+                message?: string;
+            };
+            const msg =
+                errObj.response?.data?.meta?.message ||
+                errObj.response?.data?.message ||
+                errObj.message ||
+                'Pre-booking room failed. Please try another room or date.';
+            setBookingError(msg);
+            setIsBooking(false);
+        }
     };
 
     const thumbnail = room.roomInformations?.thumbnail;
@@ -164,13 +257,16 @@ export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetai
                         </button>
                     </div>
 
-                    <div className="flex flex-col justify-between items-end gap-3 sm:min-w-[180px]">
+                    <div className="flex flex-col justify-between items-end gap-3 sm:min-w-[190px]">
                         <div className="text-right w-full sm:w-auto">
-                            <div className="flex items-center justify-end gap-1.5">
+                            <span className="text-[11px] font-medium text-slate-400 block uppercase tracking-wider">
+                                Total Price ({nights} night{nights > 1 ? 's' : ''})
+                            </span>
+                            <div className="flex items-baseline justify-end gap-1.5 mt-0.5">
                                 <span
                                     onClick={handleCopyPrice}
                                     title="Click to copy price"
-                                    className="text-xl font-black sm:text-2xl text-primary cursor-pointer hover:text-primary-bright transition-colors select-all"
+                                    className="text-xl sm:text-2xl font-black text-primary cursor-pointer hover:text-primary-bright transition-colors select-all"
                                 >
                                     {hotel.currency}{formatRupiah(room.sellingPrice)}
                                 </span>
@@ -181,7 +277,7 @@ export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetai
                                     className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-semibold rounded-md border transition-all cursor-pointer ${
                                         copiedPrice
                                             ? 'bg-emerald-50 text-emerald-700 border-emerald-300 scale-105'
-                                            : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 hover:text-primary'
+                                            : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 hover:text-primary'
                                     }`}
                                 >
                                     {copiedPrice ? (
@@ -190,32 +286,47 @@ export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetai
                                             <span className="text-[10px]">Copied!</span>
                                         </>
                                     ) : (
-                                        <>
-                                            <Copy size={11} className="text-gray-400 group-hover:text-primary" />
-                                        </>
+                                        <Copy size={11} className="text-slate-400 group-hover:text-primary" />
                                     )}
                                 </button>
                             </div>
 
-                            <div className="flex flex-col items-end gap-1 mt-1.5">
-                                <span className="text-xs font-medium text-quaternary">
-                                    Base: {hotel.currency}{formatRupiah(room.ntaPrice)}/night
-                                </span>
+                            <div className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200/80 rounded-lg px-2.5 py-1 text-[11px] font-medium text-slate-600 mt-2">
+                                <span>NTA: <strong className="text-slate-800 font-bold">{hotel.currency}{formatRupiah(room.ntaPrice)}</strong></span>
                                 {markup > 0 && (
-                                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-semibold px-2 py-0.5 rounded-md">
-                                        <TrendingUp size={11} className="text-emerald-600" />
-                                        Markup: {hotel.currency}{formatRupiah(markup)}
-                                    </span>
+                                    <>
+                                        <span className="text-slate-300">•</span>
+                                        <span className="text-emerald-700 font-semibold flex items-center gap-0.5">
+                                            <TrendingUp size={11} className="text-emerald-600" />
+                                            +{hotel.currency}{formatRupiah(markup)}
+                                        </span>
+                                    </>
                                 )}
                             </div>
                         </div>
 
-                        <button
-                            type="button"
-                            className="bg-primary hover:bg-primary-bright text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
-                        >
-                            <span>Book Room</span>
-                        </button>
+                        <div className="w-full sm:w-auto flex flex-col items-end gap-1.5">
+                            {bookingError && (
+                                <p className="text-[11px] text-red-600 font-medium text-right max-w-[220px] leading-tight">
+                                    {bookingError}
+                                </p>
+                            )}
+                            <button
+                                type="button"
+                                onClick={handleBookRoom}
+                                disabled={isBooking}
+                                className="bg-primary hover:bg-primary-bright text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed w-full sm:w-auto"
+                            >
+                                {isBooking ? (
+                                    <>
+                                        <Loader2 size={16} className="animate-spin" />
+                                        <span>Booking...</span>
+                                    </>
+                                ) : (
+                                    <span>Book Room</span>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -231,3 +342,4 @@ export default function RoomCard({ room, hotel, nights }: { room: HotelRoomDetai
         </>
     );
 }
+
