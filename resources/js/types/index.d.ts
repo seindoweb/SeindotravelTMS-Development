@@ -188,6 +188,16 @@ export interface UserProps {
     deleted_at?: string;
 }
 
+export interface TravellerProps {
+    id: number;
+    index: string;
+    key: string;
+    title: string;
+    first_name: string;
+    last_name: string;
+    date_of_birth: string;
+}
+
 export interface UserCreditProps {
     index: string;
     key: string;

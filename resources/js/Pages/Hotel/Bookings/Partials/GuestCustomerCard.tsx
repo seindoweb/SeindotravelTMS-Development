@@ -17,9 +17,6 @@ export default function GuestCustomerCard({
         <div className="bg-white rounded-2xl border border-[#E2E8F0] p-5 sm:p-6 shadow-2xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-100">
                 <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
-                        <UserCheck size={19} />
-                    </div>
                     <div>
                         <h2 className="text-base font-bold text-primary">Customer Data</h2>
                         <p className="text-xs text-quaternary">

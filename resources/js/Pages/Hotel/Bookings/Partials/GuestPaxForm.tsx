@@ -1,8 +1,10 @@
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
+import SecondaryButton from '@/Components/SecondaryButton';
 import SelectOption, { SelectOptionProps } from '@/Components/SelectOption';
 import TextInput from '@/Components/TextInput';
-import { BedDouble, Baby, User } from 'lucide-react';
+import { TravellerProps } from '@/types';
+import { Baby, Check, RefreshCw, User, X } from 'lucide-react';
 import React from 'react';
 
 export interface PaxItem {
@@ -11,6 +13,8 @@ export interface PaxItem {
     lastName: string;
     age: string;
     type: 'adult' | 'child';
+    travellerId?: number | string;
+    travellerName?: string;
 }
 
 export interface RoomPaxGroup {
@@ -31,6 +35,8 @@ export interface GuestPaxFormProps {
     setRoomsPax: React.Dispatch<React.SetStateAction<RoomPaxGroup[]>>;
     formErrors: Record<string, string>;
     setFormErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+    onOpenSelectTravellerModal: (roomIdx: number, paxIdx: number) => void;
+    onClearPaxTraveller?: (roomIdx: number, paxIdx: number) => void;
 }
 
 export default function GuestPaxForm({
@@ -38,6 +44,8 @@ export default function GuestPaxForm({
     setRoomsPax,
     formErrors,
     setFormErrors,
+    onOpenSelectTravellerModal,
+    onClearPaxTraveller,
 }: GuestPaxFormProps) {
     const handleUpdatePax = (
         roomIdx: number,
@@ -78,9 +86,6 @@ export default function GuestPaxForm({
                     >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-gray-100">
                             <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
-                                    <BedDouble size={18} />
-                                </div>
                                 <div>
                                     <h2 className="text-base font-bold text-primary">
                                         Room {roomGroup.roomNo}
@@ -110,7 +115,7 @@ export default function GuestPaxForm({
                                         key={paxIdx}
                                         className="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-4 sm:p-5 relative"
                                     >
-                                        <div className="flex items-center justify-between mb-3.5">
+                                        <div className="flex items-center justify-between mb-6">
                                             <div className="flex items-center gap-2">
                                                 <span
                                                     className={`w-5 h-5 rounded-full text-white text-[10px] font-bold flex items-center justify-center ${
@@ -136,6 +141,41 @@ export default function GuestPaxForm({
                                                     </span>
                                                 )}
                                             </div>
+
+                                            {paxItem.travellerId ? (
+                                                <div className="flex items-center gap-1.5 flex-wrap">
+                                                    <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md flex items-center gap-1">
+                                                        <Check size={11} /> {paxItem.travellerName || 'Traveller Selected'}
+                                                    </span>
+                                                    <SecondaryButton
+                                                        type="button"
+                                                        onClick={() => onOpenSelectTravellerModal(roomIdx, paxIdx)}
+                                                        className="inline-flex items-center justify-center gap-1 text-[11px] font-semibold py-1 px-2.5 rounded-lg cursor-pointer"
+                                                    >
+                                                        <RefreshCw size={11} />
+                                                        <span>Change</span>
+                                                    </SecondaryButton>
+                                                    {onClearPaxTraveller && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => onClearPaxTraveller(roomIdx, paxIdx)}
+                                                            className="text-slate-400 hover:text-red-600 p-1 rounded-md hover:bg-red-50 transition-colors cursor-pointer"
+                                                            title="Clear Traveller"
+                                                        >
+                                                            <X size={13} />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <SecondaryButton
+                                                    type="button"
+                                                    onClick={() => onOpenSelectTravellerModal(roomIdx, paxIdx)}
+                                                    className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-1.5 px-3 rounded-xl cursor-pointer w-fit"
+                                                >
+                                                    <User size={13} />
+                                                    <span>Select Traveller</span>
+                                                </SecondaryButton>
+                                            )}
                                         </div>
 
                                         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
