@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
-import { HotelRoomDetail, UserProps } from '@/types';
+import { HotelRoomDetail, TravellerProps, UserProps } from '@/types';
 import { Head } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, Check } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ import GuestPaxForm, { PaxItem, RoomPaxGroup } from './Partials/GuestPaxForm';
 import GuestSkeleton from './Partials/GuestSkeleton';
 import GuestSpecialRequests from './Partials/GuestSpecialRequests';
 import SelectCustomerModal from './Partials/SelectCustomerModal';
+import SelectTravellerModal from './Partials/SelectTravellerModal';
 
 export type { PaxItem, RoomPaxGroup };
 
@@ -102,6 +103,27 @@ const countNights = (ci?: string, co?: string): number => {
     return Math.max(1, Math.round(diff / (1000 * 60 * 60 * 24)));
 };
 
+const normalizeSalutation = (title?: string): string => {
+    if (!title) return 'Mr.';
+    const clean = title.trim().replace(/\./g, '').toUpperCase();
+    if (clean === 'MRS') return 'Mrs.';
+    if (clean === 'MS' || clean === 'MISS') return 'Ms.';
+    return 'Mr.';
+};
+
+const calculateAge = (dateOfBirth?: string): string => {
+    if (!dateOfBirth) return '';
+    const dob = new Date(dateOfBirth);
+    if (isNaN(dob.getTime())) return '';
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    return age >= 0 ? String(age) : '';
+};
+
 const buildDefaultRoomsPax = (
     paramsRooms?: PrebookRoomParam[],
 ): RoomPaxGroup[] => {
@@ -166,12 +188,10 @@ export default function Guest(props: GuestPageProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [copiedPrice, setCopiedPrice] = useState<boolean>(false);
-
-    // Customer / Pemesan
     const [selectedCustomer, setSelectedCustomer] = useState<UserProps | null>(null);
+    const [activePaxTarget, setActivePaxTarget] = useState<{ roomIdx: number; paxIdx: number } | null>(null);
     const [isCustomerModalOpen, setIsCustomerModalOpen] = useState<boolean>(false);
-
-    // Pax Grouped per Room
+    const [isTravellerModalOpen, setIsTravellerModalOpen] = useState<boolean>(false);
     const [roomsPax, setRoomsPax] = useState<RoomPaxGroup[]>([
         {
             roomNo: '1',
@@ -308,7 +328,6 @@ export default function Guest(props: GuestPageProps) {
         );
     };
 
-    // Validasi Form
     const validateForm = (): boolean => {
         const errors: Record<string, string> = {};
 
@@ -321,7 +340,6 @@ export default function Guest(props: GuestPageProps) {
                 if (!paxItem.lastName.trim()) {
                     errors[`room_${roomIdx}_pax_${paxIdx}_lastName`] = `${labelTarget}: Nama belakang wajib diisi.`;
                 }
-                // Khusus child, age WAJIB diisi
                 if (paxItem.type === 'child' && !paxItem.age.trim()) {
                     errors[`room_${roomIdx}_pax_${paxIdx}_age`] = `${labelTarget}: Umur anak wajib diisi.`;
                 }
@@ -330,6 +348,72 @@ export default function Guest(props: GuestPageProps) {
 
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
+    };
+
+    const handleOpenSelectTravellerModal = (roomIdx: number, paxIdx: number) => {
+        setActivePaxTarget({ roomIdx, paxIdx });
+        setIsTravellerModalOpen(true);
+    };
+
+    const handleSelectTraveller = (traveller: TravellerProps) => {
+        if (!activePaxTarget) return;
+        const { roomIdx, paxIdx } = activePaxTarget;
+
+        const salutation = normalizeSalutation(traveller.title);
+        const age = calculateAge(traveller.date_of_birth);
+
+        setRoomsPax((prev) => {
+            const next = [...prev];
+            const nextRoom = { ...next[roomIdx] };
+            const nextPaxList = [...nextRoom.pax];
+            nextPaxList[paxIdx] = {
+                ...nextPaxList[paxIdx],
+                salutation,
+                firstName: traveller.first_name || '',
+                lastName: traveller.last_name || '',
+                age: age || nextPaxList[paxIdx].age || '',
+                travellerId: traveller.id || traveller.index,
+                travellerName: `${traveller.first_name} ${traveller.last_name}`.trim(),
+            };
+            nextRoom.pax = nextPaxList;
+            next[roomIdx] = nextRoom;
+            return next;
+        });
+
+        const firstNameErrorKey = `room_${roomIdx}_pax_${paxIdx}_firstName`;
+        const lastNameErrorKey = `room_${roomIdx}_pax_${paxIdx}_lastName`;
+        const ageErrorKey = `room_${roomIdx}_pax_${paxIdx}_age`;
+
+        setFormErrors((prev) => {
+            const next = { ...prev };
+            delete next[firstNameErrorKey];
+            delete next[lastNameErrorKey];
+            delete next[ageErrorKey];
+            return next;
+        });
+
+        setIsTravellerModalOpen(false);
+        setActivePaxTarget(null);
+    };
+
+    const handleClearPaxTraveller = (roomIdx: number, paxIdx: number) => {
+        setRoomsPax((prev) => {
+            const next = [...prev];
+            const nextRoom = { ...next[roomIdx] };
+            const nextPaxList = [...nextRoom.pax];
+            nextPaxList[paxIdx] = {
+                ...nextPaxList[paxIdx],
+                salutation: 'Mr.',
+                firstName: '',
+                lastName: '',
+                age: '',
+                travellerId: undefined,
+                travellerName: undefined,
+            };
+            nextRoom.pax = nextPaxList;
+            next[roomIdx] = nextRoom;
+            return next;
+        });
     };
 
     const handleProceedToBooking = () => {
@@ -387,9 +471,6 @@ export default function Guest(props: GuestPageProps) {
                         </span>
                         <span className="text-gray-300">›</span>
                         <span className="inline-flex items-center gap-1.5 text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 font-bold">
-                            <span className="w-4 h-4 rounded-full bg-primary text-white text-[10px] flex items-center justify-center">
-                                2
-                            </span>
                             Guest Information
                         </span>
                         <span className="text-gray-300">›</span>
@@ -423,6 +504,8 @@ export default function Guest(props: GuestPageProps) {
                                 setRoomsPax={setRoomsPax}
                                 formErrors={formErrors}
                                 setFormErrors={setFormErrors}
+                                onOpenSelectTravellerModal={handleOpenSelectTravellerModal}
+                                onClearPaxTraveller={handleClearPaxTraveller}
                             />
 
                             <GuestSpecialRequests
@@ -468,6 +551,20 @@ export default function Guest(props: GuestPageProps) {
                 onClose={() => setIsCustomerModalOpen(false)}
                 onSelect={(cust) => setSelectedCustomer(cust)}
                 selectedCustomerId={selectedCustomer?.index || selectedCustomer?.key}
+            />
+
+            <SelectTravellerModal
+                isOpen={isTravellerModalOpen}
+                onClose={() => {
+                    setIsTravellerModalOpen(false);
+                    setActivePaxTarget(null);
+                }}
+                onSelect={handleSelectTraveller}
+                selectedTravellerId={
+                    activePaxTarget
+                        ? roomsPax[activePaxTarget.roomIdx]?.pax[activePaxTarget.paxIdx]?.travellerId
+                        : undefined
+                }
             />
 
             <GuestConfirmModal
