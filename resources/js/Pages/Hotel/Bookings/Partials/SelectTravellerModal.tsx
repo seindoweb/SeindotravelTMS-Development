@@ -3,7 +3,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import TablePaginate from '@/Components/TablePaginate';
 import TextInput from '@/Components/TextInput';
 import { api } from '@/libs/http/api';
-import { Paginate, TravellerProps, UserProps } from '@/types';
+import { Paginate, TravellerProps } from '@/types';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { Check, Loader2, Search, User, X } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
