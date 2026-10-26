@@ -1,4 +1,5 @@
 import SecondaryButton from '@/Components/SecondaryButton';
+import { formatDate } from '@/helpers';
 import { UserProps } from '@/types';
 import { Calendar, Mail, Phone, RefreshCw, User, UserCheck } from 'lucide-react';
 
@@ -97,7 +98,7 @@ export default function GuestCustomerCard({
                                     Date of Birth
                                 </span>
                                 <span className="font-medium text-slate-800 truncate block">
-                                    {customer.date_of_birth || '-'}
+                                    {customer.date_of_birth ? formatDate(customer.date_of_birth) : '-'}
                                 </span>
                             </div>
                         </div>

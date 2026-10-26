@@ -80,7 +80,6 @@ function HotelBookingForm({
             return;
         }
 
-        console.log('Search selection:', selection);
         const roomStr = encodeRooms(rooms);
 
         const isHotel = selection.type === 'htl' || Boolean(selection.hotel);

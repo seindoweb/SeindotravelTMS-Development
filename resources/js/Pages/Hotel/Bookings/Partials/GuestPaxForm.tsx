@@ -22,6 +22,7 @@ export interface RoomPaxGroup {
     noOfAdults: number;
     noOfChild: number;
     pax: PaxItem[];
+    rateKey: string;
 }
 
 export const salutations: SelectOptionProps[] = [

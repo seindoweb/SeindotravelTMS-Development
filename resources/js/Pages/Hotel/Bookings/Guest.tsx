@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
-import { HotelRoomDetail, TravellerProps, UserProps } from '@/types';
+import { GuestPageProps, HotelRoomDetail, PrebookRoomData, PrebookRoomParam, RoomOccupancy, TravellerProps, UserProps } from '@/types';
 import { Head } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, Check } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -13,76 +13,8 @@ import GuestSkeleton from './Partials/GuestSkeleton';
 import GuestSpecialRequests from './Partials/GuestSpecialRequests';
 import SelectCustomerModal from './Partials/SelectCustomerModal';
 import SelectTravellerModal from './Partials/SelectTravellerModal';
-
 export type { PaxItem, RoomPaxGroup };
-
-interface GuestPageProps {
-    country?: string;
-    destination?: string;
-    hotel?: string;
-    checkIn?: string;
-    checkOut?: string;
-    code?: string;
-    mealPlan?: string;
-    cancellationPolicyType?: string;
-    packageRate?: string;
-    sessionId?: string;
-}
-
-interface PrebookRoomParam {
-    roomNo: string;
-    noOfAdults: string;
-    noOfChild: string;
-    child1Age?: string;
-    child2Age?: string;
-    extraBed?: boolean;
-}
-
-interface PrebookRoomData {
-    params?: {
-        country: string;
-        destination: string;
-        hotel: string;
-        checkIn: string;
-        checkOut: string;
-        rooms: PrebookRoomParam[];
-    };
-    rooms?: {
-        code: string;
-        mealPlan: string;
-        cancellationPolicyType: string;
-        packageRate: boolean;
-    };
-    results?: {
-        key: string;
-        sessionID: string;
-        name: string;
-        hotelCode: string;
-        code: string;
-        rating: string;
-        currency: string;
-        thumbnail: string;
-        thumbnailSource?: string;
-        geoLocations?: { latitude: string; longitude: string };
-        locations?: {
-            addressMain: string;
-            addressAlternative?: string;
-            zipCode?: string;
-            area?: string;
-            landmark?: string;
-            cityName?: string;
-            cityCode?: string;
-            countryName?: string;
-            countryCode?: string;
-        };
-        roomDetails?: HotelRoomDetail[] | null;
-        images?: Array<{ url: string; source?: string }>;
-        facilities?: Array<{ name: string; type: string }>;
-    };
-    selectedRoom?: HotelRoomDetail;
-    hotelInfo?: any;
-}
-
+    
 const formatRupiah = (amount: number | string) => {
     const num = typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
     return new Intl.NumberFormat('id-ID', {
@@ -124,16 +56,61 @@ const calculateAge = (dateOfBirth?: string): string => {
     return age >= 0 ? String(age) : '';
 };
 
+const getRateKeyForRoom = (
+    selectedRoom?: HotelRoomDetail | null,
+    roomNo?: string | number,
+    roomIndex: number = 0,
+    fallbackKey?: string,
+): string => {
+    if (!selectedRoom) return fallbackKey || '';
+
+    const occupancies = selectedRoom.roomOccupancies;
+    if (Array.isArray(occupancies) && occupancies.length > 0) {
+        if (roomNo !== undefined && roomNo !== null) {
+            const match = occupancies.find(
+                (occ) => String(occ.roomNo) === String(roomNo),
+            );
+            if (match?.rateKey) return match.rateKey;
+        }
+        if (occupancies[roomIndex]?.rateKey) {
+            return occupancies[roomIndex].rateKey;
+        }
+        if (occupancies[0]?.rateKey) {
+            return occupancies[0].rateKey;
+        }
+    } else if (occupancies && typeof occupancies === 'object') {
+        const singleOcc = occupancies as RoomOccupancy;
+        if (singleOcc.rateKey) return singleOcc.rateKey;
+    }
+
+    return fallbackKey || selectedRoom.key || '';
+};
+
 const buildDefaultRoomsPax = (
     paramsRooms?: PrebookRoomParam[],
+    roomOccupancies?: RoomOccupancy[] | RoomOccupancy,
 ): RoomPaxGroup[] => {
+    const occList = Array.isArray(roomOccupancies)
+        ? roomOccupancies
+        : roomOccupancies
+          ? [roomOccupancies]
+          : [];
+
     if (paramsRooms && paramsRooms.length > 0) {
         return paramsRooms.map((r, rIdx) => {
             const adults = parseInt(r.noOfAdults || '1', 10) || 1;
             const children = parseInt(r.noOfChild || '0', 10) || 0;
+            const currentRoomNo = r.roomNo || String(rIdx + 1);
+
+            const matchedOcc =
+                occList.find((occ) => String(occ.roomNo) === currentRoomNo) ||
+                occList[rIdx] ||
+                occList[0];
+
+            const rateKey = matchedOcc?.rateKey || r.rateKey || '';
+
             const paxList: PaxItem[] = [];
 
-            // Adults
             for (let i = 0; i < adults; i++) {
                 paxList.push({
                     salutation: 'Mr.',
@@ -144,7 +121,6 @@ const buildDefaultRoomsPax = (
                 });
             }
 
-            // Children
             for (let i = 0; i < children; i++) {
                 const childAge = i === 0 ? r.child1Age || '' : r.child2Age || '';
                 paxList.push({
@@ -157,14 +133,16 @@ const buildDefaultRoomsPax = (
             }
 
             return {
-                roomNo: r.roomNo || String(rIdx + 1),
+                roomNo: currentRoomNo,
                 noOfAdults: adults,
                 noOfChild: children,
                 pax: paxList,
+                rateKey: rateKey,
             };
         });
     }
 
+    const defaultRateKey = occList[0]?.rateKey || '';
     return [
         {
             roomNo: '1',
@@ -179,6 +157,7 @@ const buildDefaultRoomsPax = (
                     type: 'adult',
                 },
             ],
+            rateKey: defaultRateKey,
         },
     ];
 };
@@ -206,6 +185,7 @@ export default function Guest(props: GuestPageProps) {
                     type: 'adult',
                 },
             ],
+            rateKey: ''
         },
     ]);
 
@@ -215,7 +195,17 @@ export default function Guest(props: GuestPageProps) {
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-    // 1. Initial Data Loading: Ambil dari sessionStorage atau fallback fetch ulang
+    const [isSubmittingBooking, setIsSubmittingBooking] = useState<boolean>(false);
+    const [bookingError, setBookingError] = useState<string | null>(null);
+    const [bookingSuccessData, setBookingSuccessData] = useState<any | null>(() => {
+        try {
+            const stored = sessionStorage.getItem('hotelBookingResultData');
+            return stored ? JSON.parse(stored) : null;
+        } catch {
+            return null;
+        }
+    });
+
     useEffect(() => {
         try {
             const rawStored = sessionStorage.getItem('hotelPrebookData');
@@ -223,9 +213,19 @@ export default function Guest(props: GuestPageProps) {
                 const parsed = JSON.parse(rawStored) as PrebookRoomData;
                 setPrebookData(parsed);
 
-                // Inisialisasi rooms pax sesuai jumlah kamar dan tamu di params
+                const activeRoom =
+                    parsed.selectedRoom ||
+                    (parsed.results?.roomDetails && parsed.results.roomDetails.length > 0
+                        ? parsed.results.roomDetails[0]
+                        : null);
+
                 if (parsed.params?.rooms && parsed.params.rooms.length > 0) {
-                    setRoomsPax(buildDefaultRoomsPax(parsed.params.rooms));
+                    setRoomsPax(
+                        buildDefaultRoomsPax(
+                            parsed.params.rooms,
+                            activeRoom?.roomOccupancies,
+                        ),
+                    );
                 }
 
                 setLoading(false);
@@ -235,7 +235,6 @@ export default function Guest(props: GuestPageProps) {
             console.error('Failed to parse hotelPrebookData from sessionStorage:', e);
         }
 
-        // Fallback: Jika di-refresh atau direct URL, fetch ulang prebook
         if (props.sessionId && (props.code || props.hotel)) {
             setLoading(true);
             hotelMicroserviceApi
@@ -258,8 +257,18 @@ export default function Guest(props: GuestPageProps) {
                         const data = res.data.data as PrebookRoomData;
                         setPrebookData(data);
                         sessionStorage.setItem('hotelPrebookData', JSON.stringify(data));
+                        const activeRoom =
+                            data.selectedRoom ||
+                            (data.results?.roomDetails && data.results.roomDetails.length > 0
+                                ? data.results.roomDetails[0]
+                                : null);
                         if (data.params?.rooms && data.params.rooms.length > 0) {
-                            setRoomsPax(buildDefaultRoomsPax(data.params.rooms));
+                            setRoomsPax(
+                                buildDefaultRoomsPax(
+                                    data.params.rooms,
+                                    activeRoom?.roomOccupancies,
+                                ),
+                            );
                         }
                     }
                 })
@@ -275,9 +284,11 @@ export default function Guest(props: GuestPageProps) {
 
     const results = prebookData?.results;
     const params = prebookData?.params;
+    console.log('params', params)
     const selectedRoom =
         prebookData?.selectedRoom ||
         (results?.roomDetails && results.roomDetails.length > 0 ? results.roomDetails[0] : null);
+    console.log('selectedRoom', selectedRoom)
 
     const checkInDate = params?.checkIn || props.checkIn || '';
     const checkOutDate = params?.checkOut || props.checkOut || '';
@@ -422,6 +433,8 @@ export default function Guest(props: GuestPageProps) {
             return;
         }
 
+        setBookingError(null);
+
         const bookingPayload = {
             customer: selectedCustomer,
             prebookData,
@@ -433,6 +446,122 @@ export default function Guest(props: GuestPageProps) {
 
         sessionStorage.setItem('hotelBookingGuestData', JSON.stringify(bookingPayload));
         setShowConfirmModal(true);
+    };
+
+    const handleConfirmBooking = async () => {
+        setIsSubmittingBooking(true);
+        setBookingError(null);
+
+        try {
+            const finalCountry = params?.country || props.country || 'ID';
+            const finalDestination = params?.destination || props.destination || '';
+            const finalHotel = params?.hotel || props.hotel || '';
+            const finalSessionId =
+                params?.sessionId ||
+                results?.sessionID ||
+                props.sessionId ||
+                '';
+            const finalCheckIn = checkInDate;
+            const finalCheckOut = checkOutDate;
+
+            const roomDetailsPayload = {
+                code:
+                    selectedRoom?.roomCode ||
+                    selectedRoom?.code ||
+                    prebookData?.rooms?.code ||
+                    props.code ||
+                    '',
+                mealPlan:
+                    selectedRoom?.mealPlanCode ||
+                    prebookData?.rooms?.mealPlan ||
+                    props.mealPlan ||
+                    '',
+                cancellationPolicyType:
+                    selectedRoom?.cancellationPolicyType ||
+                    prebookData?.rooms?.cancellationPolicyType ||
+                    props.cancellationPolicyType ||
+                    'Flexi',
+                packageRate: Boolean(
+                    selectedRoom?.packageRate ??
+                    prebookData?.rooms?.packageRate ??
+                    (props.packageRate === 'true'),
+                ),
+            };
+
+            const roomsListPayload = roomsPax.map((r, rIdx) => {
+                const currentRoomNo = String(r.roomNo || rIdx + 1);
+                const paramRoom = params?.rooms?.[rIdx];
+                const rateKey = getRateKeyForRoom(
+                    selectedRoom,
+                    currentRoomNo,
+                    rIdx,
+                    r.rateKey || paramRoom?.rateKey,
+                );
+
+                const paxPayload = r.pax.map((p) => {
+                    const salutation = p.salutation ? p.salutation.trim() : 'Mr.';
+                    const formattedSalutation = ` ${salutation}`;
+                    return {
+                        salutation: formattedSalutation,
+                        firstName: p.firstName.trim(),
+                        lastName: p.lastName.trim(),
+                        age: p.age ? String(p.age).trim() : '',
+                    };
+                });
+
+                const childPax = r.pax.filter((p) => p.type === 'child');
+                const child1Age = childPax[0]?.age
+                    ? String(childPax[0].age).trim()
+                    : String(paramRoom?.child1Age || '0');
+                const child2Age = childPax[1]?.age
+                    ? String(childPax[1].age).trim()
+                    : String(paramRoom?.child2Age || '0');
+
+                return {
+                    pax: paxPayload,
+                    roomNo: String(r.roomNo || rIdx + 1),
+                    noOfAdults: String(r.noOfAdults ?? 1),
+                    noOfChild: String(r.noOfChild ?? 0),
+                    child1Age: child1Age || '0',
+                    child2Age: child2Age || '0',
+                    extraBed: Boolean(paramRoom?.extraBed ?? false),
+                    rateKey: rateKey,
+                };
+            });
+
+            const payload = {
+                country: finalCountry,
+                destination: finalDestination,
+                hotel: finalHotel,
+                sessionId: finalSessionId,
+                checkIn: finalCheckIn,
+                checkOut: finalCheckOut,
+                roomDetails: roomDetailsPayload,
+                rooms: {
+                    picGuestNationality: (selectedCustomer as any)?.nationality || 'ID',
+                    room: roomsListPayload,
+                },
+            };
+
+            const res = await hotelMicroserviceApi.post('/booking-room', payload);
+
+            setBookingSuccessData(res.data);
+            sessionStorage.setItem('hotelBookingResultData', JSON.stringify(res.data));
+
+            setShowConfirmModal(false);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err: any) {
+            console.error('Booking Room Error:', err);
+            const errMsg =
+                err.response?.data?.meta?.message ||
+                err.response?.data?.message ||
+                err.message ||
+                'Terjadi kesalahan saat memproses pemesanan kamar.';
+            setBookingError(errMsg);
+        } finally {
+            setIsSubmittingBooking(false);
+        }
     };
 
     return (
@@ -477,6 +606,30 @@ export default function Guest(props: GuestPageProps) {
                         <span className="text-gray-400">Confirmation & Booking</span>
                     </div>
                 </div>
+
+                {bookingSuccessData && (
+                    <div className="bg-emerald-50 border border-emerald-300/90 rounded-2xl p-5 mb-6 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+                        <div className="flex items-start gap-3.5">
+                            <div className="flex-1 space-y-2">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2">
+                                        <h4 className="text-sm sm:text-base font-bold text-emerald-950">
+                                            Booking Room Berhasil (HTTP 200 OK)
+                                        </h4>
+                                    </div>
+                                </div>
+                                <details className="mt-2 text-xs">
+                                    <summary className="cursor-pointer font-bold text-emerald-900 hover:text-emerald-700 select-none py-1">
+                                        Lihat Detail Response API (JSON)
+                                    </summary>
+                                    <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded-xl overflow-x-auto text-[11px] font-mono leading-relaxed max-h-60 border border-slate-800">
+                                        {JSON.stringify(bookingSuccessData, null, 2)}
+                                    </pre>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {fetchError && (
                     <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 flex items-start gap-3">
@@ -569,13 +722,14 @@ export default function Guest(props: GuestPageProps) {
 
             <GuestConfirmModal
                 isOpen={showConfirmModal}
-                onClose={() => setShowConfirmModal(false)}
-                onConfirm={() => {
-                    setShowConfirmModal(false);
-                    alert(
-                        'Booking data has been successfully confirmed! Ready for the next booking session integration.',
-                    );
+                onClose={() => {
+                    if (!isSubmittingBooking) {
+                        setShowConfirmModal(false);
+                    }
                 }}
+                onConfirm={handleConfirmBooking}
+                isSubmitting={isSubmittingBooking}
+                errorMessage={bookingError}
                 customer={selectedCustomer}
                 roomsPax={roomsPax}
                 hotelName={hotelName}

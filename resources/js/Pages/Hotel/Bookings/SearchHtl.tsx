@@ -135,8 +135,6 @@ export default function SearchHtl({
                 payload,
             );
 
-            console.log('response',res)
-
             if (res.data?.meta?.status === 'success' || res.data?.data) {
                 setSearchData(res.data.data);
             } else {

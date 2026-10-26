@@ -141,14 +141,13 @@ export default function SearchDst({
             filter: activeFilters,
             page: currentPage,
         };
-        console.log('payload', payload);
 
         try {
             const res = await hotelMicroserviceApi.post<PriceSearchDestinationResponse>(
                 '/price-search-by-destination',
                 payload,
             );
-            console.log('response', res);
+            console.log('resp des:', res)
 
             if (res.data?.meta?.status === 'success' || res.data?.data) {
                 setSearchData(res.data.data);
