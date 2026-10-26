@@ -2,6 +2,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TablePaginate from '@/Components/TablePaginate';
 import TextInput from '@/Components/TextInput';
+import { formatDate } from '@/helpers';
 import { api } from '@/libs/http/api';
 import { Paginate, UserProps } from '@/types';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
@@ -168,7 +169,7 @@ export default function SelectCustomerModal({
                                                             {c.phone_number ? `${c.dial_code || ''} ${c.phone_number}` : '-'}
                                                         </td>
                                                         <td className="py-3 px-3 text-slate-600">
-                                                            {c.date_of_birth || '-'}
+                                                            {c.date_of_birth ? formatDate(c.date_of_birth) : '-'}
                                                         </td>
                                                         <td className="py-3 px-3 text-right">
                                                             <PrimaryButton

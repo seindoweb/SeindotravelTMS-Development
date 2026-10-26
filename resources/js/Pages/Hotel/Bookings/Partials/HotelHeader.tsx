@@ -279,8 +279,7 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                                 onClick={() => setShowDetailModal(true)}
                                 className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-bright px-2 py-1 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer"
                             >
-                                <Sparkles size={12} />
-                                <span>+{facilitiesList.length - highlightFacilities.length} Other Facilities</span>
+                                View <span>+{facilitiesList.length - highlightFacilities.length} Other Facilities</span>
                             </button>
                         )}
                     </div>

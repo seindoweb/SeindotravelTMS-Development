@@ -56,14 +56,12 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         });
 
         Route::prefix('markups')->name('markups.')->group(function () {
-            // Hotel Markup
             Route::prefix('hotel')->name('hotel.')->group(function () {
                 Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'indexByHotel'])->name('index');
                 Route::match(['get', 'post'], '/create', [HotelMarkupController::class, 'createHotel'])->name('create');
                 Route::match(['get', 'post'], '/edit/{id}', [HotelMarkupController::class, 'editHotel'])->name('edit');
             });
 
-            // Destination Markup
             Route::prefix('destination')->name('destination.')->group(function () {
                 Route::match(['get', 'post'], '/', [HotelMarkupController::class, 'indexByDestination'])->name('index');
                 Route::match(['get', 'post'], '/create', [HotelMarkupController::class, 'createDestination'])->name('create');
@@ -100,8 +98,8 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::prefix('travellers')->name('travellers.')->group(function () {
             Route::match(['get', 'post'], '/', [TravellersController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/retrieve-data', [TravellersController::class, 'retrieveData'])->name('retrieveData');
-            Route::match(['get', 'post'], '/create', [TravellersController::class, 'createDestination'])->name('create');
-            Route::match(['get', 'post'], '/{id}/edit', [TravellersController::class, 'editDestination'])->name('edit');
+            Route::match(['get', 'post'], '/create', [TravellersController::class, 'create'])->name('create');
+            Route::match(['get', 'post'], '/{id}/edit', [TravellersController::class, 'edit'])->name('edit');
         });
     });
 
