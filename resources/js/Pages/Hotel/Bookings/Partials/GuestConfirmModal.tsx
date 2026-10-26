@@ -1,7 +1,7 @@
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import { UserProps } from '@/types';
-import { CheckCircle2, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2, X } from 'lucide-react';
 import { RoomPaxGroup } from './GuestPaxForm';
 
 const formatRupiah = (amount: number | string) => {
@@ -29,6 +29,8 @@ export interface GuestConfirmModalProps {
     nights: number;
     currency: string;
     sellingPrice: number;
+    isSubmitting?: boolean;
+    errorMessage?: string | null;
 }
 
 export default function GuestConfirmModal({
@@ -44,6 +46,8 @@ export default function GuestConfirmModal({
     nights,
     currency,
     sellingPrice,
+    isSubmitting = false,
+    errorMessage = null,
 }: GuestConfirmModalProps) {
     if (!isOpen) return null;
 
@@ -133,20 +137,39 @@ export default function GuestConfirmModal({
                     </div>
                 </div>
 
+                {errorMessage && (
+                    <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl flex items-start gap-2.5 text-xs">
+                        <AlertCircle size={16} className="shrink-0 mt-0.5 text-rose-600" />
+                        <div>
+                            <span className="font-bold block">Gagal Memproses Pemesanan:</span>
+                            <span className="text-rose-600">{errorMessage}</span>
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex items-center gap-3 pt-2">
                     <SecondaryButton
                         type="button"
                         onClick={onClose}
-                        className="flex-1 justify-center py-2.5 px-4 text-sm cursor-pointer"
+                        disabled={isSubmitting}
+                        className="flex-1 justify-center py-2.5 px-4 text-sm cursor-pointer disabled:opacity-50"
                     >
                         Check Again
                     </SecondaryButton>
                     <PrimaryButton
                         type="button"
                         onClick={onConfirm}
-                        className="flex-1 justify-center py-2.5 px-4 text-sm shadow-md cursor-pointer"
+                        disabled={isSubmitting}
+                        className="flex-1 justify-center py-2.5 px-4 text-sm shadow-md cursor-pointer flex items-center gap-2 disabled:opacity-50"
                     >
-                        Yes, Continue
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 size={16} className="animate-spin" />
+                                <span>Processing...</span>
+                            </>
+                        ) : (
+                            <span>Yes, Continue</span>
+                        )}
                     </PrimaryButton>
                 </div>
             </div>

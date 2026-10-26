@@ -188,6 +188,16 @@ export interface UserProps {
     deleted_at?: string;
 }
 
+export interface TravellerProps {
+    id: number;
+    index: string;
+    key: string;
+    title: string;
+    first_name: string;
+    last_name: string;
+    date_of_birth: string;
+}
+
 export interface UserCreditProps {
     index: string;
     key: string;
@@ -455,6 +465,16 @@ export interface HotelRoomInformations {
     moreInformations: HotelRoomMoreInformations;
 }
 
+export interface RoomOccupancy {
+    child1Age: string;
+    child2Age: string;
+    extraBed: boolean;
+    noOfAdults: string;
+    noOfChild: string;
+    rateKey: string;
+    roomNo: string;
+}
+
 export interface HotelRoomDetail {
     key: string;
     code?: string;
@@ -479,6 +499,7 @@ export interface HotelRoomDetail {
     remarks: string;
     message?: string | null;
     roomInformations?: HotelRoomInformations;
+    roomOccupancies?: RoomOccupancy[] | RoomOccupancy;
 }
 
 export interface HotelDetailInfo {
@@ -533,5 +554,74 @@ export interface PrebookRoomReq {
         cancellationPolicyType: string;
         packageRate: boolean;
     };
+}
+
+export interface GuestPageProps {
+    country?: string;
+    destination?: string;
+    hotel?: string;
+    checkIn?: string;
+    checkOut?: string;
+    code?: string;
+    mealPlan?: string;
+    cancellationPolicyType?: string;
+    packageRate?: string;
+    sessionId?: string;
+}
+
+export interface PrebookRoomParam {
+    roomNo: string;
+    noOfAdults: string;
+    noOfChild: string;
+    child1Age?: string;
+    child2Age?: string;
+    extraBed?: boolean;
+    rateKey: string;
+}
+
+export interface PrebookRoomData {
+    params?: {
+        country: string;
+        destination: string;
+        hotel: string;
+        sessionId?: string;
+        checkIn: string;
+        checkOut: string;
+        rooms: PrebookRoomParam[];
+    };
+    rooms?: {
+        code: string;
+        mealPlan: string;
+        cancellationPolicyType: string;
+        packageRate: boolean;
+    };
+    results?: {
+        key: string;
+        sessionID: string;
+        name: string;
+        hotelCode: string;
+        code: string;
+        rating: string;
+        currency: string;
+        thumbnail: string;
+        thumbnailSource?: string;
+        geoLocations?: { latitude: string; longitude: string };
+        locations?: {
+            addressMain: string;
+            addressAlternative?: string;
+            zipCode?: string;
+            area?: string;
+            landmark?: string;
+            cityName?: string;
+            cityCode?: string;
+            countryName?: string;
+            countryCode?: string;
+        };
+        roomDetails?: HotelRoomDetail[] | null;
+        images?: Array<{ url: string; source?: string }>;
+        facilities?: Array<{ name: string; type: string }>;
+    };
+    selectedRoom?: HotelRoomDetail;
+    hotelInfo?: any;
 }
 
