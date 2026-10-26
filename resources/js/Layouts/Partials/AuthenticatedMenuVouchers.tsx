@@ -31,10 +31,9 @@ export default function AuthenticatedMenuVouchers({
     |--------------------------------------------------------------------------
     */
 
-    const isFlightVouchers = route().current('hotel.orders.*');
-
-    const isHotelVouchers = route().current('hotel.bookings.*');
-    const isTourVoucher = route().current('hotel.bookings.*');
+    const isFlightVouchers = route().current('voucher.indexFlight');
+    const isHotelVouchers = route().current('voucher.indexHotel');
+    const isTourVoucher = route().current('voucher.indexTour');
 
     // Hotel Markup
     const isHotelMarkup = route().current('hotel.markups.hotel.*');
@@ -46,7 +45,7 @@ export default function AuthenticatedMenuVouchers({
     const isDistributionTypePage = isHotelMarkup || isDestinationMarkup;
 
     // Apakah sedang berada di halaman Distribution Type?
-    const isHotelsPage =
+    const isVouchersPage =
         isFlightVouchers ||
         isHotelVouchers ||
         isTourVoucher ||
@@ -93,7 +92,7 @@ export default function AuthenticatedMenuVouchers({
                     'group h-11 w-11 rounded-xl relative flex items-center justify-center',
                     'transition-all duration-200',
 
-                    isHotelsPage || open
+                    isVouchersPage || open
                         ? 'bg-primary-bright text-white'
                         : 'text-quaternary-bright hover:bg-primary-bright hover:text-white',
                 ].join(' ')}
@@ -102,7 +101,7 @@ export default function AuthenticatedMenuVouchers({
 
                 {/* Active indicator */}
 
-                {isHotelsPage && (
+                {isVouchersPage && (
                     <span className="h-6 w-1 bg-tertiary absolute -left-[9px] rounded-r-full" />
                 )}
 
@@ -133,7 +132,6 @@ export default function AuthenticatedMenuVouchers({
                     {/* =================================================
                         FLYMENU HEADER
                     ================================================== */}
-
                     <div className="px-4 py-3 border-secondary-dark bg-secondary border-b">
                         <div className="gap-2 flex items-center">
                             <div className="w-8 h-8 text-white rounded-lg bg-primary flex items-center justify-center">
@@ -155,14 +153,13 @@ export default function AuthenticatedMenuVouchers({
                     {/* =================================================
                         MENU ITEMS
                     ================================================== */}
-
                     <div className="p-2">
                         {/* =================================================
                             Flight Vouchers
                         ================================================== */}
 
                         <Link
-                            href={route('hotel.orders.list')}
+                            href={route('voucher.indexFlight')}
                             className={[
                                 'group gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',
@@ -211,7 +208,7 @@ export default function AuthenticatedMenuVouchers({
                         ================================================== */}
 
                         <Link
-                            href={route('hotel.bookings.index')}
+                            href={route('voucher.indexHotel')}
                             className={[
                                 'group mt-1 gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',
@@ -258,9 +255,8 @@ export default function AuthenticatedMenuVouchers({
                         {/* =================================================
                             Tour Vouchers
                         ================================================== */}
-
                         <Link
-                            href={route('hotel.bookings.index')}
+                            href={route('voucher.indexTour')}
                             className={[
                                 'group mt-1 gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',
@@ -307,7 +303,6 @@ export default function AuthenticatedMenuVouchers({
                         {/* =================================================
                            Distribution Type Parent
                         ================================================== */}
-
                         <button
                             type="button"
                             onClick={() =>

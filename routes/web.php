@@ -7,6 +7,7 @@ use App\Http\Controllers\Pages\Hotels\HotelOrderController;
 use App\Http\Controllers\Pages\Users\AdministratorsController;
 use App\Http\Controllers\Pages\Users\CustomersController;
 use App\Http\Controllers\Pages\Users\TravellersController;
+use App\Http\Controllers\Pages\Vouchers\AllVouchersController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -77,6 +78,12 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
     Route::prefix('tours')->name('tours.')->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('voucher')->name('voucher.')->group(function () {
+        Route::match(['get', 'post'], '/flight', [AllVouchersController::class, 'indexFlight'])->name('indexFlight');
+        Route::match(['get', 'post'], '/hotel', [AllVouchersController::class, 'indexHotel'])->name('indexHotel');
+        Route::match(['get', 'post'], '/tour', [AllVouchersController::class, 'indexTour'])->name('indexTour');
     });
 
     Route::prefix('user')->name('user.')->group(function () {
