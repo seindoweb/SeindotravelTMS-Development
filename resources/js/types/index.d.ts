@@ -196,6 +196,9 @@ export interface TravellerProps {
     first_name: string;
     last_name: string;
     date_of_birth: string;
+    nationality: string;
+    created_at: string;
+    tracking_code?: string;
 }
 
 export interface UserCreditProps {
@@ -624,4 +627,3 @@ export interface PrebookRoomData {
     selectedRoom?: HotelRoomDetail;
     hotelInfo?: any;
 }
-

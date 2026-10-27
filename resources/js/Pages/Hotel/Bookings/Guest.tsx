@@ -1,7 +1,15 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
-import { GuestPageProps, HotelRoomDetail, PrebookRoomData, PrebookRoomParam, RoomOccupancy, TravellerProps, UserProps } from '@/types';
-import { Head } from '@inertiajs/react';
+import {
+    GuestPageProps,
+    HotelRoomDetail,
+    PrebookRoomData,
+    PrebookRoomParam,
+    RoomOccupancy,
+    TravellerProps,
+    UserProps,
+} from '@/types';
+import { Head, router } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, Check } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import GuestBookingSummary from './Partials/GuestBookingSummary';
@@ -14,7 +22,7 @@ import GuestSpecialRequests from './Partials/GuestSpecialRequests';
 import SelectCustomerModal from './Partials/SelectCustomerModal';
 import SelectTravellerModal from './Partials/SelectTravellerModal';
 export type { PaxItem, RoomPaxGroup };
-    
+
 const formatRupiah = (amount: number | string) => {
     const num = typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
     return new Intl.NumberFormat('id-ID', {
@@ -122,7 +130,8 @@ const buildDefaultRoomsPax = (
             }
 
             for (let i = 0; i < children; i++) {
-                const childAge = i === 0 ? r.child1Age || '' : r.child2Age || '';
+                const childAge =
+                    i === 0 ? r.child1Age || '' : r.child2Age || '';
                 paxList.push({
                     salutation: 'Mr.',
                     firstName: '',
@@ -163,14 +172,23 @@ const buildDefaultRoomsPax = (
 };
 
 export default function Guest(props: GuestPageProps) {
-    const [prebookData, setPrebookData] = useState<PrebookRoomData | null>(null);
+    const [prebookData, setPrebookData] = useState<PrebookRoomData | null>(
+        null,
+    );
     const [loading, setLoading] = useState<boolean>(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [copiedPrice, setCopiedPrice] = useState<boolean>(false);
-    const [selectedCustomer, setSelectedCustomer] = useState<UserProps | null>(null);
-    const [activePaxTarget, setActivePaxTarget] = useState<{ roomIdx: number; paxIdx: number } | null>(null);
-    const [isCustomerModalOpen, setIsCustomerModalOpen] = useState<boolean>(false);
-    const [isTravellerModalOpen, setIsTravellerModalOpen] = useState<boolean>(false);
+    const [selectedCustomer, setSelectedCustomer] = useState<UserProps | null>(
+        null,
+    );
+    const [activePaxTarget, setActivePaxTarget] = useState<{
+        roomIdx: number;
+        paxIdx: number;
+    } | null>(null);
+    const [isCustomerModalOpen, setIsCustomerModalOpen] =
+        useState<boolean>(false);
+    const [isTravellerModalOpen, setIsTravellerModalOpen] =
+        useState<boolean>(false);
     const [roomsPax, setRoomsPax] = useState<RoomPaxGroup[]>([
         {
             roomNo: '1',
@@ -185,7 +203,7 @@ export default function Guest(props: GuestPageProps) {
                     type: 'adult',
                 },
             ],
-            rateKey: ''
+            rateKey: '',
         },
     ]);
 
@@ -195,16 +213,19 @@ export default function Guest(props: GuestPageProps) {
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-    const [isSubmittingBooking, setIsSubmittingBooking] = useState<boolean>(false);
+    const [isSubmittingBooking, setIsSubmittingBooking] =
+        useState<boolean>(false);
     const [bookingError, setBookingError] = useState<string | null>(null);
-    const [bookingSuccessData, setBookingSuccessData] = useState<any | null>(() => {
-        try {
-            const stored = sessionStorage.getItem('hotelBookingResultData');
-            return stored ? JSON.parse(stored) : null;
-        } catch {
-            return null;
-        }
-    });
+    const [bookingSuccessData, setBookingSuccessData] = useState<any | null>(
+        () => {
+            try {
+                const stored = sessionStorage.getItem('hotelBookingResultData');
+                return stored ? JSON.parse(stored) : null;
+            } catch {
+                return null;
+            }
+        },
+    );
 
     useEffect(() => {
         try {
@@ -215,7 +236,8 @@ export default function Guest(props: GuestPageProps) {
 
                 const activeRoom =
                     parsed.selectedRoom ||
-                    (parsed.results?.roomDetails && parsed.results.roomDetails.length > 0
+                    (parsed.results?.roomDetails &&
+                    parsed.results.roomDetails.length > 0
                         ? parsed.results.roomDetails[0]
                         : null);
 
@@ -232,7 +254,10 @@ export default function Guest(props: GuestPageProps) {
                 return;
             }
         } catch (e) {
-            console.error('Failed to parse hotelPrebookData from sessionStorage:', e);
+            console.error(
+                'Failed to parse hotelPrebookData from sessionStorage:',
+                e,
+            );
         }
 
         if (props.sessionId && (props.code || props.hotel)) {
@@ -248,7 +273,8 @@ export default function Guest(props: GuestPageProps) {
                     roomDetails: {
                         code: props.code || '',
                         mealPlan: props.mealPlan || '',
-                        cancellationPolicyType: props.cancellationPolicyType || 'Flexi',
+                        cancellationPolicyType:
+                            props.cancellationPolicyType || 'Flexi',
                         packageRate: props.packageRate === 'true',
                     },
                 })
@@ -256,13 +282,20 @@ export default function Guest(props: GuestPageProps) {
                     if (res.data?.data) {
                         const data = res.data.data as PrebookRoomData;
                         setPrebookData(data);
-                        sessionStorage.setItem('hotelPrebookData', JSON.stringify(data));
+                        sessionStorage.setItem(
+                            'hotelPrebookData',
+                            JSON.stringify(data),
+                        );
                         const activeRoom =
                             data.selectedRoom ||
-                            (data.results?.roomDetails && data.results.roomDetails.length > 0
+                            (data.results?.roomDetails &&
+                            data.results.roomDetails.length > 0
                                 ? data.results.roomDetails[0]
                                 : null);
-                        if (data.params?.rooms && data.params.rooms.length > 0) {
+                        if (
+                            data.params?.rooms &&
+                            data.params.rooms.length > 0
+                        ) {
                             setRoomsPax(
                                 buildDefaultRoomsPax(
                                     data.params.rooms,
@@ -284,17 +317,22 @@ export default function Guest(props: GuestPageProps) {
 
     const results = prebookData?.results;
     const params = prebookData?.params;
-    console.log('params', params)
+    console.log('params', params);
     const selectedRoom =
         prebookData?.selectedRoom ||
-        (results?.roomDetails && results.roomDetails.length > 0 ? results.roomDetails[0] : null);
-    console.log('selectedRoom', selectedRoom)
+        (results?.roomDetails && results.roomDetails.length > 0
+            ? results.roomDetails[0]
+            : null);
+    console.log('selectedRoom', selectedRoom);
 
     const checkInDate = params?.checkIn || props.checkIn || '';
     const checkOutDate = params?.checkOut || props.checkOut || '';
     const nights = countNights(checkInDate, checkOutDate);
     const hotelName = results?.name || prebookData?.hotelInfo?.name || 'Hotel';
-    const hotelRating = parseInt(results?.rating || prebookData?.hotelInfo?.rating || '0', 10);
+    const hotelRating = parseInt(
+        results?.rating || prebookData?.hotelInfo?.rating || '0',
+        10,
+    );
     const currency = results?.currency || selectedRoom?.currency || 'IDR';
 
     const sellingPrice = selectedRoom?.sellingPrice || 0;
@@ -303,8 +341,11 @@ export default function Guest(props: GuestPageProps) {
     const roomName = selectedRoom?.name || 'Room';
     const mealPlanName =
         selectedRoom?.mealPlanName ||
-        (props.mealPlan === 'BDBF' ? 'Breakfast' : props.mealPlan || 'Room Only');
-    const isRefundable = selectedRoom?.refundable ?? props.cancellationPolicyType === 'Flexi';
+        (props.mealPlan === 'BDBF'
+            ? 'Breakfast'
+            : props.mealPlan || 'Room Only');
+    const isRefundable =
+        selectedRoom?.refundable ?? props.cancellationPolicyType === 'Flexi';
     const hotelAddress =
         results?.locations?.addressMain ||
         results?.locations?.area ||
@@ -313,9 +354,10 @@ export default function Guest(props: GuestPageProps) {
 
     const handleCopyPrice = (e?: React.MouseEvent) => {
         e?.stopPropagation();
-        const priceText = `${currency.trim()} ${formatRupiah(sellingPrice).trim()}`
-            .replace(/\s+/g, ' ')
-            .trim();
+        const priceText =
+            `${currency.trim()} ${formatRupiah(sellingPrice).trim()}`
+                .replace(/\s+/g, ' ')
+                .trim();
         if (navigator.clipboard && window.isSecureContext) {
             navigator.clipboard.writeText(priceText);
         } else {
@@ -346,13 +388,16 @@ export default function Guest(props: GuestPageProps) {
             roomGroup.pax.forEach((paxItem, paxIdx) => {
                 const labelTarget = `Kamar ${roomGroup.roomNo} Pax ${paxIdx + 1}`;
                 if (!paxItem.firstName.trim()) {
-                    errors[`room_${roomIdx}_pax_${paxIdx}_firstName`] = `${labelTarget}: Nama depan wajib diisi.`;
+                    errors[`room_${roomIdx}_pax_${paxIdx}_firstName`] =
+                        `${labelTarget}: Nama depan wajib diisi.`;
                 }
                 if (!paxItem.lastName.trim()) {
-                    errors[`room_${roomIdx}_pax_${paxIdx}_lastName`] = `${labelTarget}: Nama belakang wajib diisi.`;
+                    errors[`room_${roomIdx}_pax_${paxIdx}_lastName`] =
+                        `${labelTarget}: Nama belakang wajib diisi.`;
                 }
                 if (paxItem.type === 'child' && !paxItem.age.trim()) {
-                    errors[`room_${roomIdx}_pax_${paxIdx}_age`] = `${labelTarget}: Umur anak wajib diisi.`;
+                    errors[`room_${roomIdx}_pax_${paxIdx}_age`] =
+                        `${labelTarget}: Umur anak wajib diisi.`;
                 }
             });
         });
@@ -361,7 +406,10 @@ export default function Guest(props: GuestPageProps) {
         return Object.keys(errors).length === 0;
     };
 
-    const handleOpenSelectTravellerModal = (roomIdx: number, paxIdx: number) => {
+    const handleOpenSelectTravellerModal = (
+        roomIdx: number,
+        paxIdx: number,
+    ) => {
         setActivePaxTarget({ roomIdx, paxIdx });
         setIsTravellerModalOpen(true);
     };
@@ -384,7 +432,8 @@ export default function Guest(props: GuestPageProps) {
                 lastName: traveller.last_name || '',
                 age: age || nextPaxList[paxIdx].age || '',
                 travellerId: traveller.id || traveller.index,
-                travellerName: `${traveller.first_name} ${traveller.last_name}`.trim(),
+                travellerName:
+                    `${traveller.first_name} ${traveller.last_name}`.trim(),
             };
             nextRoom.pax = nextPaxList;
             next[roomIdx] = nextRoom;
@@ -444,7 +493,10 @@ export default function Guest(props: GuestPageProps) {
             createdAt: new Date().toISOString(),
         };
 
-        sessionStorage.setItem('hotelBookingGuestData', JSON.stringify(bookingPayload));
+        sessionStorage.setItem(
+            'hotelBookingGuestData',
+            JSON.stringify(bookingPayload),
+        );
         setShowConfirmModal(true);
     };
 
@@ -454,7 +506,8 @@ export default function Guest(props: GuestPageProps) {
 
         try {
             const finalCountry = params?.country || props.country || 'ID';
-            const finalDestination = params?.destination || props.destination || '';
+            const finalDestination =
+                params?.destination || props.destination || '';
             const finalHotel = params?.hotel || props.hotel || '';
             const finalSessionId =
                 params?.sessionId ||
@@ -484,7 +537,7 @@ export default function Guest(props: GuestPageProps) {
                 packageRate: Boolean(
                     selectedRoom?.packageRate ??
                     prebookData?.rooms?.packageRate ??
-                    (props.packageRate === 'true'),
+                    props.packageRate === 'true',
                 ),
             };
 
@@ -499,7 +552,9 @@ export default function Guest(props: GuestPageProps) {
                 );
 
                 const paxPayload = r.pax.map((p) => {
-                    const salutation = p.salutation ? p.salutation.trim() : 'Mr.';
+                    const salutation = p.salutation
+                        ? p.salutation.trim()
+                        : 'Mr.';
                     const formattedSalutation = ` ${salutation}`;
                     return {
                         salutation: formattedSalutation,
@@ -538,15 +593,23 @@ export default function Guest(props: GuestPageProps) {
                 checkOut: finalCheckOut,
                 roomDetails: roomDetailsPayload,
                 rooms: {
-                    picGuestNationality: (selectedCustomer as any)?.nationality || 'ID',
+                    picGuestNationality:
+                        (selectedCustomer as any)?.nationality || 'ID',
                     room: roomsListPayload,
                 },
             };
 
-            const res = await hotelMicroserviceApi.post('/booking-room', payload);
+            const res = await hotelMicroserviceApi.post(
+                '/booking-room',
+                payload,
+            );
 
             setBookingSuccessData(res.data);
-            sessionStorage.setItem('hotelBookingResultData', JSON.stringify(res.data));
+            sessionStorage.setItem(
+                'hotelBookingResultData',
+                JSON.stringify(res.data),
+            );
+            return router.visit(route('hotel.orders.preview', 12364));
 
             setShowConfirmModal(false);
 
@@ -567,63 +630,71 @@ export default function Guest(props: GuestPageProps) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center gap-2 text-sm">
+                <div className="gap-2 text-sm flex items-center">
                     <span className="font-bold text-primary">Hotel</span>
                     <span className="text-gray-300">/</span>
                     <span className="font-bold text-primary">Search</span>
                     <span className="text-gray-300">/</span>
-                    <span className="font-bold text-primary truncate max-w-[200px] sm:max-w-xs">
+                    <span className="font-bold text-primary sm:max-w-xs max-w-[200px] truncate">
                         {hotelName}
                     </span>
                     <span className="text-gray-300">/</span>
-                    <span className="font-bold text-primary">Guest Information</span>
+                    <span className="font-bold text-primary">
+                        Guest Information
+                    </span>
                 </div>
             }
         >
             <Head title={`Data Tamu — ${hotelName}`} />
 
-            <div className="max-w-7xl mx-auto py-2 sm:py-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div className="max-w-7xl py-2 sm:py-4 mx-auto">
+                <div className="sm:flex-row sm:items-center gap-3 mb-6 flex flex-col justify-between">
                     <button
                         type="button"
                         onClick={() => window.history.back()}
-                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-quaternary hover:text-primary transition-colors cursor-pointer w-fit"
+                        className="gap-2 text-xs sm:text-sm font-semibold text-quaternary hover:text-primary inline-flex w-fit cursor-pointer items-center transition-colors"
                     >
                         <ArrowLeft size={16} />
                         <span>Back to Room Selection</span>
                     </button>
 
-                    <div className="flex items-center gap-2 text-xs font-semibold">
-                        <span className="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/60">
+                    <div className="gap-2 text-xs font-semibold flex items-center">
+                        <span className="gap-1 text-emerald-600 bg-emerald-50 px-2.5 py-1 border-emerald-200/60 inline-flex items-center rounded-full border">
                             <Check size={12} />
                             Room Selection
                         </span>
                         <span className="text-gray-300">›</span>
-                        <span className="inline-flex items-center gap-1.5 text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 font-bold">
+                        <span className="gap-1.5 text-primary bg-primary/10 px-3 py-1 border-primary/20 font-bold inline-flex items-center rounded-full border">
                             Guest Information
                         </span>
                         <span className="text-gray-300">›</span>
-                        <span className="text-gray-400">Confirmation & Booking</span>
+                        <span className="text-gray-400">
+                            Confirmation & Booking
+                        </span>
                     </div>
                 </div>
 
                 {bookingSuccessData && (
-                    <div className="bg-emerald-50 border border-emerald-300/90 rounded-2xl p-5 mb-6 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-                        <div className="flex items-start gap-3.5">
-                            <div className="flex-1 space-y-2">
-                                <div className="flex flex-wrap items-center justify-between gap-2">
-                                    <div className="flex items-center gap-2">
+                    <div className="bg-emerald-50 border-emerald-300/90 rounded-2xl p-5 mb-6 shadow-sm animate-in fade-in slide-in-from-top-4 border duration-300">
+                        <div className="gap-3.5 flex items-start">
+                            <div className="space-y-2 flex-1">
+                                <div className="gap-2 flex flex-wrap items-center justify-between">
+                                    <div className="gap-2 flex items-center">
                                         <h4 className="text-sm sm:text-base font-bold text-emerald-950">
                                             Booking Room Berhasil (HTTP 200 OK)
                                         </h4>
                                     </div>
                                 </div>
                                 <details className="mt-2 text-xs">
-                                    <summary className="cursor-pointer font-bold text-emerald-900 hover:text-emerald-700 select-none py-1">
+                                    <summary className="font-bold text-emerald-900 hover:text-emerald-700 py-1 cursor-pointer select-none">
                                         Lihat Detail Response API (JSON)
                                     </summary>
-                                    <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded-xl overflow-x-auto text-[11px] font-mono leading-relaxed max-h-60 border border-slate-800">
-                                        {JSON.stringify(bookingSuccessData, null, 2)}
+                                    <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded-xl font-mono leading-relaxed max-h-60 border-slate-800 overflow-x-auto border text-[11px]">
+                                        {JSON.stringify(
+                                            bookingSuccessData,
+                                            null,
+                                            2,
+                                        )}
                                     </pre>
                                 </details>
                             </div>
@@ -632,11 +703,18 @@ export default function Guest(props: GuestPageProps) {
                 )}
 
                 {fetchError && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 flex items-start gap-3">
-                        <AlertCircle className="text-amber-600 shrink-0 mt-0.5" size={18} />
+                    <div className="bg-amber-50 border-amber-200 rounded-2xl p-4 mb-6 gap-3 flex items-start border">
+                        <AlertCircle
+                            className="text-amber-600 mt-0.5 shrink-0"
+                            size={18}
+                        />
                         <div>
-                            <p className="text-sm font-bold text-amber-900">Note</p>
-                            <p className="text-xs text-amber-800 mt-0.5">{fetchError}</p>
+                            <p className="text-sm font-bold text-amber-900">
+                                Note
+                            </p>
+                            <p className="text-xs text-amber-800 mt-0.5">
+                                {fetchError}
+                            </p>
                         </div>
                     </div>
                 )}
@@ -644,12 +722,16 @@ export default function Guest(props: GuestPageProps) {
                 {loading ? (
                     <GuestSkeleton />
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <div className="lg:grid-cols-12 gap-6 grid grid-cols-1 items-start">
                         <div className="lg:col-span-8 space-y-6">
                             <GuestCustomerCard
                                 customer={selectedCustomer}
-                                onOpenSelectModal={() => setIsCustomerModalOpen(true)}
-                                onClearCustomer={() => setSelectedCustomer(null)}
+                                onOpenSelectModal={() =>
+                                    setIsCustomerModalOpen(true)
+                                }
+                                onClearCustomer={() =>
+                                    setSelectedCustomer(null)
+                                }
                             />
 
                             <GuestPaxForm
@@ -657,7 +739,9 @@ export default function Guest(props: GuestPageProps) {
                                 setRoomsPax={setRoomsPax}
                                 formErrors={formErrors}
                                 setFormErrors={setFormErrors}
-                                onOpenSelectTravellerModal={handleOpenSelectTravellerModal}
+                                onOpenSelectTravellerModal={
+                                    handleOpenSelectTravellerModal
+                                }
                                 onClearPaxTraveller={handleClearPaxTraveller}
                             />
 
@@ -703,7 +787,9 @@ export default function Guest(props: GuestPageProps) {
                 isOpen={isCustomerModalOpen}
                 onClose={() => setIsCustomerModalOpen(false)}
                 onSelect={(cust) => setSelectedCustomer(cust)}
-                selectedCustomerId={selectedCustomer?.index || selectedCustomer?.key}
+                selectedCustomerId={
+                    selectedCustomer?.index || selectedCustomer?.key
+                }
             />
 
             <SelectTravellerModal
@@ -715,7 +801,9 @@ export default function Guest(props: GuestPageProps) {
                 onSelect={handleSelectTraveller}
                 selectedTravellerId={
                     activePaxTarget
-                        ? roomsPax[activePaxTarget.roomIdx]?.pax[activePaxTarget.paxIdx]?.travellerId
+                        ? roomsPax[activePaxTarget.roomIdx]?.pax[
+                              activePaxTarget.paxIdx
+                          ]?.travellerId
                         : undefined
                 }
             />

@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
+import ListTravellerTable from './Partials/ListTravellerTable';
 
 export default function Index() {
     return (
@@ -21,7 +22,7 @@ export default function Index() {
             }
         >
             <Head title="Traveller" />
-            {/* <ListCustomerTable /> */}
+            <ListTravellerTable />
         </AuthenticatedLayout>
     );
 }
