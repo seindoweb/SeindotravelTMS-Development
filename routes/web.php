@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     Route::prefix('hotel')->name('hotel.')->group(function () {
         Route::prefix('orders')->name('orders.')->group(function () {
             Route::match(['get', 'post'], '/list', [HotelOrderController::class, 'orderList'])->name('list');
+            Route::match(['get', 'post'], '/preview/{session}', [HotelOrderController::class, 'preview'])->name('preview');
             Route::match(['get', 'post'], '/details/{id}', [HotelOrderController::class, 'orderDetails'])->name('orderDetails');
         });
 
