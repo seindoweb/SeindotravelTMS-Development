@@ -477,6 +477,10 @@ export default function Guest(props: GuestPageProps) {
     };
 
     const handleProceedToBooking = () => {
+        if (!selectedCustomer) {
+            return;
+        }
+
         if (!validateForm()) {
             window.scrollTo({ top: 150, behavior: 'smooth' });
             return;
@@ -609,7 +613,7 @@ export default function Guest(props: GuestPageProps) {
                 'hotelBookingResultData',
                 JSON.stringify(res.data),
             );
-            return router.visit(route('hotel.orders.preview', 12364));
+            // return router.visit(route('hotel.orders.preview', 12364));
 
             setShowConfirmModal(false);
 
@@ -645,7 +649,7 @@ export default function Guest(props: GuestPageProps) {
                 </div>
             }
         >
-            <Head title={`Data Tamu — ${hotelName}`} />
+            <Head title={`${hotelName}`} />
 
             <div className="max-w-7xl py-2 sm:py-4 mx-auto">
                 <div className="sm:flex-row sm:items-center gap-3 mb-6 flex flex-col justify-between">
@@ -729,9 +733,19 @@ export default function Guest(props: GuestPageProps) {
                                 onOpenSelectModal={() =>
                                     setIsCustomerModalOpen(true)
                                 }
-                                onClearCustomer={() =>
-                                    setSelectedCustomer(null)
-                                }
+                                onClearCustomer={() => {
+                                    setSelectedCustomer(null);
+                                    setRoomsPax((prev) =>
+                                        prev.map((r) => ({
+                                            ...r,
+                                            pax: r.pax.map((p) => ({
+                                                ...p,
+                                                travellerId: undefined,
+                                                travellerName: undefined,
+                                            })),
+                                        })),
+                                    );
+                                }}
                             />
 
                             <GuestPaxForm
@@ -777,6 +791,9 @@ export default function Guest(props: GuestPageProps) {
                                 copiedPrice={copiedPrice}
                                 onCopyPrice={handleCopyPrice}
                                 onProceed={handleProceedToBooking}
+                                isProceedDisabled={
+                                    !selectedCustomer || isSubmittingBooking
+                                }
                             />
                         </div>
                     </div>
@@ -786,7 +803,25 @@ export default function Guest(props: GuestPageProps) {
             <SelectCustomerModal
                 isOpen={isCustomerModalOpen}
                 onClose={() => setIsCustomerModalOpen(false)}
-                onSelect={(cust) => setSelectedCustomer(cust)}
+                onSelect={(cust) => {
+                    if (
+                        selectedCustomer &&
+                        (selectedCustomer.id !== cust.id ||
+                            selectedCustomer.index !== cust.index)
+                    ) {
+                        setRoomsPax((prev) =>
+                            prev.map((r) => ({
+                                ...r,
+                                pax: r.pax.map((p) => ({
+                                    ...p,
+                                    travellerId: undefined,
+                                    travellerName: undefined,
+                                })),
+                            })),
+                        );
+                    }
+                    setSelectedCustomer(cust);
+                }}
                 selectedCustomerId={
                     selectedCustomer?.index || selectedCustomer?.key
                 }
@@ -806,6 +841,7 @@ export default function Guest(props: GuestPageProps) {
                           ]?.travellerId
                         : undefined
                 }
+                customer={selectedCustomer}
             />
 
             <GuestConfirmModal

@@ -1,18 +1,30 @@
+import ConfirmModal from '@/Components/ConfirmModal';
 import TableOnlySkeleton from '@/Components/Skeleton/TableOnlySkeleton';
 import TableActionMenu from '@/Components/TableActionMenu';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import TablePaginate from '@/Components/TablePaginate';
 import { formatDate } from '@/helpers';
 import { api } from '@/libs/http/api';
-import { Paginate, TravellerProps, UserProps } from '@/types';
+import { Paginate, TravellerProps } from '@/types';
 import { router } from '@inertiajs/react';
-import { ArrowDownAZ, ArrowUpZA, Eye, Plus } from 'lucide-react';
+import { Edit, Eye, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import TravellerDetailModal from './TravellerDetailModal';
 
 export default function ListTravellerTable() {
     const [search, setSearch] = useState('');
     const [page, setPage] = useState<Paginate<TravellerProps> | null>(null);
     const [loading, setLoading] = useState(false);
+
+    const [selectedTraveller, setSelectedTraveller] =
+        useState<TravellerProps | null>(null);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
+    const [itemToDelete, setItemToDelete] = useState<TravellerProps | null>(
+        null,
+    );
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const fetchPage = async (urlOrPage: string | number = 1) => {
         setLoading(true);
@@ -40,6 +52,33 @@ export default function ListTravellerTable() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
+    const handleViewDetail = (traveller: TravellerProps) => {
+        setSelectedTraveller(traveller);
+        setIsDetailModalOpen(true);
+    };
+
+    const handleDeleteClick = (traveller: TravellerProps) => {
+        setItemToDelete(traveller);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!itemToDelete) return;
+        setIsDeleting(true);
+        try {
+            const targetId = itemToDelete.index || itemToDelete.id;
+            await api.del(route('user.travellers.destroy', targetId));
+            setIsDeleteModalOpen(false);
+            setItemToDelete(null);
+            fetchPage(page?.current_page || 1);
+        } catch (error) {
+            console.error('Failed to delete traveller:', error);
+            alert('Failed to delete traveller.');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     const items = page?.data ?? [];
 
     return (
@@ -49,14 +88,12 @@ export default function ListTravellerTable() {
                 subtitle="Manage registered travellers and profiles"
                 searchValue={search}
                 onSearchChange={setSearch}
-                dropdownLabel="@dwdwd
-                Sort"
                 actions={[
                     {
                         label: 'New Traveller',
                         icon: <Plus size={16} strokeWidth={2.5} />,
                         onClick: () =>
-                            router.visit(route('hotel.markups.hotel.create')),
+                            router.visit(route('user.travellers.create')),
                     },
                 ]}
             />
@@ -120,6 +157,12 @@ export default function ListTravellerTable() {
                                                         {val.first_name}{' '}
                                                         {val.last_name}
                                                     </span>
+                                                    {val.user && (
+                                                        <span className="text-[11px] text-gray-400">
+                                                            Customer:{' '}
+                                                            {val.user.full_name}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         </td>
@@ -157,7 +200,38 @@ export default function ListTravellerTable() {
                                                                     size={16}
                                                                 />
                                                             ),
-                                                            href: '#',
+                                                            onClick: () =>
+                                                                handleViewDetail(
+                                                                    val,
+                                                                ),
+                                                        },
+                                                        {
+                                                            label: 'Edit Traveller',
+                                                            icon: (
+                                                                <Edit
+                                                                    size={16}
+                                                                />
+                                                            ),
+                                                            href: route(
+                                                                'user.travellers.edit',
+                                                                val.index ||
+                                                                    val.id,
+                                                            ),
+                                                        },
+                                                    ],
+                                                    [
+                                                        {
+                                                            label: 'Delete Traveller',
+                                                            icon: (
+                                                                <Trash2
+                                                                    size={16}
+                                                                />
+                                                            ),
+                                                            onClick: () =>
+                                                                handleDeleteClick(
+                                                                    val,
+                                                                ),
+                                                            variant: 'danger',
                                                         },
                                                     ],
                                                 ]}
@@ -178,6 +252,42 @@ export default function ListTravellerTable() {
                     onNavigate={(url) => fetchPage(url)}
                 />
             )}
+
+            <TravellerDetailModal
+                isOpen={isDetailModalOpen}
+                onClose={() => {
+                    setIsDetailModalOpen(false);
+                    setSelectedTraveller(null);
+                }}
+                traveller={selectedTraveller}
+            />
+
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => {
+                    setIsDeleteModalOpen(false);
+                    setItemToDelete(null);
+                }}
+                onConfirm={confirmDelete}
+                title="Delete Traveller"
+                message={
+                    <>
+                        Are you sure you want to delete traveller{' '}
+                        <strong>
+                            {[
+                                itemToDelete?.title,
+                                itemToDelete?.first_name,
+                                itemToDelete?.last_name,
+                            ]
+                                .filter(Boolean)
+                                .join(' ')}
+                        </strong>
+                        ? This action cannot be undone.
+                    </>
+                }
+                confirmText="Delete Traveller"
+                isProcessing={isDeleting}
+            />
         </div>
     );
 }

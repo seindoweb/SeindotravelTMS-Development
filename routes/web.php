@@ -93,7 +93,11 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::match(['get', 'post'], '/', [TravellersController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/retrieve-data', [TravellersController::class, 'retrieveData'])->name('retrieveData');
             Route::match(['get', 'post'], '/create', [TravellersController::class, 'create'])->name('create');
+            Route::post('/store', [TravellersController::class, 'store'])->name('store');
+            Route::get('/search-customers', [TravellersController::class, 'searchCustomers'])->name('searchCustomers');
             Route::match(['get', 'post'], '/{id}/edit', [TravellersController::class, 'edit'])->name('edit');
+            Route::match(['put', 'patch', 'post'], '/{id}', [TravellersController::class, 'update'])->name('update');
+            Route::delete('/{id}', [TravellersController::class, 'destroy'])->name('destroy');
         });
     });
 
@@ -105,5 +109,5 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
-require __DIR__ . '/locale.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/locale.php';
