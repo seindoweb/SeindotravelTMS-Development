@@ -14,6 +14,19 @@ return [
     |
     */
 
+    'hotelMicroserviceApi' => [
+        'base_url' => env('HOTEL_MICROSERVICE_API_URL', 'https://travelhotelcdn.seindo.dev/api/v2026'),
+        'access_permission_token' => env('HOTEL_MICROSERVICE_API_ACCESS_PERMISSION_TOKEN', 'master-access-token'),
+    ],
+
+    'mgbedbank' => [
+        'agency_code'       => env('MGBEDBANK_AGENCY_CODE', 'AGID013799'),
+        'username'          => env('MGBEDBANK_USERNAME', 'SEIGTINJsonV1'),
+        'password'          => env('MGBEDBANK_PASSWORD', '52!n6OG1062L75'),
+        'currency'          => env('MGBEDBANK_DEFAULT_CURRENCY', 'IDR'),
+        'url'               => env('MGBEDBANK_URL', 'http://uat-jarvis1-xmlsell.mgbedbank.com')
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],
@@ -34,5 +47,6 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+
 
 ];

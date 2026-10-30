@@ -46,14 +46,14 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     Route::prefix('hotel')->name('hotel.')->group(function () {
         Route::prefix('orders')->name('orders.')->group(function () {
             Route::match(['get', 'post'], '/list', [HotelOrderController::class, 'orderList'])->name('list');
-            Route::match(['get', 'post'], '/preview/{session}', [HotelOrderController::class, 'preview'])->name('preview');
             Route::match(['get', 'post'], '/details/{id}', [HotelOrderController::class, 'orderDetails'])->name('orderDetails');
         });
-
+        
         Route::prefix('bookings')->name('bookings.')->group(function () {
             Route::match(['get', 'post'], '/', [HotelBookingController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/search', [HotelBookingController::class, 'search'])->name('search');
             Route::match(['get', 'post'], '/guest', [HotelBookingController::class, 'guest'])->name('guest');
+            Route::match(['get', 'post'], '/create/{session_id}/{customer_tracking_code}', [HotelBookingController::class, 'create'])->name('create');
         });
 
         Route::prefix('markups')->name('markups.')->group(function () {

@@ -31,13 +31,4 @@ class HotelOrderController extends Controller
             'orderId' => $id
         ]);
     }
-
-    /**
-     * preview
-     *
-     * @return void
-     */
-    public function preview($session) {
-       return Inertia::render('Hotel/Orders/List');
-    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages\Hotels;
 
 use App\Http\Controllers\Controller;
+use App\Services\HotelMicroserviceApi\BookingPreview;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -76,12 +77,24 @@ class HotelBookingController extends Controller
      * guest
      *
      * @return void
-     *              only 1 room
-     *              Guest
-     *              ?country=ID&destination=ID-CGK&hotel=ID10000117&checkIn=2026-10-13&checkOut=2026-10-14&sessionId=1AF58339-6815-49CB-ACB6-3F720310968A&code=RM_3142_1&mealPlan=BDBF&cancellationPolicyType=Flexi&packageRate=false
+     * only 1 room
+     * Guest
+     * ?country=ID&destination=ID-CGK&hotel=ID10000117&checkIn=2026-10-13&checkOut=2026-10-14&sessionId=1AF58339-6815-49CB-ACB6-3F720310968A&code=RM_3142_1&mealPlan=BDBF&cancellationPolicyType=Flexi&packageRate=false
      */
     public function guest(Request $request)
     {
         return Inertia::render('Hotel/Bookings/Guest', $request->all());
+    }
+
+    /**
+     * create
+     *
+     * @return void
+     */
+    public function create($session_id, $customer_tracking_code)
+    {
+        // $bookingPreview = BookingPreview::getBookingPreview($session_id);
+        // dd($bookingPreview);
+        return Inertia::render('Hotel/Orders/List');
     }
 }

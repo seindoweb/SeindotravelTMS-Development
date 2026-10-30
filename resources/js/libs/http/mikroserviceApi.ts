@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 export const hotelMicroserviceApi = axios.create({
-    baseURL: 'https://travelhotelcdn.seindo.dev/api/v2026',
+    baseURL: import.meta.env.VITE_HOTEL_MICROSERVICE_API_URL ?? "https://travelhotelcdn.seindo.dev/api/v2026",
     headers: {
-        AccessPermissionToken: 'master-access-token',
+        AccessPermissionToken: import.meta.env.HOTEL_MICROSERVICE_API_ACCESS_PERMISSION_TOKEN ?? "master-access-token",
         Accept: 'application/json',
     },
 });

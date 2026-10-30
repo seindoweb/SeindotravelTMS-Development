@@ -609,10 +609,10 @@ export default function Guest(props: GuestPageProps) {
                 'hotelBookingResultData',
                 JSON.stringify(res.data),
             );
-            return router.visit(route('hotel.orders.preview', 12364));
-
+            
+            return router.visit(route('hotel.bookings.create', {customer_tracking_code : selectedCustomer?.tracking_code, session_id : bookingSuccessData.data.results.sessionID}));
             setShowConfirmModal(false);
-
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err: any) {
             console.error('Booking Room Error:', err);
