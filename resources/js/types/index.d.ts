@@ -130,6 +130,7 @@ export interface SubregionProps {
 }
 
 export interface UserProps {
+    id?: number;
     index: string;
     key: string;
 
@@ -192,13 +193,29 @@ export interface TravellerProps {
     id: number;
     index: string;
     key: string;
+    user_id?: number;
     title: string;
     first_name: string;
     last_name: string;
     date_of_birth: string;
     nationality: string;
+    document_type?: string;
+    document_number?: string;
+    issuing_country?: string;
+    document_issue_date?: string | null;
+    document_expiry_date?: string | null;
+    passport_number?: string;
+    passport_issuing_country?: string | null;
+    passport_issue_date?: string | null;
+    passport_expiry_date?: string | null;
     created_at: string;
+    updated_at?: string;
     tracking_code?: string;
+    user?: {
+        id: number;
+        full_name: string;
+        email: string;
+    } | null;
 }
 
 export interface UserCreditProps {

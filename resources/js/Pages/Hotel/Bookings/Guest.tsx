@@ -477,6 +477,10 @@ export default function Guest(props: GuestPageProps) {
     };
 
     const handleProceedToBooking = () => {
+        if (!selectedCustomer) {
+            return;
+        }
+
         if (!validateForm()) {
             window.scrollTo({ top: 150, behavior: 'smooth' });
             return;
@@ -609,10 +613,15 @@ export default function Guest(props: GuestPageProps) {
                 'hotelBookingResultData',
                 JSON.stringify(res.data),
             );
-            
-            return router.visit(route('hotel.bookings.create', {customer_tracking_code : selectedCustomer?.tracking_code, session_id : bookingSuccessData.data.results.sessionID}));
+
+            return router.visit(
+                route('hotel.bookings.create', {
+                    customer_tracking_code: selectedCustomer?.tracking_code,
+                    session_id: bookingSuccessData.data.results.sessionID,
+                }),
+            );
             setShowConfirmModal(false);
-            
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err: any) {
             console.error('Booking Room Error:', err);
@@ -645,14 +654,14 @@ export default function Guest(props: GuestPageProps) {
                 </div>
             }
         >
-            <Head title={`Data Tamu — ${hotelName}`} />
+            <Head title={`${hotelName}`} />
 
-            <div className="max-w-7xl py-2 sm:py-4 mx-auto">
-                <div className="sm:flex-row sm:items-center gap-3 mb-6 flex flex-col justify-between">
+            <div className="py-2 max-w-7xl sm:py-4 mx-auto">
+                <div className="gap-3 mb-6 sm:flex-row sm:items-center flex flex-col justify-between">
                     <button
                         type="button"
                         onClick={() => window.history.back()}
-                        className="gap-2 text-xs sm:text-sm font-semibold text-quaternary hover:text-primary inline-flex w-fit cursor-pointer items-center transition-colors"
+                        className="gap-2 text-xs font-semibold sm:text-sm text-quaternary hover:text-primary inline-flex w-fit cursor-pointer items-center transition-colors"
                     >
                         <ArrowLeft size={16} />
                         <span>Back to Room Selection</span>
@@ -675,18 +684,18 @@ export default function Guest(props: GuestPageProps) {
                 </div>
 
                 {bookingSuccessData && (
-                    <div className="bg-emerald-50 border-emerald-300/90 rounded-2xl p-5 mb-6 shadow-sm animate-in fade-in slide-in-from-top-4 border duration-300">
+                    <div className="p-5 mb-6 shadow-sm bg-emerald-50 border-emerald-300/90 rounded-2xl animate-in fade-in slide-in-from-top-4 border duration-300">
                         <div className="gap-3.5 flex items-start">
                             <div className="space-y-2 flex-1">
                                 <div className="gap-2 flex flex-wrap items-center justify-between">
                                     <div className="gap-2 flex items-center">
-                                        <h4 className="text-sm sm:text-base font-bold text-emerald-950">
+                                        <h4 className="text-sm font-bold sm:text-base text-emerald-950">
                                             Booking Room Berhasil (HTTP 200 OK)
                                         </h4>
                                     </div>
                                 </div>
                                 <details className="mt-2 text-xs">
-                                    <summary className="font-bold text-emerald-900 hover:text-emerald-700 py-1 cursor-pointer select-none">
+                                    <summary className="py-1 font-bold text-emerald-900 hover:text-emerald-700 cursor-pointer select-none">
                                         Lihat Detail Response API (JSON)
                                     </summary>
                                     <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded-xl font-mono leading-relaxed max-h-60 border-slate-800 overflow-x-auto border text-[11px]">
@@ -703,7 +712,7 @@ export default function Guest(props: GuestPageProps) {
                 )}
 
                 {fetchError && (
-                    <div className="bg-amber-50 border-amber-200 rounded-2xl p-4 mb-6 gap-3 flex items-start border">
+                    <div className="gap-3 p-4 mb-6 bg-amber-50 border-amber-200 rounded-2xl flex items-start border">
                         <AlertCircle
                             className="text-amber-600 mt-0.5 shrink-0"
                             size={18}
@@ -722,16 +731,26 @@ export default function Guest(props: GuestPageProps) {
                 {loading ? (
                     <GuestSkeleton />
                 ) : (
-                    <div className="lg:grid-cols-12 gap-6 grid grid-cols-1 items-start">
-                        <div className="lg:col-span-8 space-y-6">
+                    <div className="gap-6 lg:grid-cols-12 grid grid-cols-1 items-start">
+                        <div className="space-y-6 lg:col-span-8">
                             <GuestCustomerCard
                                 customer={selectedCustomer}
                                 onOpenSelectModal={() =>
                                     setIsCustomerModalOpen(true)
                                 }
-                                onClearCustomer={() =>
-                                    setSelectedCustomer(null)
-                                }
+                                onClearCustomer={() => {
+                                    setSelectedCustomer(null);
+                                    setRoomsPax((prev) =>
+                                        prev.map((r) => ({
+                                            ...r,
+                                            pax: r.pax.map((p) => ({
+                                                ...p,
+                                                travellerId: undefined,
+                                                travellerName: undefined,
+                                            })),
+                                        })),
+                                    );
+                                }}
                             />
 
                             <GuestPaxForm
@@ -777,6 +796,9 @@ export default function Guest(props: GuestPageProps) {
                                 copiedPrice={copiedPrice}
                                 onCopyPrice={handleCopyPrice}
                                 onProceed={handleProceedToBooking}
+                                isProceedDisabled={
+                                    !selectedCustomer || isSubmittingBooking
+                                }
                             />
                         </div>
                     </div>
@@ -786,7 +808,25 @@ export default function Guest(props: GuestPageProps) {
             <SelectCustomerModal
                 isOpen={isCustomerModalOpen}
                 onClose={() => setIsCustomerModalOpen(false)}
-                onSelect={(cust) => setSelectedCustomer(cust)}
+                onSelect={(cust) => {
+                    if (
+                        selectedCustomer &&
+                        (selectedCustomer.id !== cust.id ||
+                            selectedCustomer.index !== cust.index)
+                    ) {
+                        setRoomsPax((prev) =>
+                            prev.map((r) => ({
+                                ...r,
+                                pax: r.pax.map((p) => ({
+                                    ...p,
+                                    travellerId: undefined,
+                                    travellerName: undefined,
+                                })),
+                            })),
+                        );
+                    }
+                    setSelectedCustomer(cust);
+                }}
                 selectedCustomerId={
                     selectedCustomer?.index || selectedCustomer?.key
                 }
@@ -806,6 +846,7 @@ export default function Guest(props: GuestPageProps) {
                           ]?.travellerId
                         : undefined
                 }
+                customer={selectedCustomer}
             />
 
             <GuestConfirmModal
