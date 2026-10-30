@@ -59,6 +59,7 @@ export interface GuestBookingSummaryProps {
     copiedPrice: boolean;
     onCopyPrice: (e?: React.MouseEvent) => void;
     onProceed: () => void;
+    isProceedDisabled?: boolean;
 }
 
 export default function GuestBookingSummary({
@@ -79,6 +80,7 @@ export default function GuestBookingSummary({
     copiedPrice,
     onCopyPrice,
     onProceed,
+    isProceedDisabled = false,
 }: GuestBookingSummaryProps) {
     return (
         <div className="lg:sticky lg:top-24 space-y-5">
@@ -231,10 +233,21 @@ export default function GuestBookingSummary({
                     <PrimaryButton
                         type="button"
                         onClick={onProceed}
-                        className="w-full justify-center py-3 px-4 text-sm font-bold shadow-md hover:shadow-lg mt-2 cursor-pointer"
+                        disabled={isProceedDisabled}
+                        className={`w-full justify-center py-3 px-4 text-sm font-bold shadow-md hover:shadow-lg mt-2 ${
+                            isProceedDisabled
+                                ? 'cursor-not-allowed opacity-50 bg-slate-300 hover:bg-slate-300 text-slate-600'
+                                : 'cursor-pointer'
+                        }`}
                     >
                         Continue to Booking
                     </PrimaryButton>
+
+                    {isProceedDisabled && (
+                        <p className="text-[11px] text-amber-600 text-center font-medium">
+                            Pilih Customer terlebih dahulu untuk melanjutkan
+                        </p>
+                    )}
 
                     <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 text-center pt-1">
                         <Shield size={12} className="text-emerald-600" />
