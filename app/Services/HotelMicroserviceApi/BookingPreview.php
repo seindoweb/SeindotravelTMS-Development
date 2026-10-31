@@ -2,54 +2,66 @@
 
 namespace App\Services\HotelMicroserviceApi;
 
-use Illuminate\Support\Facades\Http;
+use Exception;
+
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class BookingPreview
 {
     public static function getBookingPreview(string $sessionId): array
     {
-        // try {
-        //     $response = Http::acceptJson()
-        //         ->withHeaders(['AccessPermissionToken' => config('services.hotelMicroserviceApi.access_permission_token')])
-        //         ->timeout(30)
-        //         ->post(
-        //             rtrim(config('services.hotelMicroserviceApi.base_url'), '/') . '/booking-preview',
-        //             [
-        //                 'sessionId' => $sessionId,
-        //             ]
-        //         );
-        //     dd($response);
-        //     if ($response->failed()) {
-        //         Log::error('Failed to get booking preview', [
-        //             'session_id' => $sessionId,
-        //             'status' => $response->status(),
-        //             'response' => $response->body(),
-        //         ]);
+        $request = [
+            'sessionId' => $sessionId,
+        ];
 
-        //         return [
-        //             'success' => false,
-        //             'message' => 'Failed to retrieve booking preview.',
-        //             'data' => null,
-        //         ];
-        //     }
+        $url = config('services.hotelMicroserviceApi.base_url') . '/booking-preview';
 
-        //     return [
-        //         'success' => true,
-        //         'message' => 'Booking preview retrieved successfully.',
-        //         'data' => $response->json('data', $response->json()),
-        //     ];
-        // } catch (\Throwable $e) {
-        //     Log::error('Booking preview API exception', [
-        //         'session_id' => $sessionId,
-        //         'error' => $e->getMessage(),
-        //     ]);
+        $headers = [
+            'AccessPermissionToken: ' . config('services.hotelMicroserviceApi.access_permission_token'),
+            'Content-Type: application/json',
+        ];
 
-        //     return [
-        //         'success' => false,
-        //         'message' => 'Unable to connect to Hotel Microservice API.',
-        //         'data' => null,
-        //     ];
-        // }
+        $curl = curl_init();
+
+        if ($curl === false) {
+            throw new RuntimeException('Failed to initialize cURL');
+        }
+
+        try {
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2_0,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode($request, JSON_THROW_ON_ERROR),
+                CURLOPT_HTTPHEADER => $headers,
+            ]);
+
+            $response = curl_exec($curl);
+
+            if ($response === false) {
+                throw new RuntimeException('cURL error: ' . curl_error($curl));
+            }
+
+            $res = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+
+            if (($res['meta']['status'] ?? null) === 'error') {
+                $errors = $res['data']['errors'] ?? 'Hotel API error';
+
+                throw new RuntimeException(
+                    is_string($errors) ? $errors : json_encode($errors)
+                );
+            }
+
+            return $res['data'];
+        } finally {
+            unset($curl);
+        }
     }
 }

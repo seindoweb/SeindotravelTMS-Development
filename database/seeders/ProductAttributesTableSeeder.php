@@ -20,7 +20,7 @@ class ProductAttributesTableSeeder extends Seeder
             [
                 'id' => 1,
                 'attribute' => 'hotel',
-                'model' => 'Hotel',
+                'model' => 'HotelBooking',
                 'product' => 'Hotel',
                 'created_at' => '2008-08-08 08:08:08',
                 'updated_at' => '2008-08-08 08:08:08',
@@ -28,7 +28,7 @@ class ProductAttributesTableSeeder extends Seeder
             [
                 'id' => 2,
                 'attribute' => 'flight',
-                'model' => 'Flight',
+                'model' => 'FlightBooking',
                 'product' => 'Flight',
                 'created_at' => '2008-08-08 08:08:08',
                 'updated_at' => '2008-08-08 08:08:08',
@@ -36,8 +36,16 @@ class ProductAttributesTableSeeder extends Seeder
             [
                 'id' => 3,
                 'attribute' => 'tour',
-                'model' => 'Tour',
+                'model' => 'TourOrder',
                 'product' => 'Tour',
+                'created_at' => '2008-08-08 08:08:08',
+                'updated_at' => '2008-08-08 08:08:08',
+            ],
+            [
+                'id' => 4,
+                'attribute' => 'event',
+                'model' => 'EventOrder',
+                'product' => 'Event',
                 'created_at' => '2008-08-08 08:08:08',
                 'updated_at' => '2008-08-08 08:08:08',
             ],

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -22,6 +23,42 @@ class Order extends Model
      * @var array<string>|bool
      */
     protected $guarded = [];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (Order $order) {
+
+            if (!empty($order->invoice_number)) {
+                return;
+            }
+
+            // Prefix tanggal mengikuti tanggal saat ini
+            $prefix = now()->format('Ymd') . '-';
+
+            // Ambil nomor urut terbesar dari seluruh invoice
+            $lastNumber = static::query()
+                ->selectRaw("
+                    COALESCE(
+                        MAX(CAST(SUBSTRING_INDEX(invoice_number, '-', -1) AS UNSIGNED)),
+                        0
+                    ) AS last_number
+                ")
+                ->value('last_number');
+
+            // Nomor urut selalu bertambah
+            $nextNumber = ((int) $lastNumber) + 1;
+
+            $order->invoice_number = $prefix . str_pad(
+                (string) $nextNumber,
+                4,
+                '0',
+                STR_PAD_LEFT
+            );
+        });
+    }
 
     /**
      * The accessors to append to the model's array form.

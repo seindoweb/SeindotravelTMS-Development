@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('order_product_attributes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->string('code')->unique();
             $table->unsignedBigInteger('product_attribute_id')->nullable();
-            $table->enum('order_status', ['B', 'C', 'D', 'F'])->nullable()->default('B')->comment('Booking,Confirmed,Done,Failed');
+            $table->enum('order_status', ['B', 'P', 'C', 'D', 'F', 'A', 'E'])->nullable()->default('B')->comment('Booking,Progress,Confirmed,Done,Aborted,Failed,Expired');
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('hotel_bookings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_prod_attr_id')->nullable();
+            $table->string('session_id')->unique();
             $table->string('booking_status');
             $table->string('country', 8);
             $table->string('destination', 88);
