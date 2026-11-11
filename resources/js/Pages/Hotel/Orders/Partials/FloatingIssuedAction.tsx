@@ -1,3 +1,4 @@
+import { router } from '@inertiajs/react';
 import {
     AlertCircle,
     Check,
@@ -48,7 +49,6 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
         totalGuests,
         hotelName,
     }) => {
-        // Initial issued status check (e.g. from OrderProductAttribute order_status 'C', 'D', 'I')
         const initialIsIssued =
             (orderStatus &&
                 ['C', 'D', 'I'].includes(orderStatus.toUpperCase())) ||
@@ -67,9 +67,27 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
         const [isConfirmModalOpen, setIsConfirmModalOpen] =
             useState<boolean>(false);
         const [isIssuedSuccess, setIsIssuedSuccess] = useState<boolean>(false);
-        const [demoExtraMinutes, setDemoExtraMinutes] = useState<number>(0);
+        const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-        // Countdown timer calculation from order.expired_at
+        const handleIssueVoucher = () => {
+            setIsConfirmModalOpen(false);
+            setIsSubmitting(true);
+            setIsIssued(true);
+            setSelectedPaymentStatus('paid');
+            setIsIssuedSuccess(true);
+
+            const safeCode = (rawOrderCode || '').replace(/\//g, '-');
+            router.visit(route('hotel.orders.orderIssued', safeCode), {
+                method: 'post',
+                data: {
+                    payment_status: 'paid',
+                },
+                onFinish: () => {
+                    setIsSubmitting(false);
+                },
+            });
+        };
+
         const calculateTimeRemaining = () => {
             if (!order?.expired_at) {
                 return {
@@ -82,9 +100,6 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                 };
             }
             let expiredTimestamp = new Date(order.expired_at).getTime();
-            if (demoExtraMinutes > 0) {
-                expiredTimestamp += demoExtraMinutes * 60 * 1000;
-            }
             const now = new Date().getTime();
             const diff = Math.max(
                 0,
@@ -125,7 +140,7 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                 }
             }, 1000);
             return () => clearInterval(timer);
-        }, [order?.expired_at, demoExtraMinutes, isIssued]);
+        }, [order?.expired_at, isIssued]);
 
         const handleEnableDemoTimer = () => {
             if (!order?.expired_at) return;
@@ -135,7 +150,6 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                 0,
                 Math.ceil((now - expiredTimestamp) / 60000),
             );
-            setDemoExtraMinutes(diffMinutes + 30); 
         };
 
         const isPaid = selectedPaymentStatus === 'paid';
@@ -309,16 +323,6 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                             </div>
                                         )}
                                     </div>
-
-                                    {countdown.isExpired && (
-                                        <button
-                                            type="button"
-                                            onClick={handleEnableDemoTimer}
-                                            className="mt-2 w-full text-center text-[10px] font-bold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer transition-colors"
-                                        >
-                                            + Simulasi 30 Menit (Demo Test)
-                                        </button>
-                                    )}
                                 </div>
                             )}
 
@@ -429,19 +433,6 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                                 <CheckCircle2 size={13} />
                                                 Voucher Siap Digunakan
                                             </span>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setIsIssued(false);
-                                                    setSelectedPaymentStatus(
-                                                        'unpaid',
-                                                    );
-                                                }}
-                                                className="text-[10px] text-slate-400 hover:text-slate-600 underline cursor-pointer"
-                                                title="Kembali ke mode unissued untuk pengujian tampilan"
-                                            >
-                                                ↺ Reset Simulasi
-                                            </button>
                                         </div>
                                     </div>
                                 ) : canIssue ? (
@@ -620,16 +611,21 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => {
-                                        setIsConfirmModalOpen(false);
-                                        setIsIssued(true);
-                                        setSelectedPaymentStatus('paid');
-                                        setIsIssuedSuccess(true);
-                                    }}
-                                    className="px-5 py-2.5 bg-primary hover:bg-primary-bright text-white font-bold rounded-xl text-xs shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-1.5"
+                                    disabled={isSubmitting}
+                                    onClick={handleIssueVoucher}
+                                    className="px-5 py-2.5 bg-primary hover:bg-primary-bright text-white font-bold rounded-xl text-xs shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-75 disabled:cursor-not-allowed"
                                 >
-                                    <CheckCircle2 size={15} />
-                                    Ya, Terbitkan Voucher
+                                    {isSubmitting ? (
+                                        <>
+                                            <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            Memproses...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <CheckCircle2 size={15} />
+                                            Ya, Terbitkan Voucher
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </div>

@@ -169,6 +169,9 @@ export default function HotelOrdersDetail({
         previewResults?.name ||
         hotelBooking?.hotel ||
         'Hotel Booking';
+    
+    console.log("hotel name:", hotelName)
+    console.log("orderProductAttribute:", orderProductAttribute)
 
     const locationObj = previewResults?.locations;
     const hotelAddress =
@@ -292,10 +295,10 @@ export default function HotelOrdersDetail({
                             </div>
                             <div className="space-y-2">
                                 <p className="text-xs text-quaternary font-medium uppercase tracking-wider">
-                                    Order Code
+                                   Invoice Number
                                 </p>
                                 <p className="text-sm font-mono font-bold text-primary break-all">
-                                    {rawOrderCode}
+                                     {invoiceNumber}
                                 </p>
                             </div>
                             <div className="space-y-1 sm:col-span-2">
@@ -421,10 +424,10 @@ export default function HotelOrdersDetail({
                         <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto">
                             <div className="bg-white border border-gray-200 px-5 py-3 rounded-xl flex flex-col w-full md:w-auto shadow-sm">
                                 <span className="text-[10px] font-bold text-quaternary uppercase tracking-wider mb-0.5">
-                                    Invoice Number
+                                    Order Code 
                                 </span>
                                 <span className="text-lg font-mono font-bold text-primary tracking-tight">
-                                    {invoiceNumber}
+                                    {rawOrderCode}
                                 </span>
                             </div>
                             <div className="flex flex-col items-start md:items-end text-xs text-quaternary font-medium mt-1 gap-1">
