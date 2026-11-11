@@ -99,5 +99,11 @@ class HotelOrderController extends Controller
         ]);
     }
 
-    public function orderIssued() {}
+    public function orderIssued(string $code)
+    {
+        dd('OK!!!!!!!!!!', [
+            'order_code' => $code,
+            'payload' => request()->all(),
+        ]);
+    }
 }

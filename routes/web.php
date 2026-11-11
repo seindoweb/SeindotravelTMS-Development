@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::prefix('orders')->name('orders.')->group(function () {
             Route::match(['get', 'post'], '/list', [HotelOrderController::class, 'orderList'])->name('list');
             Route::match(['get', 'post'], '/{code}/details', [HotelOrderController::class, 'orderDetails'])->name('orderDetails');
+            Route::match(['get', 'post'], '/{code}/issued', [HotelOrderController::class, 'orderIssued'])->name('orderIssued');
         });
 
         Route::prefix('bookings')->name('bookings.')->group(function () {
@@ -116,5 +117,5 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
-require __DIR__ . '/locale.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/locale.php';
