@@ -607,22 +607,42 @@ export default function Guest(props: GuestPageProps) {
                 '/booking-room',
                 payload,
             );
+            console.log('resp:', res);
 
-            setBookingSuccessData(res.data);
+            const responseData = res.data;
+            setBookingSuccessData(responseData);
             sessionStorage.setItem(
                 'hotelBookingResultData',
-                JSON.stringify(res.data),
+                JSON.stringify(responseData),
             );
 
-            return router.visit(
-                route('hotel.bookings.create', {
-                    customer_tracking_code: selectedCustomer?.tracking_code,
-                    session_id: bookingSuccessData.data.results.sessionID,
-                }),
-            );
+            const responseSessionId =
+                responseData?.data?.results?.sessionID ||
+                responseData?.results?.sessionID ||
+                finalSessionId;
+
+            const trackingCode = selectedCustomer?.tracking_code;
+
+            if (!trackingCode) {
+                setBookingError(
+                    'Customer belum dipilih atau tidak memiliki tracking code.',
+                );
+                return;
+            }
+
+            if (!responseSessionId) {
+                setBookingError('Session ID pemesanan tidak ditemukan.');
+                return;
+            }
+
             setShowConfirmModal(false);
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            router.visit(
+                route('hotel.bookings.create', {
+                    session_id: responseSessionId,
+                    customer_tracking_code: trackingCode,
+                }),
+            );
         } catch (err: any) {
             console.error('Booking Room Error:', err);
             const errMsg =

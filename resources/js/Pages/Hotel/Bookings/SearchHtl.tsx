@@ -11,11 +11,7 @@ import {
     SearchSelectionProps,
 } from '@/types';
 import { Head } from '@inertiajs/react';
-import {
-    AlertCircle,
-    BedDouble,
-    ChevronRight
-} from 'lucide-react';
+import { AlertCircle, BedDouble, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import HotelBookingForm from './Partials/HotelBookingForm';
 import HotelHeader from './Partials/HotelHeader';
@@ -94,7 +90,8 @@ export default function SearchHtl({
     const rooms = decodeRooms(room);
     const nights = countNights(checkIn, checkOut);
 
-    const storedName = sessionStorage.getItem('searchSelectionName') || hotelCode;
+    const storedName =
+        sessionStorage.getItem('searchSelectionName') || hotelCode;
 
     const initialSelection: SearchSelectionProps | null = hotelCode
         ? {
@@ -107,7 +104,9 @@ export default function SearchHtl({
           }
         : null;
 
-    const [searchData, setSearchData] = useState<PriceSearchHotelData | null>(null);
+    const [searchData, setSearchData] = useState<PriceSearchHotelData | null>(
+        null,
+    );
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -130,10 +129,12 @@ export default function SearchHtl({
         };
 
         try {
-            const res = await hotelMicroserviceApi.post<PriceSearchHotelResponse>(
-                '/price-discovery-by-hotel',
-                payload,
-            );
+            const res =
+                await hotelMicroserviceApi.post<PriceSearchHotelResponse>(
+                    '/price-discovery-by-hotel',
+                    payload,
+                );
+            console.log('Hotel price search response:', res.data);
 
             if (res.data?.meta?.status === 'success' || res.data?.data) {
                 setSearchData(res.data.data);
@@ -160,16 +161,27 @@ export default function SearchHtl({
     }, [fetchHotelPrices]);
 
     const hotelDetail: HotelDetailInfo | null = searchData?.results ?? null;
-    const roomDetails: HotelRoomDetail[] = searchData?.results.roomDetails ?? [];
+    const roomDetails: HotelRoomDetail[] =
+        searchData?.results.roomDetails ?? [];
 
     return (
         <AuthenticatedLayout
             header={
                 <>
-                    <span className="text-sm font-bold text-primary truncate">Hotel</span>
-                    <ChevronRight size={14} className="sm:block hidden text-[#CBD5E1]" />
-                    <span className="text-sm font-bold text-primary truncate">Search</span>
-                    <ChevronRight size={14} className="sm:block hidden text-[#CBD5E1]" />
+                    <span className="text-sm font-bold text-primary truncate">
+                        Hotel
+                    </span>
+                    <ChevronRight
+                        size={14}
+                        className="sm:block hidden text-[#CBD5E1]"
+                    />
+                    <span className="text-sm font-bold text-primary truncate">
+                        Search
+                    </span>
+                    <ChevronRight
+                        size={14}
+                        className="sm:block hidden text-[#CBD5E1]"
+                    />
                     <span className="text-sm font-bold text-primary truncate">
                         {hotelDetail?.name || 'Hotel'}
                     </span>
@@ -189,9 +201,12 @@ export default function SearchHtl({
                 {loading && <HotelSearchSkeleton />}
 
                 {!loading && error && !hotelDetail && (
-                    <div className="flex flex-col items-center justify-center bg-white border border-red-100 rounded-2xl py-16 px-6 text-center gap-3">
+                    <div className="bg-white border-red-100 rounded-2xl py-16 px-6 gap-3 flex flex-col items-center justify-center border text-center">
                         <AlertCircle size={40} className="text-red-400" />
-                        <p className="font-semibold text-primary">Hotel is not available at the moment. Please try again on another date or choose another hotel.</p>
+                        <p className="font-semibold text-primary">
+                            Hotel is not available at the moment. Please try
+                            again on another date or choose another hotel.
+                        </p>
                     </div>
                 )}
 
@@ -201,7 +216,7 @@ export default function SearchHtl({
 
                         {roomDetails.length > 0 ? (
                             <div className="space-y-3">
-                                <div className="flex items-center justify-between px-1">
+                                <div className="px-1 flex items-center justify-between">
                                     <p className="text-sm font-semibold text-primary">
                                         {roomDetails.length} room type available
                                     </p>
@@ -213,19 +228,35 @@ export default function SearchHtl({
                                         hotel={hotelDetail}
                                         nights={nights}
                                         searchParams={{
-                                            country: country || hotelDetail.countryCode || 'ID',
-                                            destination: destination || hotelDetail.destinationCode || '',
-                                            hotel: hotel || hotelDetail.hotelCode || '',
+                                            country:
+                                                country ||
+                                                hotelDetail.countryCode ||
+                                                'ID',
+                                            destination:
+                                                destination ||
+                                                hotelDetail.destinationCode ||
+                                                '',
+                                            hotel:
+                                                hotel ||
+                                                hotelDetail.hotelCode ||
+                                                '',
                                             checkIn,
                                             checkOut,
-                                            sessionId: hotelDetail.sessionID || (searchData as any)?.results?.sessionID || '',
+                                            sessionId:
+                                                hotelDetail.sessionID ||
+                                                (searchData as any)?.results
+                                                    ?.sessionID ||
+                                                '',
                                         }}
                                     />
                                 ))}
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center bg-white border border-[#E2E8F0] rounded-2xl py-16 px-6 text-center gap-3">
-                                <BedDouble size={40} className="text-gray-300" />
+                            <div className="bg-white rounded-2xl py-16 px-6 gap-3 flex flex-col items-center justify-center border border-[#E2E8F0] text-center">
+                                <BedDouble
+                                    size={40}
+                                    className="text-gray-300"
+                                />
                                 <p className="font-semibold text-primary">
                                     No room type available
                                 </p>

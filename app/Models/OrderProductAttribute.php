@@ -7,6 +7,7 @@ use App\Services\Systems\TriadIdMask;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Crypt;
 
 class OrderProductAttribute extends Model
@@ -50,6 +51,11 @@ class OrderProductAttribute extends Model
         return $this->belongsTo(ProductAttribute::class, 'product_attribute_id', 'id');
     }
 
+    public function hotelBooking(): HasOne
+    {
+        return $this->hasOne(HotelBooking::class, 'order_prod_attr_id', 'id');
+    }
+
     /**
      * Get details if from the orders table associated with the order_product_attribute.
      */
@@ -64,8 +70,7 @@ class OrderProductAttribute extends Model
             /**
              * Get the car_schedules associated with the order_product_attributes.
              */
-
-            if ($productAttribute->model === "HotelBooking") {
+            if ($productAttribute->model === 'HotelBooking') {
 
                 // Use dynamic model relationship to retrieve the related model
                 return $this->hasOne(HotelBooking::class, 'order_prod_attr_id', 'id');
