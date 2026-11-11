@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -58,6 +59,11 @@ class HotelBooking extends Model
     public function orderProductAttribute(): BelongsTo
     {
         return $this->belongsTo(OrderProductAttribute::class, 'order_prod_attr_id', 'id');
+    }
+
+    public function hotelBookingDetails(): HasOne
+    {
+        return $this->hasOne(HotelBookingDetails::class, 'hotel_booking_id', 'id');
     }
 
     public function hotelBookingRoomDetails(): HasMany

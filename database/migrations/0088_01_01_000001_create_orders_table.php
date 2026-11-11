@@ -37,10 +37,10 @@ return new class extends Migration
             $table->decimal('tax_amount', 18, 2)->nullable()->default(0);
             $table->decimal('total_amount', 18, 2)->nullable()->default(0);
 
-            $table->string('type_of_payment')->comment('CH, TF, PG, SC');
+            $table->string('type_of_payment')->comment('CH, TF, PG, SC'); //Desc Code -> Payment Gateway = PG, Seindo Credit = SC, Pay Manual = PM. Transfer Manual
             $table->string('payment_status', 36);
             $table->text('payment_url')->nullable();
-            $table->string('system', 88);
+            $table->string('system', 88); //WEB, CRM, MOBILE-ANDROID, MOBILE-IOS, API-MITRA-XXXX
             $table->datetime('expired_at');
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();

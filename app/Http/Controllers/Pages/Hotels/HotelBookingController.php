@@ -6,6 +6,7 @@ use App\Constants\ModelConstant;
 use App\Constants\SystemConstant;
 use App\Http\Controllers\Controller;
 use App\Models\HotelBooking;
+use App\Models\HotelBookingDetails;
 use App\Models\HotelBookingRoom;
 use App\Models\HotelBookingRoomDetails;
 use App\Models\HotelBookingRoomPax;
@@ -147,6 +148,7 @@ class HotelBookingController extends Controller
                     $order_product_att->code = CodeGenerator::orderProductAttribute(ModelConstant::PRODUCT_ATTRIBUTE_HOTEL);
                     $order_product_att->product_attribute_id = $att->id;
                     $order_product_att->order_status = $att->id;
+                    $order_product_att->resource_provider = "MG";
                     $order_product_att->created_by = Auth::id();
                     $order_product_att->updated_by = Auth::id();
 
@@ -164,50 +166,67 @@ class HotelBookingController extends Controller
                         $h_book->pic_guest_nationality = $res['params']['rooms']['picGuestNationality'];
 
                         if ($h_book->save()) {
-                            $roomDet = new HotelBookingRoomDetails;
+                            $h_book_det = new HotelBookingDetails();
 
-                            $roomDet->hotel_booking_id = $h_book->id;
-                            $roomDet->code = $res['results']['roomDetails']['code'];
-                            $roomDet->name = $res['results']['roomDetails']['name'];
-                            $roomDet->meal_plan_code = $res['results']['roomDetails']['mealPlanCode'];
-                            $roomDet->meal_plan_name = $res['results']['roomDetails']['mealPlanName'];
-                            $roomDet->cancellation_policy_type = $res['results']['roomDetails']['cancellationPolicyType'];
-                            $roomDet->package_rate = $res['results']['roomDetails']['packageRate'];
-                            $roomDet->msp = $res['results']['roomDetails']['msp'] == '' ? 0 : (int) $res['results']['roomDetails']['msp'];
-                            $roomDet->gross_price = (int) $res['results']['roomDetails']['grossPrice'];
-                            $roomDet->nta_price = (int) $res['results']['roomDetails']['ntaPrice'];
-                            $roomDet->nta_price_per_night = (int) $res['results']['roomDetails']['ntaPricePerNight'];
-                            $roomDet->markup_price = (int) $res['results']['roomDetails']['markupPrice'];
-                            $roomDet->markup_price_per_night = (int) $res['results']['roomDetails']['markupPricePerNight'];
-                            $roomDet->selling_price = (int) $res['results']['roomDetails']['sellingPrice'];
-                            $roomDet->selling_price_per_night = (int) $res['results']['roomDetails']['sellingPricePerNight'];
-                            $roomDet->message = $res['params']['specialRequest'];
+                            $h_book_det->hotel_booking_id = $h_book->id;
+                            $h_book_det->name = $res['results']['name'];
+                            $h_book_det->code = $res['results']['code'];
+                            $h_book_det->rating = $res['results']['rating'];
+                            $h_book_det->address_main =  $res['results']['locations']['addressMain'];
+                            $h_book_det->address_alternative = $res['results']['locations']['addressAlternative'];
+                            $h_book_det->area_name = $res['results']['locations']['area'];
+                            $h_book_det->destination_name = $res['results']['locations']['cityName'];
+                            $h_book_det->country_name = $res['results']['locations']['countryName'];
+                            $h_book_det->zip_code = $res['results']['locations']['zipCode'];
+                            $h_book_det->latitude = $res['results']['geoLocations']['latitude'];
+                            $h_book_det->longitude = $res['results']['geoLocations']['longitude'];
 
-                            if ($roomDet->save()) {
-                                foreach ($res['results']['roomDetails']['rooms']['room'] ?: [] as $rr) {
-                                    $room = new HotelBookingRoom;
+                            if ($h_book_det->save()) {
+                                $roomDet = new HotelBookingRoomDetails;
 
-                                    $room->hotel_booking_id = $h_book->id;
-                                    $room->room_no = $rr['roomNo'];
-                                    $room->no_of_adults = $rr['noOfAdults'];
-                                    $room->no_of_child = $rr['noOfChild'];
-                                    $room->child1_age = $rr['child1Age'];
-                                    $room->child2_age = $rr['child2Age'];
-                                    $room->extra_bed = $rr['extraBed'];
-                                    $room->rate_key = $rr['rateKey'];
-                                    if ($room->save()) {
-                                        foreach ($res['params']['rooms']['room'] ?: [] as $rp) {
-                                            if ($rr['roomNo'] == $rp['roomNo']) {
-                                                foreach ($rp['pax'] ?: [] as $p) {
-                                                    $roomPax = new HotelBookingRoomPax;
+                                $roomDet->hotel_booking_id = $h_book->id;
+                                $roomDet->code = $res['results']['roomDetails']['code'];
+                                $roomDet->name = $res['results']['roomDetails']['name'];
+                                $roomDet->meal_plan_code = $res['results']['roomDetails']['mealPlanCode'];
+                                $roomDet->meal_plan_name = $res['results']['roomDetails']['mealPlanName'];
+                                $roomDet->cancellation_policy_type = $res['results']['roomDetails']['cancellationPolicyType'];
+                                $roomDet->package_rate = $res['results']['roomDetails']['packageRate'];
+                                $roomDet->msp = $res['results']['roomDetails']['msp'] == '' ? 0 : (int) $res['results']['roomDetails']['msp'];
+                                $roomDet->gross_price = (int) $res['results']['roomDetails']['grossPrice'];
+                                $roomDet->nta_price = (int) $res['results']['roomDetails']['ntaPrice'];
+                                $roomDet->nta_price_per_night = (int) $res['results']['roomDetails']['ntaPricePerNight'];
+                                $roomDet->markup_price = (int) $res['results']['roomDetails']['markupPrice'];
+                                $roomDet->markup_price_per_night = (int) $res['results']['roomDetails']['markupPricePerNight'];
+                                $roomDet->selling_price = (int) $res['results']['roomDetails']['sellingPrice'];
+                                $roomDet->selling_price_per_night = (int) $res['results']['roomDetails']['sellingPricePerNight'];
+                                $roomDet->message = $res['params']['specialRequest'];
 
-                                                    $roomPax->hotel_booking_room_id = $room->id;
-                                                    $roomPax->salutation = $p['salutation'];
-                                                    $roomPax->first_name = $p['firstName'];
-                                                    $roomPax->last_name = $p['lastName'];
-                                                    $roomPax->age = $p['age'];
+                                if ($roomDet->save()) {
+                                    foreach ($res['results']['roomDetails']['rooms']['room'] ?: [] as $rr) {
+                                        $room = new HotelBookingRoom;
 
-                                                    $roomPax->save();
+                                        $room->hotel_booking_id = $h_book->id;
+                                        $room->room_no = $rr['roomNo'];
+                                        $room->no_of_adults = $rr['noOfAdults'];
+                                        $room->no_of_child = $rr['noOfChild'];
+                                        $room->child1_age = $rr['child1Age'];
+                                        $room->child2_age = $rr['child2Age'];
+                                        $room->extra_bed = $rr['extraBed'];
+                                        $room->rate_key = $rr['rateKey'];
+                                        if ($room->save()) {
+                                            foreach ($res['params']['rooms']['room'] ?: [] as $rp) {
+                                                if ($rr['roomNo'] == $rp['roomNo']) {
+                                                    foreach ($rp['pax'] ?: [] as $p) {
+                                                        $roomPax = new HotelBookingRoomPax;
+
+                                                        $roomPax->hotel_booking_room_id = $room->id;
+                                                        $roomPax->salutation = $p['salutation'];
+                                                        $roomPax->first_name = $p['firstName'];
+                                                        $roomPax->last_name = $p['lastName'];
+                                                        $roomPax->age = $p['age'];
+
+                                                        $roomPax->save();
+                                                    }
                                                 }
                                             }
                                         }

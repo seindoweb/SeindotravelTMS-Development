@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->string('code')->unique();
-            $table->string('ref_id')->nullable()->unique(); // VIA => "refId": "FMNTID3000AA460", MG =>"mgBookingID": "AGID0044371909007168",
             $table->unsignedBigInteger('product_attribute_id')->nullable();
             $table->enum('order_status', ['B', 'P', 'C', 'D', 'F', 'A', 'E'])->nullable()->default('B')->comment('Booking,Progress,Confirmed,Done,Aborted,Failed,Expired');
+            $table->string('resource_provider'); // VIA, SEINDO, MG_BEDBANK
+            $table->string('ref_id')->nullable()->unique(); // VIA => "refId": "FMNTID3000AA460", MG =>"mgBookingID": "AGID0044371909007168",
+            $table->string('ref_url')->nullable()->unique(); // A URL that can direct to a page accessible via the system.
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();
