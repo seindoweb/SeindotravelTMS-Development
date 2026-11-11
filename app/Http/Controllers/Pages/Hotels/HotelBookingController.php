@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Pages\Hotels;
 
 use App\Constants\ModelConstant;
 use App\Constants\SystemConstant;
-use App\Enums\PaymentStatus;
-use App\Enums\PaymentType;
-use App\Services\HotelMicroserviceApi\BookingPreview;
 use App\Http\Controllers\Controller;
 use App\Models\HotelBooking;
 use App\Models\HotelBookingRoom;
@@ -16,12 +13,12 @@ use App\Models\Order;
 use App\Models\OrderProductAttribute;
 use App\Models\ProductAttribute;
 use App\Models\User;
+use App\Services\HotelMicroserviceApi\BookingPreview;
 use App\Services\Systems\CodeGenerator;
-use App\Services\Systems\InvoiceNumber;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class HotelBookingController extends Controller
@@ -94,9 +91,9 @@ class HotelBookingController extends Controller
      * guest
      *
      * @return void
-     * only 1 room
-     * Guest
-     * ?country=ID&destination=ID-CGK&hotel=ID10000117&checkIn=2026-10-13&checkOut=2026-10-14&sessionId=1AF58339-6815-49CB-ACB6-3F720310968A&code=RM_3142_1&mealPlan=BDBF&cancellationPolicyType=Flexi&packageRate=false
+     *              only 1 room
+     *              Guest
+     *              ?country=ID&destination=ID-CGK&hotel=ID10000117&checkIn=2026-10-13&checkOut=2026-10-14&sessionId=1AF58339-6815-49CB-ACB6-3F720310968A&code=RM_3142_1&mealPlan=BDBF&cancellationPolicyType=Flexi&packageRate=false
      */
     public function guest(Request $request)
     {
@@ -121,7 +118,7 @@ class HotelBookingController extends Controller
 
         if ($res['results'] != null) {
             DB::transaction(function () use ($att, $res, $usr, &$h_book) {
-                $order = new Order();
+                $order = new Order;
 
                 $order->user_id = $usr->id;
                 $order->voucher_code_id = null;
@@ -136,25 +133,25 @@ class HotelBookingController extends Controller
                 $order->discount_amount = $order->discount_base_amount;
                 $order->tax_amount = $order->tax_base_amount;
                 $order->total_amount = $order->total_base_amount;
-                $order->type_of_payment =  ModelConstant::PAYMENT_TYPE_CASH;
+                $order->type_of_payment = ModelConstant::PAYMENT_TYPE_CASH;
                 $order->payment_status = ModelConstant::PAYMENT_STATUS_UNPAID;
-                $order->payment_url  = null;
+                $order->payment_url = null;
                 $order->system = SystemConstant::SYSTEM_PLATFORMS_TMS;
                 $order->expired_at = Carbon::parse($res['sessionExpiredAt']);
                 $order->created_by = Auth::id();
                 $order->updated_by = Auth::id();
                 if ($order->save()) {
-                    $order_product_att = new OrderProductAttribute();
+                    $order_product_att = new OrderProductAttribute;
 
                     $order_product_att->order_id = $order->id;
                     $order_product_att->code = CodeGenerator::orderProductAttribute(ModelConstant::PRODUCT_ATTRIBUTE_HOTEL);
                     $order_product_att->product_attribute_id = $att->id;
-                    $order_product_att->order_status  = $att->id;
+                    $order_product_att->order_status = $att->id;
                     $order_product_att->created_by = Auth::id();
-                    $order_product_att->created_by = Auth::id();
+                    $order_product_att->updated_by = Auth::id();
 
                     if ($order_product_att->save()) {
-                        $h_book = new HotelBooking();
+                        $h_book = new HotelBooking;
 
                         $h_book->order_prod_attr_id = $order_product_att->id;
                         $h_book->session_id = $res['results']['sessionID'];
@@ -167,7 +164,7 @@ class HotelBookingController extends Controller
                         $h_book->pic_guest_nationality = $res['params']['rooms']['picGuestNationality'];
 
                         if ($h_book->save()) {
-                            $roomDet = new HotelBookingRoomDetails();
+                            $roomDet = new HotelBookingRoomDetails;
 
                             $roomDet->hotel_booking_id = $h_book->id;
                             $roomDet->code = $res['results']['roomDetails']['code'];
@@ -176,7 +173,7 @@ class HotelBookingController extends Controller
                             $roomDet->meal_plan_name = $res['results']['roomDetails']['mealPlanName'];
                             $roomDet->cancellation_policy_type = $res['results']['roomDetails']['cancellationPolicyType'];
                             $roomDet->package_rate = $res['results']['roomDetails']['packageRate'];
-                            $roomDet->msp = $res['results']['roomDetails']['msp'] == "" ? 0 : (int) $res['results']['roomDetails']['msp'];
+                            $roomDet->msp = $res['results']['roomDetails']['msp'] == '' ? 0 : (int) $res['results']['roomDetails']['msp'];
                             $roomDet->gross_price = (int) $res['results']['roomDetails']['grossPrice'];
                             $roomDet->nta_price = (int) $res['results']['roomDetails']['ntaPrice'];
                             $roomDet->nta_price_per_night = (int) $res['results']['roomDetails']['ntaPricePerNight'];
@@ -188,7 +185,7 @@ class HotelBookingController extends Controller
 
                             if ($roomDet->save()) {
                                 foreach ($res['results']['roomDetails']['rooms']['room'] ?: [] as $rr) {
-                                    $room = new HotelBookingRoom();
+                                    $room = new HotelBookingRoom;
 
                                     $room->hotel_booking_id = $h_book->id;
                                     $room->room_no = $rr['roomNo'];
@@ -202,7 +199,7 @@ class HotelBookingController extends Controller
                                         foreach ($res['params']['rooms']['room'] ?: [] as $rp) {
                                             if ($rr['roomNo'] == $rp['roomNo']) {
                                                 foreach ($rp['pax'] ?: [] as $p) {
-                                                    $roomPax = new HotelBookingRoomPax();
+                                                    $roomPax = new HotelBookingRoomPax;
 
                                                     $roomPax->hotel_booking_room_id = $room->id;
                                                     $roomPax->salutation = $p['salutation'];
@@ -223,6 +220,10 @@ class HotelBookingController extends Controller
                 }
             });
         }
-        return redirect()->route('hotel.orders.orderDetails', helperReplaceSeparator($h_book->orderProductAttribute->code));
+        if ($h_book && $h_book->orderProductAttribute) {
+            return redirect()->route('hotel.orders.orderDetails', helperReplaceSeparator($h_book->orderProductAttribute->code));
+        }
+
+        return redirect()->route('hotel.bookings.index');
     }
 }

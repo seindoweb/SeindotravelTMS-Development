@@ -10,40 +10,32 @@ class CodeGenerator
     public static function orderProductAttribute(string $code)
     {
         $allowedToContinue = false;
-        $number = '/' . strtoupper($code) . '-SGT/' . Carbon::now()->year;
+        $suffix = '/'.strtoupper($code).'-SGT/'.Carbon::now()->year;
+        $thisMonthCode = helperMonthNumbersToRomanNumerals(Carbon::now()->month);
+
+        $dObjLastTransaksi = OrderProductAttribute::where('code', 'like', '%'.$suffix)->latest('id')->first();
+
+        $dIntLastKode = 0;
+        if ($dObjLastTransaksi && $dObjLastTransaksi->code) {
+            $exploded = explode('/', $dObjLastTransaksi->code);
+            $dIntLastKode = (int) intval($exploded[0]);
+        }
+
         do {
-            $thisMonthCode = helperMonthNumbersToRomanNumerals(Carbon::now()->month);
-            $dObjLastTransaksi = OrderProductAttribute::where('code', 'like', "%" . $number . "%")->latest()->first();
+            $dIntLastKode++;
+            $dStrPrefix = str_pad((string) $dIntLastKode, 4, '0', STR_PAD_LEFT);
+            $number = $dStrPrefix.'/'.$thisMonthCode.$suffix;
 
-            $dIntLastKode = 0;
-            if ($dObjLastTransaksi && $dObjLastTransaksi->receipt_number) {
-                $dIntLastKode = (int) intval(explode('/', $dObjLastTransaksi->receipt_number)[0]);
-            }
-
-            $dIntKodeNow = $dIntLastKode + 1;
-
-            $dStrPrefix = '';
-            if ($dIntKodeNow < 10) {
-                $dStrPrefix = '000';
-            } else if ($dIntKodeNow < 100) {
-                $dStrPrefix = '00';
-            } else if ($dIntKodeNow < 1000) {
-                $dStrPrefix = '0';
-            } else {
-                $dStrPrefix = '';
-            }
-
-            $number = $dStrPrefix . $dIntKodeNow . "/" . $thisMonthCode . $number;
-
-            //cek apakah udah ada
+            // cek apakah udah ada
             $exists = OrderProductAttribute::where('code', $number)->first();
-            if (!$exists) {
+            if (! $exists) {
                 $allowedToContinue = true;
             }
-        } while (!$allowedToContinue);
+        } while (! $allowedToContinue);
 
         return $number;
     }
+
     public static function kwitansi()
     {
         // $allowedToContinue = false;
@@ -81,6 +73,7 @@ class CodeGenerator
 
         // return $number;
     }
+
     public static function make()
     {
         // $allowedToContinue = false;
@@ -120,6 +113,7 @@ class CodeGenerator
 
         // return $number;
     }
+
     public static function generate($kode = 'C')
     {
         // $allowedToContinue = false;
