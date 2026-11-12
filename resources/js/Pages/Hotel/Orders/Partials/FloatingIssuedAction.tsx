@@ -435,7 +435,7 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                             </span>
                                         </div>
                                     </div>
-                                ) : canIssue ? (
+                                ) : (
                                     <button
                                         type="button"
                                         onClick={() =>
@@ -445,17 +445,19 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                     >
                                         ISSUE HOTEL SEKARANG
                                     </button>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        disabled
-                                        className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-slate-100 border border-slate-200 text-slate-400 rounded-xl text-sm font-bold cursor-not-allowed opacity-80"
-                                    >
-                                        {countdown.isExpired
-                                            ? 'WAKTU EXPIRED'
-                                            : 'MENUNGGU PEMBAYARAN'}
-                                    </button>
-                                )}
+                                )
+                                    //     : (
+                                    // <button
+                                    //     type="button"
+                                    //     disabled
+                                    //     className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-slate-100 border border-slate-200 text-slate-400 rounded-xl text-sm font-bold cursor-not-allowed opacity-80"
+                                    // >
+                                    //     {countdown.isExpired
+                                    //         ? 'WAKTU EXPIRED'
+                                    //         : 'MENUNGGU PEMBAYARAN'}
+                                    // </button>
+                                    // )
+                                 }
                             </div>
                         </div>
                     </div>
