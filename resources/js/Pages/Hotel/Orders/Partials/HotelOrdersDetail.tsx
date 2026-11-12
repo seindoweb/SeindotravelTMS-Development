@@ -166,9 +166,7 @@ export default function HotelOrdersDetail({
 
     const previewResults = hotelPreview?.results;
     const hotelName =
-        previewResults?.name ||
-        hotelBooking?.hotel ||
-        'Hotel Booking';
+        previewResults?.name || hotelBooking?.hotel_booking_details?.name;
     
     console.log("hotel name:", hotelName)
     console.log("orderProductAttribute:", orderProductAttribute)

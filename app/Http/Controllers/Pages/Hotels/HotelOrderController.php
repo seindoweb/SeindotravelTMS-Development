@@ -79,6 +79,7 @@ class HotelOrderController extends Controller
                 'order.creator',
                 'hotelBooking.hotelBookingRoomDetails',
                 'hotelBooking.hotelBookingRooms.hotelBookingRoomPaxes',
+                'hotelBooking.hotelBookingDetails',
             ])
             ->firstOrFail();
 
