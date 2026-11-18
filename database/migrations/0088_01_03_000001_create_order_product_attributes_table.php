@@ -16,10 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('order_id');
             $table->string('code')->unique();
             $table->unsignedBigInteger('product_attribute_id')->nullable();
-            $table->enum('order_status', ['B', 'P', 'C', 'D', 'F', 'A', 'E'])->nullable()->default('B')->comment('Booking,Progress,Confirmed,Done,Aborted,Failed,Expired');
-            $table->string('resource_provider'); // VIA, SEINDO, MG_BEDBANK
-            $table->string('ref_id')->nullable()->unique(); // VIA => "refId": "FMNTID3000AA460", MG =>"mgBookingID": "AGID0044371909007168",
-            $table->string('ref_url')->nullable()->unique(); // A URL that can direct to a page accessible via the system.
+            $table->enum('order_status', ['B', 'P', 'C', 'D', 'F', 'A', 'E', 'X'])->nullable()->default('B')->comment('Booking,Progress,Confirmed,Done,Aborted,Failed,Expired,Canceled');
+            $table->boolean('is_retryable')->default(false); // Failed + is_retryable = true: Temporarily failed, you can retry, Failed + is_retryable = false: Permanent failure, no retry.
+            $table->string('supplier_source'); // VIA, SEINDO, MG_BEDBANK
+            $table->string('reference_id')->nullable()->unique(); // VIA => "refId": "FMNTID3000AA460", MG =>"mgBookingID": "AGID0044371909007168",
+            $table->string('reference_url')->nullable()->unique(); // A URL that can direct to a page accessible via the system.
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();

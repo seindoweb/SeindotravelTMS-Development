@@ -31,6 +31,7 @@ class LoginActivityListener
         $offerData = [
             'title' => 'Security Information',
             'message' => "Login activity detected on your {$appName} account on {$time}.",
+            'data' => [],
             'url' => null
         ];
 

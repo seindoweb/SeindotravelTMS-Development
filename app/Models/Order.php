@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Services\Systems\CreatorAndUpdater;
-use App\Services\Systems\TriadIdMask;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Services\Systems\TriadIdMask;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Crypt;
-use Spatie\Activitylog\Models\Concerns\LogsActivity;
-use Spatie\Activitylog\Support\LogOptions;
 use Illuminate\Support\Str;
 
 class Order extends Model
@@ -58,6 +58,18 @@ class Order extends Model
                 STR_PAD_LEFT
             );
         });
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'order_status' => 'boolean',
+        ];
     }
 
     /**

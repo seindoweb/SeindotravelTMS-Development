@@ -148,7 +148,7 @@ class HotelBookingController extends Controller
                     $order_product_att->code = CodeGenerator::orderProductAttribute(ModelConstant::PRODUCT_ATTRIBUTE_HOTEL);
                     $order_product_att->product_attribute_id = $att->id;
                     $order_product_att->order_status = $att->id;
-                    $order_product_att->resource_provider = "MG";
+                    $order_product_att->supplier_source = ModelConstant::ORDER_SUPPLIER_RESOURCE_MG;
                     $order_product_att->created_by = Auth::id();
                     $order_product_att->updated_by = Auth::id();
 

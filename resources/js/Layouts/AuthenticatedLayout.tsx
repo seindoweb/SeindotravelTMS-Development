@@ -15,6 +15,7 @@ import AuthenticatedProfile from './Partials/AuthenticatedProfile';
 import AuthenticatedMenuSales from './Partials/AuthenticatedMenuSales';
 import AuthenticatedMenuHotels from './Partials/AuthenticatedMenuHotels';
 import AuthenticatedMenuVouchers from './Partials/AuthenticatedMenuVouchers';
+import AuthenticatedMenuFinances from './Partials/AuthenticatedMenuFinances';
 
 export default function Authenticated({
     header,
@@ -22,6 +23,7 @@ export default function Authenticated({
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const user = usePage().props.auth.user;
     const { url } = usePage();
+    const [financesOpen, setFinancesOpen] = useState(false);
     const [hotelsOpen, setHotelsOpen] = useState(false);
     const [vouchersOpen, setVouchersOpen] = useState(false);
     const [usersOpen, setUsersOpen] = useState(false);
@@ -33,6 +35,7 @@ export default function Authenticated({
     | Close flymenu when navigating to another page
     |--------------------------------------------------------------------------
     */
+    const financesRef = useRef<HTMLDivElement>(null);
     const hotelsRef = useRef<HTMLDivElement>(null);
     const vouchersRef = useRef<HTMLDivElement>(null);
     const usersRef = useRef<HTMLDivElement>(null);
@@ -40,6 +43,7 @@ export default function Authenticated({
     const profileRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        setFinancesOpen(false);
         setHotelsOpen(false);
         setUsersOpen(false);
         setVouchersOpen(false);
@@ -55,6 +59,7 @@ export default function Authenticated({
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             const target = event.target as Node;
+            const clickedInsideFinances = financesRef.current?.contains(target);
             const clickedInsideHotels = hotelsRef.current?.contains(target);
             const clickedInsideVouchers = vouchersRef.current?.contains(target);
             const clickedInsideUsers = usersRef.current?.contains(target);
@@ -64,12 +69,14 @@ export default function Authenticated({
             const clickedInsideProfile = profileRef.current?.contains(target);
 
             if (
+                !clickedInsideFinances &&
                 !clickedInsideHotels &&
                 !clickedInsideVouchers &&
                 !clickedInsideUsers &&
                 !clickedInsideNotification &&
                 !clickedInsideProfile
             ) {
+                setFinancesOpen(false);
                 setHotelsOpen(false);
                 setVouchersOpen(false);
                 setUsersOpen(false);
@@ -91,8 +98,15 @@ export default function Authenticated({
     |--------------------------------------------------------------------------
     */
     const toggleMenu = (
-        menu: 'hotels' | 'vouchers' | 'users' | 'notification' | 'profile',
+        menu:
+            | 'finances'
+            | 'hotels'
+            | 'vouchers'
+            | 'users'
+            | 'notification'
+            | 'profile',
     ) => {
+        setFinancesOpen(menu === 'finances' ? (current) => !current : false);
         setHotelsOpen(menu === 'hotels' ? (current) => !current : false);
         setVouchersOpen(menu === 'vouchers' ? (current) => !current : false);
         setUsersOpen(menu === 'users' ? (current) => !current : false);
@@ -123,6 +137,16 @@ export default function Authenticated({
                         DASHBOARD
                     ================================================== */}
                     <AuthenticatedMenuDashboard />
+
+                    {/* =================================================
+                        FINANCE
+                    ================================================== */}
+                    <AuthenticatedMenuFinances
+                        url={url}
+                        open={financesOpen}
+                        onToggle={() => toggleMenu('finances')}
+                        containerRef={financesRef}
+                    />
 
                     {/* =================================================
                         SALES

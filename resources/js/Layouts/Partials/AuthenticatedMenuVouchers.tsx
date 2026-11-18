@@ -80,13 +80,13 @@ export default function AuthenticatedMenuVouchers({
     return (
         <div ref={containerRef} className="relative">
             {/* =====================================================
-                HOTELS BUTTON
+                VOUCHER BUTTON
             ====================================================== */}
 
             <button
                 type="button"
                 onClick={onToggle}
-                aria-label="Hotels"
+                aria-label="Vouchers"
                 aria-expanded={open}
                 className={[
                     'group h-11 w-11 rounded-xl relative flex items-center justify-center',
