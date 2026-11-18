@@ -1,0 +1,383 @@
+import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SelectOption, { useSelectOption } from '@/Components/SelectOption';
+import TextInput from '@/Components/TextInput';
+import { router, useForm } from '@inertiajs/react';
+import { Image as ImageIcon, X } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+
+interface CreateVoucherFormProps {
+    productAttribute: string; // 'flight' | 'hotel' | 'tour'
+    productTitle: string; // 'Flight' | 'Hotel' | 'Tour'
+}
+
+const voucher_type = [
+    { id: 'general', name: 'General' },
+    { id: 'signup', name: 'Sign Up Member' },
+];
+
+const distribution_type = [
+    { id: 'public', name: 'Public (All Users)' },
+    { id: 'personal', name: 'Personal (Specific Users)' },
+];
+
+const platform = [
+    { id: '0', name: 'All Platforms' },
+    { id: '1', name: 'Web Only' },
+    { id: '2', name: 'Mobile App Only' },
+];
+
+const discount_type = [
+    { id: 'percentage', name: 'Percentage (%)' },
+    { id: 'fixed', name: 'Fixed Amount (IDR)' },
+];
+
+export default function CreateVoucherForm({
+    productAttribute,
+    productTitle,
+}: CreateVoucherFormProps) {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+    const { data, setData, post, processing, errors } = useForm({
+        product_attribute: productAttribute,
+        image: null as File | null,
+        voucher_type: 'general',
+        distribution_type: 'public',
+        discount_type: 'percentage' as 'percentage' | 'fixed',
+        discount_value: '',
+        max_discount: '',
+        min_order_amount: '0',
+        start_at: '',
+        end_at: '',
+        usage_limit: '',
+        usage_per_user: '1',
+        platform: '0',
+    });
+
+    const { selected: selectedVoucherType, onChange: onVoucherTypeChange } =
+        useSelectOption<any>(
+            voucher_type,
+            data,
+            setData as any,
+            'voucher_type',
+        );
+    
+    const { selected: selectedDistributionType, onChange: onDistributionTypeChange } =
+        useSelectOption<any>(
+            distribution_type,
+            data,
+            setData as any,
+            'distribution_type',
+        );
+    
+    const { selected: selectedDiscountType, onChange: onDiscountTypeChange } =
+        useSelectOption<any>(
+            discount_type,
+            data,
+            setData as any,
+            'discount_type',
+        );
+
+    const { selected: selectedPlatform, onChange: onPlatformChange } =
+        useSelectOption<any>(
+            platform,
+            data,
+            setData as any,
+            'platform',
+        );
+
+    const getIndexUrl = () => {
+        const routeMap: Record<string, string> = {
+            flight: route('voucher.indexFlight'),
+            hotel: route('voucher.indexHotel'),
+            tour: route('voucher.indexTour'),
+        };
+        return routeMap[productAttribute] || route('voucher.indexHotel');
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setData('image', file);
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                setImagePreview(event.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setData('image', null);
+        setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('voucher.store'), {
+            forceFormData: true,
+            preserveScroll: true,
+        });
+    };
+
+    return (
+        <div className="max-w-4xl rounded-2xl bg-white p-6 sm:p-8 shadow-sm border border-[#E2E8F0] mx-auto">
+            <div className="border-b border-[#E2E8F0] pb-5 mb-6">
+                <h2 className="text-xl font-bold text-gray-900">
+                    Create New {productTitle} Voucher
+                </h2>
+                <p className="text-xs text-quaternary mt-1">
+                    Fill in the promotional voucher configuration for {productTitle}. New vouchers are automatically created as Draft and can be activated at any time.
+                </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                    <InputLabel value="Banner / Voucher Image (Optional)" />
+                    <div className="mt-1.5 flex items-center gap-4">
+                        {imagePreview ? (
+                            <div className="relative w-40 h-24 rounded-lg overflow-hidden border border-[#E2E8F0] bg-slate-50 shrink-0">
+                                <img
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    className="w-full h-full object-cover"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-black/80 text-white rounded-full transition-colors"
+                                >
+                                    <X size={12} />
+                                </button>
+                            </div>
+                        ) : (
+                            <div
+                                onClick={() => fileInputRef.current?.click()}
+                                className="w-40 h-24 border border-dashed border-gray-300 hover:border-gray-400 rounded-lg flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100/60 transition-colors shrink-0"
+                            >
+                                <ImageIcon size={22} className="text-gray-400" />
+                                <span className="text-[11px] text-gray-500 mt-1 font-medium">
+                                    Select Image
+                                </span>
+                            </div>
+                        )}
+                        <div className="text-xs text-gray-500">
+                            <p className="font-semibold text-gray-700">Supported formats</p>
+                            <p className="text-[11px] text-gray-400 mt-0.5">
+                                PNG, JPG, WebP up to 2MB. Recommended landscape aspect ratio.
+                            </p>
+                            {imagePreview && (
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="mt-1 text-xs text-primary font-medium hover:underline block"
+                                >
+                                    Change Image
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageChange}
+                        accept="image/png,image/jpeg,image/jpg,image/webp"
+                        className="hidden"
+                    />
+                    <InputError message={errors.image} className="mt-1" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <InputLabel value="Voucher Type" />
+                        <SelectOption
+                            options={voucher_type}
+                            className="mt-1 block w-full"
+                            value={selectedVoucherType}
+                            onChange={onVoucherTypeChange}
+                        />
+                        <InputError message={errors.voucher_type} className="mt-1" />
+                    </div>
+
+                    <div>
+                        <InputLabel value="Distribution Type" />
+                        <SelectOption
+                            options={distribution_type}
+                            className="mt-1 block w-full"
+                            value={selectedDistributionType}
+                            onChange={onDistributionTypeChange}
+                        />
+                        <InputError message={errors.distribution_type} className="mt-1" />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <InputLabel value="Discount Type" />
+                        <SelectOption
+                            options={discount_type}
+                            className="mt-1 block w-full"
+                            value={selectedDiscountType}
+                            onChange={onDiscountTypeChange}
+                        />
+                        <InputError message={errors.discount_type} className="mt-1" />
+                    </div>
+
+                    <div>
+                        <InputLabel
+                            value={
+                                data.discount_type === 'percentage'
+                                    ? 'Discount Value (%)'
+                                    : 'Discount Value (IDR)'
+                            }
+                        />
+                        <TextInput
+                            type="number"
+                            min="0"
+                            step={data.discount_type === 'percentage' ? '0.1' : '1000'}
+                            max={data.discount_type === 'percentage' ? '100' : undefined}
+                            value={data.discount_value}
+                            onChange={(e) => setData('discount_value', e.target.value)}
+                            placeholder={data.discount_type === 'percentage' ? 'e.g. 10' : 'e.g. 50000'}
+                            className="mt-1 block w-full"
+                            required
+                        />
+                        <InputError message={errors.discount_value} className="mt-1" />
+                    </div>
+
+                    <div>
+                        <InputLabel
+                            value={
+                                data.discount_type === 'percentage'
+                                    ? 'Max. Discount (IDR)'
+                                    : 'Max. Discount (IDR) — N/A'
+                            }
+                        />
+                        <TextInput
+                            type="number"
+                            min="0"
+                            step="1000"
+                            disabled={data.discount_type === 'fixed'}
+                            value={data.discount_type === 'fixed' ? '' : data.max_discount}
+                            onChange={(e) => setData('max_discount', e.target.value)}
+                            placeholder={
+                                data.discount_type === 'percentage'
+                                    ? 'Optional, e.g. 100000'
+                                    : 'Not applicable for fixed discount'
+                            }
+                            className={`mt-1 block w-full ${
+                                data.discount_type === 'fixed'
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200 shadow-none'
+                                    : ''
+                            }`}
+                        />
+                        <p className="text-[10px] text-gray-400 mt-1">
+                            {data.discount_type === 'percentage'
+                                ? 'Maximum discount cap in IDR (optional)'
+                                : 'Automatically disabled for fixed discount'}
+                        </p>
+                        <InputError message={errors.max_discount} className="mt-1" />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <InputLabel value="Min. Order Amount (IDR)" />
+                        <TextInput
+                            type="number"
+                            min="0"
+                            step="1000"
+                            value={data.min_order_amount}
+                            onChange={(e) => setData('min_order_amount', e.target.value)}
+                            placeholder="0"
+                            className="mt-1 block w-full"
+                        />
+                        <InputError message={errors.min_order_amount} className="mt-1" />
+                    </div>
+
+                    <div>
+                        <InputLabel value="Total Quota (Optional)" />
+                        <TextInput
+                            type="number"
+                            min="1"
+                            value={data.usage_limit}
+                            onChange={(e) => setData('usage_limit', e.target.value)}
+                            placeholder="Unlimited"
+                            className="mt-1 block w-full"
+                        />
+                        <InputError message={errors.usage_limit} className="mt-1" />
+                    </div>
+
+                    <div>
+                        <InputLabel value="Limit per User" />
+                        <TextInput
+                            type="number"
+                            min="1"
+                            value={data.usage_per_user}
+                            onChange={(e) => setData('usage_per_user', e.target.value)}
+                            placeholder="1"
+                            className="mt-1 block w-full"
+                        />
+                        <InputError message={errors.usage_per_user} className="mt-1" />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <InputLabel value="Start Date" />
+                        <TextInput
+                            type="datetime-local"
+                            value={data.start_at}
+                            onChange={(e) => setData('start_at', e.target.value)}
+                            className="mt-1 block w-full text-xs text-gray-700"
+                        />
+                        <InputError message={errors.start_at} className="mt-1" />
+                    </div>
+
+                    <div>
+                        <InputLabel value="End Date" />
+                        <TextInput
+                            type="datetime-local"
+                            value={data.end_at}
+                            onChange={(e) => setData('end_at', e.target.value)}
+                            className="mt-1 block w-full text-xs text-gray-700"
+                        />
+                        <InputError message={errors.end_at} className="mt-1" />
+                    </div>
+
+                    <div>
+                        <InputLabel value="Target Platform" />
+                            <SelectOption
+                            options={platform}
+                            className="mt-1 block w-full"
+                            value={selectedPlatform}
+                            onChange={onPlatformChange}
+                        />
+                        <InputError message={errors.platform} className="mt-1" />
+                    </div>
+                </div>
+
+                <div className="border-t border-[#E2E8F0] pt-6 flex items-center justify-end gap-3 mt-8">
+                    <button
+                        type="button"
+                        onClick={() => router.visit(getIndexUrl())}
+                        className="rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-bold text-gray-700 shadow-sm hover:bg-gray-50 transition-all active:scale-[0.98]"
+                    >
+                        Cancel
+                    </button>
+                    <PrimaryButton
+                        className="py-2.5 px-6 rounded-xl"
+                        disabled={processing}
+                    >
+                        {processing ? 'Saving...' : 'Save Voucher'}
+                    </PrimaryButton>
+                </div>
+            </form>
+        </div>
+    );
+}
