@@ -62,7 +62,7 @@ class OrderProductAttribute extends Model
     public function details()
     {
         // Retrieve the related ProductAttribute
-        $productAttribute = $this->productAttributes;
+        $productAttribute = $this->productAttribute;
 
         // Check if a related ProductAttribute exists
         if ($productAttribute) {

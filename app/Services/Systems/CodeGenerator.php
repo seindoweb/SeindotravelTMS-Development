@@ -10,10 +10,10 @@ class CodeGenerator
     public static function orderProductAttribute(string $code)
     {
         $allowedToContinue = false;
-        $suffix = '/'.strtoupper($code).'-SGT/'.Carbon::now()->year;
+        $suffix = '/' . strtoupper($code) . '-SGT/' . Carbon::now()->year;
         $thisMonthCode = helperMonthNumbersToRomanNumerals(Carbon::now()->month);
 
-        $dObjLastTransaksi = OrderProductAttribute::where('code', 'like', '%'.$suffix)->latest('id')->first();
+        $dObjLastTransaksi = OrderProductAttribute::where('code', 'like', '%' . $suffix)->latest('id')->first();
 
         $dIntLastKode = 0;
         if ($dObjLastTransaksi && $dObjLastTransaksi->code) {
@@ -24,7 +24,7 @@ class CodeGenerator
         do {
             $dIntLastKode++;
             $dStrPrefix = str_pad((string) $dIntLastKode, 4, '0', STR_PAD_LEFT);
-            $number = $dStrPrefix.'/'.$thisMonthCode.$suffix;
+            $number = $dStrPrefix . '/' . $thisMonthCode . $suffix;
 
             // cek apakah udah ada
             $exists = OrderProductAttribute::where('code', $number)->first();

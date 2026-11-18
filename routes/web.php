@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Pages\DashboardController;
+use App\Http\Controllers\Pages\Finances\FlightsViaController;
+use App\Http\Controllers\Pages\Finances\HotelsMgController;
 use App\Http\Controllers\Pages\Hotels\HotelBookingController;
 use App\Http\Controllers\Pages\Hotels\HotelMarkupController;
 use App\Http\Controllers\Pages\Hotels\HotelOrderController;
@@ -33,6 +35,22 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('finance')->name('finance.')->group(function () {
+        Route::prefix('flights')->name('flights.')->group(function () {
+            Route::prefix('via')->name('via.')->group(function () {
+                Route::match(['get', 'post'], '/', [FlightsViaController::class, 'index'])->name('index');
+                Route::match(['get', 'post'], '/create', [FlightsViaController::class, 'create'])->name('create');
+            });
+        });
+
+        Route::prefix('hotels')->name('hotels.')->group(function () {
+            Route::prefix('mg')->name('mg.')->group(function () {
+                Route::match(['get', 'post'], '/', [HotelsMgController::class, 'index'])->name('index');
+                Route::match(['get', 'post'], '/create', [HotelsMgController::class, 'create'])->name('create');
+            });
+        });
     });
 
     Route::prefix('sales')->name('sales.')->group(function () {
@@ -127,5 +145,26 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
-require __DIR__.'/locale.php';
+
+
+
+use App\Constants\ModelConstant;
+use App\Events\MonitoringHotelProductAttributeOrderEvent;
+use App\Models\OrderProductAttribute;
+use Illuminate\Database\Eloquent\Builder;
+
+Route::get('/test', function () {
+    $orderProductAttribute = OrderProductAttribute::whereHas('productAttribute', function (Builder $productAttribute) {
+        $productAttribute->where('attribute', ModelConstant::PRODUCT_ATTRIBUTE_HOTEL);
+    })->whereIn('order_status', [ModelConstant::ORDER_STATUS_BOOKING, ModelConstant::ORDER_STATUS_PROGRESS])
+        ->orWhere('order_status', true)
+        ->get();
+
+    foreach ($orderProductAttribute ?: [] as $orderAtt) {
+        MonitoringHotelProductAttributeOrderEvent::dispatch($orderAtt);
+    }
+});
+
+
+require __DIR__ . '/auth.php';
+require __DIR__ . '/locale.php';

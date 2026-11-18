@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Pages\Hotels;
 
+use App\Constants\ModelConstant;
+use App\Constants\SystemConstant;
+use App\Events\MonitoringHotelProductAttributeOrderEvent;
+use App\Events\PaymentActivityEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderProductAttribute;
@@ -65,15 +69,9 @@ class HotelOrderController extends Controller
     public function orderDetails(string $code)
     {
         $rawCode = helperReplaceSeparator($code, '-', '/');
-        $fixedCode = str_replace('/SGT/', '-SGT/', $rawCode);
 
         $orderProductAttribute = OrderProductAttribute::query()
-            ->where(function ($query) use ($code, $rawCode, $fixedCode) {
-                $query->whereIn('code', [$code, $rawCode, $fixedCode])
-                    ->orWhereHas('order', function ($oq) use ($code) {
-                        $oq->where('invoice_number', $code);
-                    });
-            })
+            ->where('code', $rawCode)
             ->with([
                 'order.user',
                 'order.creator',
@@ -102,6 +100,17 @@ class HotelOrderController extends Controller
 
     public function orderIssued(string $code)
     {
+        $rawCode = helperReplaceSeparator($code, '-', '/');
+        $orderAtt = OrderProductAttribute::query()->where('code', $rawCode)->first();
+        if ($orderAtt->order) {
+
+            $orderAtt->order->payment_status = ModelConstant::PAYMENT_STATUS_PAID;
+
+            if ($orderAtt->order->save()) {
+                PaymentActivityEvent::dispatch($orderAtt->order, $orderAtt->order->payment_status, SystemConstant::SYSTEM_PLATFORMS_TMS);
+                MonitoringHotelProductAttributeOrderEvent::dispatch($orderAtt);
+            }
+        }
         dd('OK!!!!!!!!!!', [
             'order_code' => $code,
             'payload' => request()->all(),

@@ -53,21 +53,18 @@ export default function BookReferenceModal({
 
     const previewResults = hotelPreview?.results;
     const hotelName =
-        previewResults?.name ||
-        hotelBooking?.hotel ||
-        'Hotel Booking';
+        previewResults?.name || hotelBooking?.hotel || 'Hotel Booking';
 
     const locationObj = previewResults?.locations;
-    const hotelAddress =
-        locationObj?.addressMain
-            ? [
-                  locationObj.addressMain,
-                  locationObj.cityName,
-                  locationObj.countryName,
-              ]
-                  .filter(Boolean)
-                  .join(', ')
-            : hotelBooking?.country || 'Indonesia';
+    const hotelAddress = locationObj?.addressMain
+        ? [
+              locationObj.addressMain,
+              locationObj.cityName,
+              locationObj.countryName,
+          ]
+              .filter(Boolean)
+              .join(', ')
+        : hotelBooking?.country || 'Indonesia';
 
     const checkInDate = hotelBooking?.check_in || '-';
     const checkOutDate = hotelBooking?.check_out || '-';
@@ -132,8 +129,11 @@ export default function BookReferenceModal({
             const paxes = r.hotel_booking_room_paxes || [];
             if (paxes.length > 0) {
                 paxes.forEach((p: any) => {
-                    const name = `${p.salutation ? p.salutation.trim() + ' ' : ''}${p.first_name || ''} ${p.last_name || ''}`.trim();
-                    guestLines.push(`  Room ${rIdx + 1}: ${name} (${p.age ? p.age + ' yo' : 'Adult'})`);
+                    const name =
+                        `${p.salutation ? p.salutation.trim() + ' ' : ''}${p.first_name || ''} ${p.last_name || ''}`.trim();
+                    guestLines.push(
+                        `  Room ${rIdx + 1}: ${name} (${p.age ? p.age + ' yo' : 'Adult'})`,
+                    );
                 });
             } else {
                 guestLines.push(`  Room ${rIdx + 1}: ${leadGuestName}`);
@@ -222,66 +222,67 @@ ${guestLines.join('\n')}`;
     ];
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-950/60 backdrop-blur-xs">
+        <div className="inset-0 p-4 sm:p-6 bg-slate-950/60 backdrop-blur-xs fixed z-[100] flex items-center justify-center">
             <div
-                className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-150"
+                className="bg-white rounded-2xl max-w-2xl shadow-2xl border-slate-200 animate-in fade-in zoom-in-95 flex max-h-[92vh] w-full flex-col overflow-hidden border duration-150"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+                <div className="px-6 py-5 bg-white border-slate-100 flex shrink-0 items-center justify-between border-b">
                     <div className="space-y-0.5">
-                        <div className="flex items-center gap-2.5">
-                            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+                        <div className="gap-2.5 flex items-center">
+                            <h2 className="text-lg font-bold tracking-tight text-slate-900">
                                 Booking Reference
                             </h2>
-                            <span className="text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                            <span className="font-semibold tracking-wide px-2 py-0.5 bg-slate-100 text-slate-700 rounded-full text-[11px]">
                                 {bookingStatus}
                             </span>
                         </div>
                         <p className="text-xs text-slate-500">
-                            Rincian identitas reservasi untuk sinkronisasi supplier & operasional
+                            Rincian identitas reservasi untuk sinkronisasi
+                            supplier & operasional
                         </p>
                     </div>
 
                     <button
                         type="button"
                         onClick={onClose}
-                        className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                        className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl cursor-pointer transition-colors"
                         title="Tutup (Esc)"
                     >
                         <X size={18} />
                     </button>
                 </div>
 
-                <div className="p-6 overflow-y-auto space-y-6 text-slate-800">
+                <div className="p-6 space-y-6 text-slate-800 overflow-y-auto">
                     <div>
-                        <div className="flex items-center justify-between mb-2.5">
-                            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        <div className="mb-2.5 flex items-center justify-between">
+                            <h3 className="text-xs font-bold tracking-wider text-slate-900 uppercase">
                                 Technical Identifiers
                             </h3>
-                            <span className="text-[11px] text-slate-400">
+                            <span className="text-slate-400 text-[11px]">
                                 Klik untuk menyalin kode
                             </span>
                         </div>
 
-                        <div className="border border-slate-200 rounded-xl divide-y divide-slate-100 bg-white overflow-hidden shadow-2xs">
+                        <div className="bg-white border-slate-200 rounded-xl divide-slate-100 shadow-2xs divide-y overflow-hidden border">
                             {referenceItems.map((item) => {
                                 const isCopied = copiedKey === item.id;
                                 return (
                                     <div
                                         key={item.id}
-                                        className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 hover:bg-slate-50/70 transition-colors group"
+                                        className="p-3.5 sm:flex-row sm:items-center gap-2.5 hover:bg-slate-50/70 group flex flex-col justify-between transition-colors"
                                     >
                                         <div className="min-w-0 flex-1">
-                                            <div className="flex items-center gap-2">
+                                            <div className="gap-2 flex items-center">
                                                 <span className="text-xs font-semibold text-slate-600">
                                                     {item.label}
                                                 </span>
-                                                <span className="text-[10px] text-slate-400 hidden sm:inline">
+                                                <span className="text-slate-400 sm:inline hidden text-[10px]">
                                                     • {item.description}
                                                 </span>
                                             </div>
                                             <div
-                                                className="font-mono text-xs font-bold text-slate-900 break-all select-all mt-0.5"
+                                                className="font-mono text-xs font-bold text-slate-900 mt-0.5 break-all select-all"
                                                 title={item.value}
                                             >
                                                 {item.value}
@@ -290,16 +291,24 @@ ${guestLines.join('\n')}`;
 
                                         <button
                                             type="button"
-                                            onClick={() => copyToClipboard(item.value, item.id)}
-                                            className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                                            onClick={() =>
+                                                copyToClipboard(
+                                                    item.value,
+                                                    item.id,
+                                                )
+                                            }
+                                            className={`gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold inline-flex shrink-0 cursor-pointer items-center transition-all ${
                                                 isCopied
-                                                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                                                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 active:scale-95'
+                                                    ? 'bg-emerald-100 text-emerald-800 border-emerald-300 border'
+                                                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200/80 border active:scale-95'
                                             }`}
                                         >
                                             {isCopied ? (
                                                 <>
-                                                    <Check size={13} className="text-emerald-700 stroke-[3]" />
+                                                    <Check
+                                                        size={13}
+                                                        className="text-emerald-700 stroke-[3]"
+                                                    />
                                                     <span>Tersalin</span>
                                                 </>
                                             ) : (
@@ -315,24 +324,24 @@ ${guestLines.join('\n')}`;
                         </div>
                     </div>
 
-                    <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/60 space-y-3.5">
-                        <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-200/70">
+                    <div className="border-slate-200 rounded-xl p-4 bg-slate-50/60 space-y-3.5 border">
+                        <div className="gap-3 pb-3 border-slate-200/70 flex items-start justify-between border-b">
                             <div>
-                                <h4 className="text-sm font-bold text-slate-900 leading-snug">
+                                <h4 className="text-sm font-bold leading-snug text-slate-900">
                                     {hotelName}
                                 </h4>
                                 <p className="text-xs text-slate-500 mt-0.5">
                                     {hotelAddress}
                                 </p>
                             </div>
-                            <span className="shrink-0 text-xs font-bold text-slate-700 bg-white border border-slate-200 px-2.5 py-1 rounded-md">
+                            <span className="text-xs font-bold text-slate-700 bg-white border-slate-200 px-2.5 py-1 rounded-md shrink-0 border">
                                 {nights} Malam
                             </span>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                        <div className="gap-4 text-xs sm:grid-cols-4 grid grid-cols-2">
                             <div>
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                <span className="font-bold text-slate-400 tracking-wider block text-[10px] uppercase">
                                     Check-In
                                 </span>
                                 <span className="font-semibold text-slate-900 mt-0.5 block">
@@ -340,7 +349,7 @@ ${guestLines.join('\n')}`;
                                 </span>
                             </div>
                             <div>
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                <span className="font-bold text-slate-400 tracking-wider block text-[10px] uppercase">
                                     Check-Out
                                 </span>
                                 <span className="font-semibold text-slate-900 mt-0.5 block">
@@ -348,7 +357,7 @@ ${guestLines.join('\n')}`;
                                 </span>
                             </div>
                             <div>
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                <span className="font-bold text-slate-400 tracking-wider block text-[10px] uppercase">
                                     Tipe Kamar
                                 </span>
                                 <span className="font-semibold text-slate-900 mt-0.5 block truncate">
@@ -356,22 +365,23 @@ ${guestLines.join('\n')}`;
                                 </span>
                             </div>
                             <div>
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                <span className="font-bold text-slate-400 tracking-wider block text-[10px] uppercase">
                                     Paket Makan
                                 </span>
                                 <span className="font-semibold text-slate-900 mt-0.5 block truncate">
-                                    {roomDetails?.[0]?.meal_plan_name || 'Room Only'}
+                                    {roomDetails?.[0]?.meal_plan_name ||
+                                        'Room Only'}
                                 </span>
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <div className="flex items-center justify-between mb-2.5">
-                            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        <div className="mb-2.5 flex items-center justify-between">
+                            <h3 className="text-xs font-bold tracking-wider text-slate-900 uppercase">
                                 Guest Allocation ({totalGuests} Pax)
                             </h3>
-                            <span className="text-[11px] text-slate-400">
+                            <span className="text-slate-400 text-[11px]">
                                 {totalRooms} Room
                             </span>
                         </div>
@@ -382,34 +392,48 @@ ${guestLines.join('\n')}`;
                                 return (
                                     <div
                                         key={rIdx}
-                                        className="border border-slate-200 rounded-xl p-3 bg-white space-y-1.5"
+                                        className="border-slate-200 rounded-xl p-3 bg-white space-y-1.5 border"
                                     >
                                         <div className="text-xs font-bold text-slate-700 flex items-center justify-between">
-                                            <span>Kamar {r.room_no || rIdx + 1}</span>
-                                            <span className="text-[11px] font-normal text-slate-400">
-                                                {r.no_of_adults || 1} Dewasa, {r.no_of_child || 0} Anak
+                                            <span>
+                                                Kamar {r.room_no || rIdx + 1}
+                                            </span>
+                                            <span className="font-normal text-slate-400 text-[11px]">
+                                                {r.no_of_adults || 1} Dewasa,{' '}
+                                                {r.no_of_child || 0} Anak
                                             </span>
                                         </div>
 
-                                        <div className="divide-y divide-slate-100 text-xs">
+                                        <div className="text-xs divide-slate-100 divide-y">
                                             {paxes.length > 0 ? (
-                                                paxes.map((p: any, pIdx: number) => (
-                                                    <div
-                                                        key={pIdx}
-                                                        className="py-1.5 flex items-center justify-between text-slate-800"
-                                                    >
-                                                        <span className="font-medium">
-                                                            {p.salutation ? p.salutation.trim() + ' ' : ''}
-                                                            {p.first_name} {p.last_name}
-                                                        </span>
-                                                        <span className="text-[10px] text-slate-400">
-                                                            {pIdx === 0 && rIdx === 0 ? 'Lead Guest • ' : ''}
-                                                            {p.age ? `${p.age} th` : 'Adult'}
-                                                        </span>
-                                                    </div>
-                                                ))
+                                                paxes.map(
+                                                    (p: any, pIdx: number) => (
+                                                        <div
+                                                            key={pIdx}
+                                                            className="py-1.5 text-slate-800 flex items-center justify-between"
+                                                        >
+                                                            <span className="font-medium">
+                                                                {p.salutation
+                                                                    ? p.salutation.trim() +
+                                                                      ' '
+                                                                    : ''}
+                                                                {p.first_name}{' '}
+                                                                {p.last_name}
+                                                            </span>
+                                                            <span className="text-slate-400 text-[10px]">
+                                                                {pIdx === 0 &&
+                                                                rIdx === 0
+                                                                    ? 'Lead Guest • '
+                                                                    : ''}
+                                                                {p.age
+                                                                    ? `${p.age} th`
+                                                                    : 'Adult'}
+                                                            </span>
+                                                        </div>
+                                                    ),
+                                                )
                                             ) : (
-                                                <div className="py-1 text-slate-600 font-medium">
+                                                <div className="py-1 font-medium text-slate-600">
                                                     {leadGuestName} (Lead Guest)
                                                 </div>
                                             )}
@@ -421,14 +445,14 @@ ${guestLines.join('\n')}`;
                     </div>
                 </div>
 
-                <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+                <div className="gap-3 px-6 py-4 bg-slate-50 border-slate-200 sm:flex-row flex shrink-0 flex-col items-center justify-between border-t">
                     <button
                         type="button"
                         onClick={handleCopyAll}
-                        className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        className={`sm:w-auto gap-2 px-4 py-2 rounded-xl text-xs font-bold inline-flex w-full cursor-pointer items-center justify-center transition-all ${
                             copiedAll
                                 ? 'bg-emerald-600 text-white'
-                                : 'bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 active:scale-95'
+                                : 'bg-white border-slate-300 hover:bg-slate-100 text-slate-700 border active:scale-95'
                         }`}
                     >
                         {copiedAll ? (
@@ -444,11 +468,11 @@ ${guestLines.join('\n')}`;
                         )}
                     </button>
 
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="gap-2 sm:w-auto flex w-full items-center">
                         <button
                             type="button"
                             onClick={() => window.print()}
-                            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                            className="sm:flex-initial gap-1.5 px-4 py-2 bg-white border-slate-300 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold inline-flex flex-1 cursor-pointer items-center justify-center border transition-colors"
                         >
                             <Printer size={14} />
                             Cetak
@@ -456,7 +480,7 @@ ${guestLines.join('\n')}`;
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 sm:flex-initial px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                            className="px-5 py-2 text-xs font-bold text-white sm:flex-initial bg-slate-900 hover:bg-slate-800 rounded-xl flex-1 cursor-pointer transition-colors"
                         >
                             Tutup
                         </button>

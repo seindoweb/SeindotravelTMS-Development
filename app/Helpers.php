@@ -3,9 +3,18 @@
 if (!function_exists('helperReplaceSeparator')) {
     function helperReplaceSeparator(string $value, string $from = '/', string $to = '-'): string
     {
-        return str_replace($from, $to, $value);
+        $value = str_replace($from, $to, $value);
+
+        if (str_contains($value, '/SGT/')) {
+            $value = str_replace('/SGT/', '-SGT/', $value);
+        }
+
+
+        return $value;
     }
 }
+
+
 
 if (!function_exists('helperMonthNumbersToRomanNumerals')) {
     function helperMonthNumbersToRomanNumerals($number)
