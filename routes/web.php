@@ -100,8 +100,18 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
     Route::prefix('voucher')->name('voucher.')->group(function () {
         Route::match(['get', 'post'], '/flight', [AllVouchersController::class, 'indexFlight'])->name('indexFlight');
+        Route::match(['get', 'post'], '/flight/create', [AllVouchersController::class, 'createFlight'])->name('createFlight');
         Route::match(['get', 'post'], '/hotel', [AllVouchersController::class, 'indexHotel'])->name('indexHotel');
+        Route::match(['get', 'post'], '/hotel/create', [AllVouchersController::class, 'createHotel'])->name('createHotel');
         Route::match(['get', 'post'], '/tour', [AllVouchersController::class, 'indexTour'])->name('indexTour');
+        Route::match(['get', 'post'], '/tour/create', [AllVouchersController::class, 'createTour'])->name('createTour');
+        Route::post('/store', [AllVouchersController::class, 'store'])->name('store');
+        Route::match(['get', 'post'], '/{voucher}/edit', [AllVouchersController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch', 'post'], '/{voucher}', [AllVouchersController::class, 'update'])->name('update');
+        Route::delete('/{voucher}', [AllVouchersController::class, 'destroy'])->name('destroy');
+        Route::patch('/{voucher}/toggle-status', [AllVouchersController::class, 'toggleStatus'])->name('toggleStatus');
+        Route::post('/{voucher}/translations', [AllVouchersController::class, 'saveTranslation'])->name('saveTranslation');
+        Route::delete('/{voucher}/translations/{locale}', [AllVouchersController::class, 'deleteTranslation'])->name('deleteTranslation');
     });
 
     Route::prefix('user')->name('user.')->group(function () {
