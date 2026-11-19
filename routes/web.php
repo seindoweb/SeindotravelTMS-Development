@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::prefix('via')->name('via.')->group(function () {
                 Route::match(['get', 'post'], '/', [FlightsViaController::class, 'index'])->name('index');
                 Route::match(['get', 'post'], '/create', [FlightsViaController::class, 'create'])->name('create');
+                Route::post('/store', [FlightsViaController::class, 'store'])->name('store');
             });
         });
 
@@ -50,6 +51,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::prefix('mg')->name('mg.')->group(function () {
                 Route::match(['get', 'post'], '/', [HotelsMgController::class, 'index'])->name('index');
                 Route::match(['get', 'post'], '/create', [HotelsMgController::class, 'create'])->name('create');
+                Route::post('/store', [HotelsMgController::class, 'store'])->name('store');
             });
         });
     });
@@ -150,9 +152,6 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     });
 });
 
-
-
-
 use App\Constants\ModelConstant;
 use App\Events\MonitoringHotelProductAttributeOrderEvent;
 use App\Models\OrderProductAttribute;
@@ -170,6 +169,5 @@ Route::get('/test', function () {
     }
 });
 
-
-require __DIR__ . '/auth.php';
-require __DIR__ . '/locale.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/locale.php';

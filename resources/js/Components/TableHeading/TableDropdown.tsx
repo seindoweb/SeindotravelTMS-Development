@@ -61,7 +61,7 @@ export function TableDropdown({
                                 onClick={action.onClick}
                                 disabled={disabled}
                                 className={[
-                                    "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition ",
+                                    "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition",
                                     active ? "bg-gray-100" : "",
                                     disabled
                                         ? "opacity-50 cursor-not-allowed"
