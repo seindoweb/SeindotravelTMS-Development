@@ -11,7 +11,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import RecentBookingsTable from './Partials/RecentBookingsTable';
 import BookingStatusCard from './Partials/BookingStatusCard';
 import { Head } from '@inertiajs/react';
-
+import LastRegisteredCustomerCard from './Partials/LastRegisteredCustomerCard';
 
 function StatCard({
     title,
@@ -27,15 +27,15 @@ function StatCard({
     icon: typeof CalendarDays;
 }) {
     return (
-        <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-            <div className="flex items-start justify-between gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary-dark text-[#334155] transition-colors group-hover:bg-primary group-hover:text-white">
+        <div className="group rounded-2xl bg-white p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md border border-[#E2E8F0] transition-all duration-200">
+            <div className="gap-3 flex items-start justify-between">
+                <div className="h-11 w-11 rounded-xl bg-secondary-dark group-hover:bg-primary group-hover:text-white flex items-center justify-center text-[#334155] transition-colors">
                     <Icon size={21} />
                 </div>
 
                 <span
                     className={[
-                        'flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-bold',
+                        'gap-1 px-2 py-1 font-bold flex items-center rounded-full text-[11px]',
                         positive
                             ? 'bg-secondary-dark text-[#334155]'
                             : 'bg-tertiary/10 text-tertiary',
@@ -51,9 +51,7 @@ function StatCard({
             </div>
 
             <div className="mt-5">
-                <p className="text-xs font-medium text-quaternary">
-                    {title}
-                </p>
+                <p className="text-xs font-medium text-quaternary">{title}</p>
 
                 <p className="mt-1 text-2xl font-bold tracking-tight text-[#0F172A]">
                     {value}
@@ -63,28 +61,27 @@ function StatCard({
     );
 }
 
-
 export default function Index() {
     return (
         <AuthenticatedLayout
             header={
-                <span className="text-sm font-bold truncate text-primary">
+                <span className="text-sm font-bold text-primary truncate">
                     Dashboard
                 </span>
-            }>
+            }
+        >
             <Head title="Dashboard" />
 
             <div className="space-y-6">
-
                 {/* Heading */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div className="gap-4 sm:flex-row sm:items-end sm:justify-between flex flex-col">
                     <div>
-                        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-tertiary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-tertiary">
-                            <span className="h-1.5 w-1.5 rounded-full bg-tertiary" />
+                        <div className="mb-2 gap-2 bg-tertiary/10 px-2.5 py-1 font-bold tracking-wider text-tertiary inline-flex items-center rounded-full text-[10px] uppercase">
+                            <span className="h-1.5 w-1.5 bg-tertiary rounded-full" />
                             Overview
                         </div>
 
-                        <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+                        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl text-[#0F172A]">
                             Travel Management System
                         </h1>
 
@@ -95,7 +92,7 @@ export default function Index() {
 
                     <button
                         type="button"
-                        className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-[#334155]"
+                        className="h-10 gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-white shadow-sm inline-flex items-center justify-center transition hover:bg-[#334155]"
                     >
                         <CalendarDays size={16} />
                         28 Aug 2026
@@ -103,7 +100,7 @@ export default function Index() {
                 </div>
 
                 {/* Statistics */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="gap-4 sm:grid-cols-2 xl:grid-cols-4 grid grid-cols-1">
                     <StatCard
                         title="Total Bookings"
                         value="1,248"
@@ -137,15 +134,14 @@ export default function Index() {
                     />
                 </div>
 
-                {/* Recent */}
-                <RecentBookingsTable />
-
                 {/* Booking Overview */}
-                <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,0.75fr)]">
+                <div className="gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,0.75fr)] grid grid-cols-1">
                     <BookingStatusCard />
+                    <LastRegisteredCustomerCard />
                 </div>
 
-
+                {/* Recent */}
+                <RecentBookingsTable />
             </div>
         </AuthenticatedLayout>
     );

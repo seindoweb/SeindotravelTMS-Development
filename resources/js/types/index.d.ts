@@ -154,6 +154,7 @@ export interface UserProps {
 
     has_credit: boolean;
     is_agent: boolean;
+    is_verified: boolean;
 
     upline_id?: number;
 

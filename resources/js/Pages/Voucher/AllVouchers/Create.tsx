@@ -60,14 +60,10 @@ export default function Create({ product_attribute, title }: Props) {
             }
         >
             <Head title={`Create ${productTitle} Voucher`} />
-
-            <div className="py-6 px-4 sm:px-6 lg:px-8">
-                <CreateVoucherForm
-                    productAttribute={product_attribute}
-                    productTitle={productTitle}
-                />
-            </div>
+            <CreateVoucherForm
+                productAttribute={product_attribute}
+                productTitle={productTitle}
+            />
         </AuthenticatedLayout>
     );
 }
-

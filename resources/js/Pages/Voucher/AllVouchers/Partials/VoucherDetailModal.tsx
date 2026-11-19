@@ -24,6 +24,7 @@ export interface VoucherItem {
     key?: string;
     product_attribute_id: number;
     image_path?: string | null;
+    image_url?: string | null;
     discount_type: 'percentage' | 'fixed';
     discount_value: string | number;
     max_discount?: string | number | null;
@@ -96,19 +97,19 @@ export default function VoucherDetailModal({
     const isPercentage = voucher.discount_type === 'percentage';
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div className="inset-0 p-4 bg-slate-900/50 backdrop-blur-sm fixed z-50 flex items-center justify-center">
             <div
-                className="relative w-full max-w-xl max-h-[90vh] flex flex-col bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden"
+                className="max-w-xl bg-white rounded-xl shadow-xl border-slate-200 relative flex max-h-[90vh] w-full flex-col overflow-hidden border"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white">
+                <div className="px-6 py-4 bg-white border-slate-200 flex items-center justify-between border-b">
                     <div>
-                        <div className="flex items-center gap-2">
+                        <div className="gap-2 flex items-center">
                             <h3 className="text-base font-semibold text-slate-900">
                                 Voucher Details #{voucher.id}
                             </h3>
                             {voucher.index && (
-                                <span className="text-xs font-mono text-slate-400">
+                                <span className="font-mono text-xs text-slate-400">
                                     ({voucher.index})
                                 </span>
                             )}
@@ -120,34 +121,34 @@ export default function VoucherDetailModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="text-slate-400 hover:text-slate-600 transition-colors p-1"
+                        className="p-1 text-slate-400 hover:text-slate-600 transition-colors"
                     >
                         <X size={18} />
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                <div className="p-6 space-y-5 flex-1 overflow-y-auto">
                     {voucher.image_path ? (
-                        <div className="rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+                        <div className="rounded-lg border-slate-200 bg-slate-50 overflow-hidden border">
                             <img
                                 src={voucher.image_path}
                                 alt={`Voucher ${voucher.id}`}
-                                className="w-full h-44 object-cover"
+                                className="h-44 w-full object-cover"
                             />
                         </div>
                     ) : (
-                        <div className="h-20 rounded-lg border border-dashed border-slate-200 bg-slate-50 flex items-center justify-center gap-2 text-slate-400 text-xs">
+                        <div className="h-20 gap-2 text-xs rounded-lg border-slate-200 bg-slate-50 text-slate-400 flex items-center justify-center border border-dashed">
                             <ImageIcon size={16} />
                             <span>No banner image available</span>
                         </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-xs border-y border-slate-100 py-4">
+                    <div className="py-4 text-xs gap-x-6 gap-y-4 border-slate-100 grid grid-cols-2 border-y">
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Product Category
                             </span>
-                            <span className="font-semibold text-slate-800 capitalize mt-0.5 block">
+                            <span className="font-semibold text-slate-800 mt-0.5 block capitalize">
                                 {voucher.product_attribute?.product ||
                                     voucher.product_attribute?.attribute ||
                                     '-'}
@@ -155,25 +156,27 @@ export default function VoucherDetailModal({
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Voucher Status
                             </span>
                             <span
-                                className={`inline-block mt-0.5 font-semibold text-xs px-2 py-0.5 rounded ${
+                                className={`mt-0.5 font-semibold text-xs px-2 py-0.5 rounded inline-block ${
                                     voucher.status === 'active'
                                         ? 'bg-emerald-50 text-emerald-700'
                                         : 'bg-slate-100 text-slate-600'
                                 }`}
                             >
-                                {voucher.status === 'active' ? 'Active' : 'Draft'}
+                                {voucher.status === 'active'
+                                    ? 'Active'
+                                    : 'Draft'}
                             </span>
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Voucher Type
                             </span>
-                            <span className="font-semibold text-slate-800 capitalize mt-0.5 block">
+                            <span className="font-semibold text-slate-800 mt-0.5 block capitalize">
                                 {voucher.voucher_type === 'signup'
                                     ? 'Sign Up Member'
                                     : 'General'}
@@ -181,10 +184,10 @@ export default function VoucherDetailModal({
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Distribution
                             </span>
-                            <span className="font-semibold text-slate-800 capitalize mt-0.5 block">
+                            <span className="font-semibold text-slate-800 mt-0.5 block capitalize">
                                 {voucher.distribution_type === 'personal'
                                     ? 'Personal (Specific Users)'
                                     : 'Public (All Users)'}
@@ -192,7 +195,7 @@ export default function VoucherDetailModal({
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Discount Value
                             </span>
                             <span className="font-semibold text-slate-900 text-sm mt-0.5 block">
@@ -203,7 +206,7 @@ export default function VoucherDetailModal({
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Max. Discount
                             </span>
                             <span className="font-medium text-slate-800 mt-0.5 block">
@@ -216,7 +219,7 @@ export default function VoucherDetailModal({
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Min. Order Amount
                             </span>
                             <span className="font-medium text-slate-800 mt-0.5 block">
@@ -227,7 +230,7 @@ export default function VoucherDetailModal({
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Target Platform
                             </span>
                             <span className="font-medium text-slate-800 mt-0.5 block">
@@ -240,94 +243,122 @@ export default function VoucherDetailModal({
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Quota Usage
                             </span>
                             <span className="font-medium text-slate-800 mt-0.5 block">
-                                {voucher.used_count} / {voucher.usage_limit ?? '∞'} (Max {voucher.usage_per_user ?? 1}x/user)
+                                {voucher.used_count} /{' '}
+                                {voucher.usage_limit ?? '∞'} (Max{' '}
+                                {voucher.usage_per_user ?? 1}x/user)
                             </span>
                         </div>
 
                         <div>
-                            <span className="text-slate-400 block text-[11px] font-medium">
+                            <span className="text-slate-400 font-medium block text-[11px]">
                                 Validity Period
                             </span>
-                            <span className="font-medium text-slate-800 mt-0.5 block leading-relaxed">
-                                {formatDateEnglish(voucher.start_at)} to {formatDateEnglish(voucher.end_at)}
+                            <span className="font-medium text-slate-800 mt-0.5 leading-relaxed block">
+                                {formatDateEnglish(voucher.start_at)} to{' '}
+                                {formatDateEnglish(voucher.end_at)}
                             </span>
                         </div>
                     </div>
 
                     {/* Terms & Descriptions (Translations) */}
-                    <div className="pt-2 border-t border-slate-100">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <div className="pt-2 border-slate-100 border-t">
+                        <div className="mb-2 flex items-center justify-between">
+                            <span className="text-xs font-bold text-slate-800 gap-1.5 flex items-center">
                                 <Globe size={14} className="text-primary" />
                                 <span>Terms & Descriptions</span>
                             </span>
-                            <div className="flex items-center gap-1">
+                            <div className="gap-1 flex items-center">
                                 <button
                                     type="button"
                                     onClick={() => setDetailLocale('id')}
-                                    className={`px-2 py-0.5 text-[11px] font-semibold rounded ${
+                                    className={`px-2 py-0.5 font-semibold rounded text-[11px] ${
                                         detailLocale === 'id'
                                             ? 'bg-primary text-white'
                                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                     }`}
                                 >
-                                    ID {voucher.voucher_translations?.some(t => t.locale === 'id' && t.description) ? '✓' : ''}
+                                    ID{' '}
+                                    {voucher.voucher_translations?.some(
+                                        (t) =>
+                                            t.locale === 'id' && t.description,
+                                    )
+                                        ? '✓'
+                                        : ''}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setDetailLocale('en')}
-                                    className={`px-2 py-0.5 text-[11px] font-semibold rounded ${
+                                    className={`px-2 py-0.5 font-semibold rounded text-[11px] ${
                                         detailLocale === 'en'
                                             ? 'bg-primary text-white'
                                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                     }`}
                                 >
-                                    EN {voucher.voucher_translations?.some(t => t.locale === 'en' && t.description) ? '✓' : ''}
+                                    EN{' '}
+                                    {voucher.voucher_translations?.some(
+                                        (t) =>
+                                            t.locale === 'en' && t.description,
+                                    )
+                                        ? '✓'
+                                        : ''}
                                 </button>
                             </div>
                         </div>
 
                         {(() => {
-                            const currentDesc = voucher.voucher_translations?.find(
-                                t => t.locale === detailLocale
-                            )?.description;
+                            const currentDesc =
+                                voucher.voucher_translations?.find(
+                                    (t) => t.locale === detailLocale,
+                                )?.description;
 
                             if (currentDesc) {
                                 return (
                                     <div
-                                        className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 leading-relaxed max-h-40 overflow-y-auto [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_p]:mb-1"
-                                        dangerouslySetInnerHTML={{ __html: currentDesc }}
+                                        className="p-3 bg-slate-50 border-slate-200 rounded-xl text-xs text-slate-700 leading-relaxed max-h-40 [&_ul]:pl-4 [&_ol]:pl-4 [&_p]:mb-1 overflow-y-auto border [&_ol]:list-decimal [&_ul]:list-disc"
+                                        dangerouslySetInnerHTML={{
+                                            __html: currentDesc,
+                                        }}
                                     />
                                 );
                             }
 
                             return (
-                                <div className="p-3 bg-amber-50/50 border border-dashed border-amber-200 rounded-xl text-xs text-amber-700">
-                                    No {detailLocale === 'id' ? 'Indonesian' : 'English'} translation configured yet.
+                                <div className="p-3 text-xs bg-amber-50/50 border-amber-200 rounded-xl text-amber-700 border border-dashed">
+                                    No{' '}
+                                    {detailLocale === 'id'
+                                        ? 'Indonesian'
+                                        : 'English'}{' '}
+                                    translation configured yet.
                                 </div>
                             );
                         })()}
                     </div>
 
-                    <div className="text-[11px] text-slate-400 flex flex-wrap justify-between gap-2">
+                    <div className="text-slate-400 gap-2 flex flex-wrap justify-between text-[11px]">
                         <span>
                             Created: {formatDateEnglish(voucher.created_at)}
-                            {voucher.creator?.full_name ? ` by ${voucher.creator.full_name}` : ''}
+                            {voucher.creator?.full_name
+                                ? ` by ${voucher.creator.full_name}`
+                                : ''}
                         </span>
-                        <span>Updated: {formatDateEnglish(voucher.updated_at)}</span>
+                        <span>
+                            Updated: {formatDateEnglish(voucher.updated_at)}
+                        </span>
                     </div>
                 </div>
 
-                <div className="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                <div className="px-6 py-3 border-slate-200 bg-slate-50 flex items-center justify-between border-t">
+                    <div className="gap-2 flex items-center">
                         <button
                             type="button"
-                            onClick={() => router.visit(route('voucher.edit', voucher.id))}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/5 rounded-md border border-primary/30 transition-colors"
+                            onClick={() =>
+                                router.visit(route('voucher.edit', voucher.id))
+                            }
+                            className="gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/5 rounded-md border-primary/30 inline-flex items-center border transition-colors"
                         >
                             <Edit size={14} />
                             <span>Edit Voucher</span>
@@ -340,7 +371,7 @@ export default function VoucherDetailModal({
                                     onClose();
                                     onOpenTranslation(voucher);
                                 }}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border border-emerald-200 transition-colors"
+                                className="gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border-emerald-200 inline-flex items-center border transition-colors"
                             >
                                 <Globe size={14} />
                                 <span>Manage Translations</span>
@@ -351,7 +382,7 @@ export default function VoucherDetailModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200/60 rounded-md border border-slate-300 transition-colors"
+                        className="px-4 py-2 text-xs font-semibold rounded-md text-slate-700 hover:bg-slate-200/60 border-slate-300 border transition-colors"
                     >
                         Close
                     </button>

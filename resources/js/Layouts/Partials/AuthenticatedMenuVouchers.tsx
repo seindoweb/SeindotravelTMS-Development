@@ -35,14 +35,11 @@ export default function AuthenticatedMenuVouchers({
     const isHotelVouchers = route().current('voucher.indexHotel');
     const isTourVoucher = route().current('voucher.indexTour');
 
-    // Hotel Markup
-    const isHotelMarkup = route().current('hotel.markups.hotel.*');
+    const isDistyPersonal = route().current('voucher.disty.indexPersonal');
+    const isDistyPublic = route().current('voucher.disty.indexPublic');
 
-    // Destination Markup
-    const isDestinationMarkup = route().current('hotel.markups.destination.*');
-
-    // Apakah sedang berada di salah satu halaman markup?
-    const isDistributionTypePage = isHotelMarkup || isDestinationMarkup;
+    // Apakah sedang berada di salah satu halaman yang sama?
+    const isDistributionTypePage = route().current('voucher.disty.*');
 
     // Apakah sedang berada di halaman Distribution Type?
     const isVouchersPage =
@@ -374,16 +371,16 @@ export default function AuthenticatedMenuVouchers({
                         >
                             <div className="ml-5 mt-1 pl-2 border-l border-[#E2E8F0]">
                                 {/* =========================================
-                                    HOTEL MARKUP
+                                    Disty Personal
                                 ========================================== */}
 
                                 <Link
-                                    href={route('hotel.markups.hotel.index')}
+                                    href={route('voucher.disty.indexPersonal')}
                                     className={[
                                         'group gap-2 rounded-lg px-3 py-2.5 flex items-center',
                                         'transition-all duration-150',
 
-                                        isHotelMarkup
+                                        isDistyPersonal
                                             ? 'bg-tertiary/10 text-tertiary'
                                             : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                                     ].join(' ')}
@@ -392,7 +389,7 @@ export default function AuthenticatedMenuVouchers({
                                         className={[
                                             'h-6 w-6 rounded-md flex shrink-0 items-center justify-center',
 
-                                            isHotelMarkup
+                                            isDistyPersonal
                                                 ? 'bg-tertiary/10 text-tertiary'
                                                 : 'bg-secondary-dark text-quaternary',
                                         ].join(' ')}
@@ -415,7 +412,7 @@ export default function AuthenticatedMenuVouchers({
                                         className={[
                                             'shrink-0 transition-transform duration-150',
 
-                                            isHotelMarkup
+                                            isDistyPersonal
                                                 ? 'text-tertiary'
                                                 : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                         ].join(' ')}
@@ -423,18 +420,16 @@ export default function AuthenticatedMenuVouchers({
                                 </Link>
 
                                 {/* =========================================
-                                    PUBLIC VOUCHERS
+                                    Disty Public
                                 ========================================== */}
 
                                 <Link
-                                    href={route(
-                                        'hotel.markups.destination.index',
-                                    )}
+                                    href={route('voucher.disty.indexPublic')}
                                     className={[
                                         'group mt-1 gap-2 rounded-lg px-3 py-2.5 flex items-center',
                                         'transition-all duration-150',
 
-                                        isDestinationMarkup
+                                        isDistyPublic
                                             ? 'bg-tertiary/10 text-tertiary'
                                             : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                                     ].join(' ')}
@@ -443,7 +438,7 @@ export default function AuthenticatedMenuVouchers({
                                         className={[
                                             'h-6 w-6 rounded-md flex shrink-0 items-center justify-center',
 
-                                            isDestinationMarkup
+                                            isDistyPublic
                                                 ? 'bg-tertiary/10 text-tertiary'
                                                 : 'bg-secondary-dark text-quaternary',
                                         ].join(' ')}
@@ -466,7 +461,7 @@ export default function AuthenticatedMenuVouchers({
                                         className={[
                                             'shrink-0 transition-transform duration-150',
 
-                                            isDestinationMarkup
+                                            isDistyPublic
                                                 ? 'text-tertiary'
                                                 : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                         ].join(' ')}
