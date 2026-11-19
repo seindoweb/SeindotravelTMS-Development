@@ -92,7 +92,16 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $appends = ['profile_photo_path', 'index', 'key'];
+    protected $appends = ['is_verified', 'profile_photo_path', 'index', 'key'];
+
+    public function getIsVerifiedAttribute()
+    {
+        if (isset($this->attributes['email_verified_at']) && $this->attributes['email_verified_at'] != null) {
+            return true;
+        }
+
+        return false;
+    }
 
     public function getProfilePhotoPathAttribute()
     {
@@ -100,7 +109,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return $this->attributes['profile_photo_path'];
         }
 
-        return 'https://avatars.mantapbacklink.com/api?format=svg&name=' . $this->full_name . '&format=svg&bold=false&rounded=true&size=320&background=Eb2E34&color=ffffff';
+        return 'https://avatars.mantapbacklink.com/api?format=svg&name=' . $this->full_name . '&format=svg&bold=false&size=320&background=Eb2E34&color=ffffff';
     }
 
 

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Illuminate\Support\Facades\Storage;
 
 class Voucher extends Model
 {
@@ -28,7 +29,7 @@ class Voucher extends Model
      *
      * @var array
      */
-    protected $appends = ['index', 'key'];
+    protected $appends = ['index', 'key', 'image_url'];
 
     public function getIndexAttribute()
     {
@@ -38,6 +39,15 @@ class Voucher extends Model
     public function getKeyAttribute()
     {
         return Crypt::encryptString($this->id); // atau logika dinamis
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image_path)) {
+            return null;
+        }
+
+        return asset('storage/' . $this->image_path);
     }
 
     /**

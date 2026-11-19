@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages\Vouchers;
 
+use App\Constants\ModelConstant;
 use App\Http\Controllers\Controller;
 use App\Models\ProductAttribute;
 use App\Models\Voucher;
@@ -13,12 +14,13 @@ use Inertia\Response;
 
 class AllVouchersController extends Controller
 {
+    private ?string $distributionType = null;
     /**
      * indexFlight
      */
     public function indexFlight(): Response
     {
-        return $this->index('flight', 'Flight Vouchers');
+        return $this->index(ModelConstant::PRODUCT_ATTRIBUTE_FLIGHT, 'Flight Vouchers');
     }
 
     /**
@@ -26,7 +28,7 @@ class AllVouchersController extends Controller
      */
     public function indexHotel(): Response
     {
-        return $this->index('hotel', 'Hotel Vouchers');
+        return $this->index(ModelConstant::PRODUCT_ATTRIBUTE_HOTEL, 'Hotel Vouchers');
     }
 
     /**
@@ -34,7 +36,62 @@ class AllVouchersController extends Controller
      */
     public function indexTour(): Response
     {
-        return $this->index('tour', 'Tour Vouchers');
+        return $this->index(ModelConstant::PRODUCT_ATTRIBUTE_TOUR, 'Tour Vouchers');
+    }
+
+    public function indexDistyPersonal(): Response
+    {
+        $this->distributionType = 'personal';
+        return $this->index(null, 'Distribution Personal');
+    }
+
+    public function indexDistyPublic(): Response
+    {
+        $this->distributionType = 'public';
+        return $this->index(null, 'Distribution Public');
+    }
+
+    /**
+     * index
+     */
+    public function index(string|null $product_attribute, string $title): Response
+    {
+        $att = ProductAttribute::where('attribute', $product_attribute)->first();
+
+        $search = request()->input('search');
+        $status = request()->input('status');
+        $discountType = request()->input('discount_type');
+        $voucherType = request()->input('voucher_type');
+
+        $vouchers = Voucher::query()
+            ->when($att, fn($q) => $q->where('product_attribute_id', $att->id))
+            ->when($this->distributionType !== null, fn($q) => $q->where('distribution_type', $this->distributionType))
+            ->when($search, function ($q, $search) {
+                $q->where(function ($sub) use ($search) {
+                    $sub->where('id', 'like', "%{$search}%")
+                        ->orWhere('discount_value', 'like', "%{$search}%");
+                });
+            })
+            ->when($status, fn($q, $status) => $q->where('status', $status))
+            ->when($discountType, fn($q, $type) => $q->where('discount_type', $type))
+            ->when($voucherType, fn($q, $type) => $q->where('voucher_type', $type))
+            ->with(['productAttribute', 'creator', 'voucherTranslations', 'voucherCodes'])
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return Inertia::render('Voucher/AllVouchers/Index', [
+            'product_attribute' => $product_attribute,
+            'productAttributeModel' => $att,
+            'title' => $title,
+            'vouchers' => $vouchers,
+            'filters' => [
+                'search' => $search,
+                'status' => $status,
+                'discount_type' => $discountType,
+                'voucher_type' => $voucherType,
+            ],
+        ]);
     }
 
     /**
@@ -76,48 +133,6 @@ class AllVouchersController extends Controller
     }
 
     /**
-     * index
-     */
-    public function index(string $product_attribute, string $title): Response
-    {
-        $att = ProductAttribute::where('attribute', $product_attribute)->first();
-
-        $search = request()->input('search');
-        $status = request()->input('status');
-        $discountType = request()->input('discount_type');
-        $voucherType = request()->input('voucher_type');
-
-        $vouchers = Voucher::query()
-            ->when($att, fn ($q) => $q->where('product_attribute_id', $att->id))
-            ->when($search, function ($q, $search) {
-                $q->where(function ($sub) use ($search) {
-                    $sub->where('id', 'like', "%{$search}%")
-                        ->orWhere('discount_value', 'like', "%{$search}%");
-                });
-            })
-            ->when($status, fn ($q, $status) => $q->where('status', $status))
-            ->when($discountType, fn ($q, $type) => $q->where('discount_type', $type))
-            ->when($voucherType, fn ($q, $type) => $q->where('voucher_type', $type))
-            ->with(['productAttribute', 'creator', 'voucherTranslations', 'voucherCodes'])
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-
-        return Inertia::render('Voucher/AllVouchers/Index', [
-            'product_attribute' => $product_attribute,
-            'productAttributeModel' => $att,
-            'title' => $title,
-            'vouchers' => $vouchers,
-            'filters' => [
-                'search' => $search,
-                'status' => $status,
-                'discount_type' => $discountType,
-                'voucher_type' => $voucherType,
-            ],
-        ]);
-    }
-
-    /**
      * store
      */
     public function store(Request $request): RedirectResponse
@@ -138,12 +153,29 @@ class AllVouchersController extends Controller
             'platform' => ['required', 'in:0,1,2'],
         ]);
 
+        $file = $request->file('image');
+
         $att = ProductAttribute::where('attribute', $validated['product_attribute'])->firstOrFail();
 
         $imagePath = null;
+
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('vouchers', 'public');
-            $imagePath = Storage::url($path);
+            $file = $request->file('image');
+
+            if (!$file->isValid()) {
+                throw new \RuntimeException('Uploaded image is invalid.');
+            }
+
+            $imagePath = 'vouchers/' . $file->hashName();
+
+            $stored = Storage::disk('public')->put(
+                $imagePath,
+                $file->get()
+            );
+
+            if (!$stored) {
+                throw new \RuntimeException('Failed to upload voucher image.');
+            }
         }
 
         Voucher::create([
@@ -182,7 +214,7 @@ class AllVouchersController extends Controller
         $voucher->load('productAttribute');
 
         $product_attribute = $voucher->productAttribute?->attribute ?? 'hotel';
-        $title = ucfirst($product_attribute).' Vouchers';
+        $title = ucfirst($product_attribute) . ' Vouchers';
 
         return Inertia::render('Voucher/AllVouchers/Edit', [
             'voucher' => $voucher,
@@ -216,7 +248,9 @@ class AllVouchersController extends Controller
         $updateData = [
             'discount_type' => $validated['discount_type'],
             'discount_value' => $validated['discount_value'],
-            'max_discount' => $validated['discount_type'] === 'percentage' ? ($validated['max_discount'] ?? null) : null,
+            'max_discount' => $validated['discount_type'] === 'percentage'
+                ? ($validated['max_discount'] ?? null)
+                : null,
             'min_order_amount' => $validated['min_order_amount'] ?? 0,
             'start_at' => $validated['start_at'] ?? null,
             'end_at' => $validated['end_at'] ?? null,
@@ -227,18 +261,37 @@ class AllVouchersController extends Controller
             'platform' => (int) $validated['platform'],
         ];
 
+        // Upload new image
         if ($request->hasFile('image')) {
-            if ($voucher->image_path) {
-                $oldPath = ltrim(str_replace('/storage/', '', $voucher->image_path), '/');
-                Storage::disk('public')->delete($oldPath);
+            $file = $request->file('image');
+
+            if (!$file->isValid()) {
+                throw new \RuntimeException('Uploaded image is invalid.');
             }
-            $path = $request->file('image')->store('vouchers', 'public');
-            $updateData['image_path'] = Storage::url($path);
+
+            $newPath = 'vouchers/' . $file->hashName();
+
+            $stored = Storage::disk('public')->put(
+                $newPath,
+                $file->get()
+            );
+
+            if (!$stored) {
+                throw new \RuntimeException('Failed to upload voucher image.');
+            }
+
+            // Delete old image after successful upload
+            if ($voucher->image_path) {
+                Storage::disk('public')->delete($voucher->image_path);
+            }
+
+            $updateData['image_path'] = $newPath;
         } elseif ($request->boolean('delete_image')) {
+
             if ($voucher->image_path) {
-                $oldPath = ltrim(str_replace('/storage/', '', $voucher->image_path), '/');
-                Storage::disk('public')->delete($oldPath);
+                Storage::disk('public')->delete($voucher->image_path);
             }
+
             $updateData['image_path'] = null;
         }
 
@@ -249,6 +302,7 @@ class AllVouchersController extends Controller
             'hotel' => 'voucher.indexHotel',
             'tour' => 'voucher.indexTour',
         ];
+
         $targetRoute = $routeMap[$validated['product_attribute']] ?? 'voucher.indexHotel';
 
         return redirect()->route($targetRoute)->with('success', 'Voucher updated successfully!');

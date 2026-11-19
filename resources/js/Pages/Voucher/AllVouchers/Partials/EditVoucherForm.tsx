@@ -55,7 +55,7 @@ export default function EditVoucherForm({
 }: EditVoucherFormProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(
-        voucher.image_path || null,
+        voucher.image_url || null,
     );
 
     const { data, setData, post, processing, errors } = useForm({
@@ -66,8 +66,7 @@ export default function EditVoucherForm({
         voucher_type: voucher.voucher_type || 'general',
         distribution_type: voucher.distribution_type || 'public',
         discount_type: (voucher.discount_type || 'percentage') as
-            | 'percentage'
-            | 'fixed',
+            'percentage' | 'fixed',
         discount_value: String(voucher.discount_value ?? ''),
         max_discount: voucher.max_discount ? String(voucher.max_discount) : '',
         min_order_amount: String(voucher.min_order_amount ?? '0'),
@@ -85,23 +84,20 @@ export default function EditVoucherForm({
             setData as any,
             'voucher_type',
         );
-    
-    const { selected: selectedDistributionType, onChange: onDistributionTypeChange } =
-        useSelectOption<any>(
-            distribution_type,
-            data,
-            setData as any,
-            'distribution_type',
-        );
+
+    const {
+        selected: selectedDistributionType,
+        onChange: onDistributionTypeChange,
+    } = useSelectOption<any>(
+        distribution_type,
+        data,
+        setData as any,
+        'distribution_type',
+    );
 
     const { selected: selectedPlatform, onChange: onPlatformChange } =
-        useSelectOption<any>(
-            platform,
-            data,
-            setData as any,
-            'platform',
-        ); 
-    
+        useSelectOption<any>(platform, data, setData as any, 'platform');
+
     const { selected: selectedDiscountType, onChange: onDiscountTypeChange } =
         useSelectOption<any>(
             discount_type,
@@ -156,25 +152,27 @@ export default function EditVoucherForm({
     };
 
     return (
-        <div className="max-w-4xl rounded-2xl bg-white p-6 sm:p-8 shadow-sm border border-[#E2E8F0] mx-auto">
-            <div className="border-b border-[#E2E8F0] pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="max-w-4xl rounded-2xl bg-white p-6 sm:p-8 shadow-sm mx-auto border border-[#E2E8F0]">
+            <div className="pb-5 mb-6 sm:flex-row sm:items-center gap-2 flex flex-col justify-between border-b border-[#E2E8F0]">
                 <div>
                     <h2 className="text-xl font-bold text-gray-900">
                         Edit {productTitle} Voucher #{voucher.id}
                     </h2>
-                    <p className="text-xs text-quaternary mt-1">
-                        Update configuration and terms for {productTitle} voucher.
+                    <p className="mt-1 text-xs text-quaternary">
+                        Update configuration and terms for {productTitle}{' '}
+                        voucher.
                     </p>
                 </div>
                 <div className="text-xs">
                     <span
-                        className={`inline-block font-semibold px-2.5 py-1 rounded-full ${
+                        className={`font-semibold px-2.5 py-1 inline-block rounded-full ${
                             voucher.status === 'active'
                                 ? 'bg-emerald-50 text-emerald-700'
                                 : 'bg-gray-100 text-gray-700'
                         }`}
                     >
-                        Current Status: {voucher.status === 'active' ? 'Active' : 'Draft'}
+                        Current Status:{' '}
+                        {voucher.status === 'active' ? 'Active' : 'Draft'}
                     </span>
                 </div>
             </div>
@@ -182,18 +180,18 @@ export default function EditVoucherForm({
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                     <InputLabel value="Banner / Voucher Image (Optional)" />
-                    <div className="mt-1.5 flex items-center gap-4">
+                    <div className="mt-1.5 gap-4 flex items-center">
                         {imagePreview ? (
-                            <div className="relative w-40 h-24 rounded-lg overflow-hidden border border-[#E2E8F0] bg-slate-50 shrink-0">
+                            <div className="w-40 h-24 rounded-lg bg-slate-50 relative shrink-0 overflow-hidden border border-[#E2E8F0]">
                                 <img
                                     src={imagePreview}
                                     alt="Preview"
-                                    className="w-full h-full object-cover"
+                                    className="h-full w-full object-cover"
                                 />
                                 <button
                                     type="button"
                                     onClick={handleRemoveImage}
-                                    className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-black/80 text-white rounded-full transition-colors"
+                                    className="p-1 text-white top-1 right-1 bg-black/60 hover:bg-black/80 absolute rounded-full transition-colors"
                                 >
                                     <X size={12} />
                                 </button>
@@ -201,24 +199,32 @@ export default function EditVoucherForm({
                         ) : (
                             <div
                                 onClick={() => fileInputRef.current?.click()}
-                                className="w-40 h-24 border border-dashed border-gray-300 hover:border-gray-400 rounded-lg flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100/60 transition-colors shrink-0"
+                                className="w-40 h-24 border-gray-300 rounded-lg hover:border-gray-400 bg-gray-50 hover:bg-gray-100/60 flex shrink-0 cursor-pointer flex-col items-center justify-center border border-dashed transition-colors"
                             >
-                                <ImageIcon size={22} className="text-gray-400" />
-                                <span className="text-[11px] text-gray-500 mt-1 font-medium">
+                                <ImageIcon
+                                    size={22}
+                                    className="text-gray-400"
+                                />
+                                <span className="text-gray-500 mt-1 font-medium text-[11px]">
                                     Select Image
                                 </span>
                             </div>
                         )}
                         <div className="text-xs text-gray-500">
-                            <p className="font-semibold text-gray-700">Supported formats</p>
-                            <p className="text-[11px] text-gray-400 mt-0.5">
-                                PNG, JPG, WebP up to 2MB. Recommended landscape aspect ratio.
+                            <p className="font-semibold text-gray-700">
+                                Supported formats
+                            </p>
+                            <p className="text-gray-400 mt-0.5 text-[11px]">
+                                PNG, JPG, WebP up to 2MB. Recommended landscape
+                                aspect ratio.
                             </p>
                             {imagePreview && (
                                 <button
                                     type="button"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="mt-1 text-xs text-primary font-medium hover:underline block"
+                                    onClick={() =>
+                                        fileInputRef.current?.click()
+                                    }
+                                    className="mt-1 text-xs font-medium text-primary block hover:underline"
                                 >
                                     Change Image
                                 </button>
@@ -235,8 +241,8 @@ export default function EditVoucherForm({
                     <InputError message={errors.image} className="mt-1" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
+                <div className="gap-5 md:grid-cols-2 grid grid-cols-1">
+                    <div>
                         <InputLabel value="Voucher Type" />
                         <SelectOption
                             options={voucher_type}
@@ -244,7 +250,10 @@ export default function EditVoucherForm({
                             value={selectedVoucherType}
                             onChange={onVoucherTypeChange}
                         />
-                        <InputError message={errors.voucher_type} className="mt-1" />
+                        <InputError
+                            message={errors.voucher_type}
+                            className="mt-1"
+                        />
                     </div>
 
                     <div>
@@ -255,11 +264,14 @@ export default function EditVoucherForm({
                             value={selectedDistributionType}
                             onChange={onDistributionTypeChange}
                         />
-                        <InputError message={errors.distribution_type} className="mt-1" />
+                        <InputError
+                            message={errors.distribution_type}
+                            className="mt-1"
+                        />
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="gap-5 md:grid-cols-3 grid grid-cols-1">
                     <div>
                         <InputLabel value="Discount Type" />
                         <SelectOption
@@ -268,7 +280,10 @@ export default function EditVoucherForm({
                             value={selectedDiscountType}
                             onChange={onDiscountTypeChange}
                         />
-                        <InputError message={errors.discount_type} className="mt-1" />
+                        <InputError
+                            message={errors.discount_type}
+                            className="mt-1"
+                        />
                     </div>
 
                     <div>
@@ -338,11 +353,11 @@ export default function EditVoucherForm({
                             }
                             className={`mt-1 block w-full ${
                                 data.discount_type === 'fixed'
-                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200 shadow-none'
+                                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed shadow-none'
                                     : ''
                             }`}
                         />
-                        <p className="text-[10px] text-gray-400 mt-1">
+                        <p className="text-gray-400 mt-1 text-[10px]">
                             {data.discount_type === 'percentage'
                                 ? 'Maximum discount cap in IDR (optional)'
                                 : 'Automatically disabled for fixed discount'}
@@ -354,7 +369,7 @@ export default function EditVoucherForm({
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="gap-5 md:grid-cols-3 grid grid-cols-1">
                     <div>
                         <InputLabel value="Min. Order Amount (IDR)" />
                         <TextInput
@@ -411,16 +426,21 @@ export default function EditVoucherForm({
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="gap-5 md:grid-cols-3 grid grid-cols-1">
                     <div>
                         <InputLabel value="Start Date" />
                         <TextInput
                             type="datetime-local"
                             value={data.start_at}
-                            onChange={(e) => setData('start_at', e.target.value)}
-                            className="mt-1 block w-full text-xs text-gray-700"
+                            onChange={(e) =>
+                                setData('start_at', e.target.value)
+                            }
+                            className="mt-1 text-xs text-gray-700 block w-full"
                         />
-                        <InputError message={errors.start_at} className="mt-1" />
+                        <InputError
+                            message={errors.start_at}
+                            className="mt-1"
+                        />
                     </div>
 
                     <div>
@@ -429,28 +449,31 @@ export default function EditVoucherForm({
                             type="datetime-local"
                             value={data.end_at}
                             onChange={(e) => setData('end_at', e.target.value)}
-                            className="mt-1 block w-full text-xs text-gray-700"
+                            className="mt-1 text-xs text-gray-700 block w-full"
                         />
                         <InputError message={errors.end_at} className="mt-1" />
                     </div>
 
                     <div>
                         <InputLabel value="Target Platform" />
-                            <SelectOption
+                        <SelectOption
                             options={platform}
                             className="mt-1 block w-full"
                             value={selectedPlatform}
                             onChange={onPlatformChange}
                         />
-                        <InputError message={errors.platform} className="mt-1" />
+                        <InputError
+                            message={errors.platform}
+                            className="mt-1"
+                        />
                     </div>
                 </div>
 
-                <div className="border-t border-[#E2E8F0] pt-6 flex items-center justify-end gap-3 mt-8">
+                <div className="pt-6 gap-3 mt-8 flex items-center justify-end border-t border-[#E2E8F0]">
                     <button
                         type="button"
                         onClick={() => router.visit(getIndexUrl())}
-                        className="rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-bold text-gray-700 shadow-sm hover:bg-gray-50 transition-all active:scale-[0.98]"
+                        className="rounded-xl border-gray-300 bg-white px-5 py-2.5 text-sm font-bold text-gray-700 shadow-sm hover:bg-gray-50 border transition-all active:scale-[0.98]"
                     >
                         Cancel
                     </button>

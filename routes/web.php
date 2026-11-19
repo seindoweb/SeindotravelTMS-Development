@@ -35,6 +35,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+        Route::match(['get', 'post'], '/retrieve-larecu', [DashboardController::class, 'retrieveLarecu'])->name('retrieveLarecu');
     });
 
     Route::prefix('finance')->name('finance.')->group(function () {
@@ -105,6 +106,10 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::match(['get', 'post'], '/hotel/create', [AllVouchersController::class, 'createHotel'])->name('createHotel');
         Route::match(['get', 'post'], '/tour', [AllVouchersController::class, 'indexTour'])->name('indexTour');
         Route::match(['get', 'post'], '/tour/create', [AllVouchersController::class, 'createTour'])->name('createTour');
+        Route::prefix('distribution-type')->name('disty.')->group(function () {
+            Route::match(['get', 'post'], '/personal', [AllVouchersController::class, 'indexDistyPersonal'])->name('indexPersonal');
+            Route::match(['get', 'post'], '/public', [AllVouchersController::class, 'indexDistyPublic'])->name('indexPublic');
+        });
         Route::post('/store', [AllVouchersController::class, 'store'])->name('store');
         Route::match(['get', 'post'], '/{voucher}/edit', [AllVouchersController::class, 'edit'])->name('edit');
         Route::match(['put', 'patch', 'post'], '/{voucher}', [AllVouchersController::class, 'update'])->name('update');

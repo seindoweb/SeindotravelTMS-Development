@@ -42,7 +42,7 @@ export default function ListCustomerTable() {
     const items = page?.data ?? [];
 
     return (
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-[#E2E8F0]">
             <TableHeader
                 title="Active Customers"
                 subtitle="Manage registered members and profiles"
@@ -50,42 +50,50 @@ export default function ListCustomerTable() {
                 onSearchChange={setSearch}
                 dropdownLabel="Sort"
                 dropdownActions={[
-                    { label: "Name A-Z", icon: <ArrowDownAZ size={16} />, onClick: () => console.log('sort user A-Z') },
-                    { label: "Name Z-A", icon: <ArrowUpZA size={16} />, onClick: () => console.log('sort user Z-A') },
+                    {
+                        label: 'Name A-Z',
+                        icon: <ArrowDownAZ size={16} />,
+                        onClick: () => console.log('sort user A-Z'),
+                    },
+                    {
+                        label: 'Name Z-A',
+                        icon: <ArrowUpZA size={16} />,
+                        onClick: () => console.log('sort user Z-A'),
+                    },
                 ]}
             />
-            <div className="overflow-x-auto min-h-[300px]">
+            <div className="min-h-[300px] overflow-x-auto">
                 {loading ? (
                     <TableOnlySkeleton />
                 ) : (
                     <table className="w-full min-w-[860px] text-left">
                         <thead className="bg-white">
                             <tr className="border-b border-[#E2E8F0]">
-                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-[10px] uppercase whitespace-nowrap">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-[10px] whitespace-nowrap uppercase">
                                     Customer
                                 </th>
 
-                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-[10px] uppercase whitespace-nowrap">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-[10px] whitespace-nowrap uppercase">
                                     Phone
                                 </th>
 
-                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-right text-[10px] uppercase whitespace-nowrap">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-right text-[10px] whitespace-nowrap uppercase">
                                     Credit Balance
                                 </th>
 
-                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase whitespace-nowrap">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] whitespace-nowrap uppercase">
                                     Upline
                                 </th>
 
-                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase whitespace-nowrap">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] whitespace-nowrap uppercase">
                                     Verified
                                 </th>
 
-                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] uppercase whitespace-nowrap">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-center text-[10px] whitespace-nowrap uppercase">
                                     Joined
                                 </th>
 
-                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-right text-[10px] uppercase whitespace-nowrap">
+                                <th className="px-6 py-4 font-bold tracking-wider text-quaternary text-right text-[10px] whitespace-nowrap uppercase">
                                     Actions
                                 </th>
                             </tr>
@@ -96,9 +104,9 @@ export default function ListCustomerTable() {
                                 <tr>
                                     <td className="py-3 text-right" colSpan={7}>
                                         <div className="flex justify-center">
-                                            <p className="text-xs italic font-medium text-quaternary-bright">
+                                            <p className="text-xs font-medium text-quaternary-bright italic">
                                                 No data available
-                                                <span className="hidden sm:inline">
+                                                <span className="sm:inline hidden">
                                                     {' '}
                                                     in table
                                                 </span>
@@ -110,18 +118,20 @@ export default function ListCustomerTable() {
                                 items.map((val) => (
                                     <tr
                                         key={val.index}
-                                        className="hover:bg-gray-50/50 transition-colors group border-b border-[#F1F5F9] last:border-0"
+                                        className="hover:bg-gray-50/50 group border-b border-[#F1F5F9] transition-colors last:border-0"
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="flex items-center gap-3">
+                                            <div className="gap-3 flex items-center">
                                                 <img
                                                     src={val.profile_photo_path}
                                                     alt={val.full_name}
-                                                    className="flex-shrink-0 object-cover w-10 h-10 rounded-full"
+                                                    className="w-10 h-10 flex-shrink-0 rounded-full object-cover"
                                                 />
                                                 <div className="flex flex-col">
                                                     <span className="text-xs font-bold text-primary">
-                                                        {val.title ? `${val.title} ` : ''}
+                                                        {val.title
+                                                            ? `${val.title} `
+                                                            : ''}
                                                         {val.full_name}
                                                     </span>
                                                     <span className="text-xs text-quaternary">
@@ -149,36 +159,37 @@ export default function ListCustomerTable() {
                                         </td>
 
                                         <td className="px-6 py-4 text-right whitespace-nowrap">
-                                            <div className="inline-flex items-center px-2 py-1 bg-gray-100 rounded-md">
+                                            <div className="px-2 py-1 bg-gray-100 rounded-md inline-flex items-center">
                                                 <span className="font-mono text-xs font-medium text-gray-600">
-                                                    {val.user_credits?.balance ?? '—'}
+                                                    {val.user_credits
+                                                        ?.balance ?? '—'}
                                                 </span>
                                             </div>
                                         </td>
 
                                         <td className="px-6 py-4 text-center whitespace-nowrap">
                                             {val.upline ? (
-                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                                <div className="gap-1.5 px-2.5 py-1 text-xs font-bold bg-blue-50 text-blue-700 inline-flex items-center rounded-full">
+                                                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
                                                     Yes
                                                 </div>
                                             ) : (
-                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                                                <div className="gap-1.5 px-2.5 py-1 text-xs font-bold bg-gray-100 text-gray-700 inline-flex items-center rounded-full">
+                                                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
                                                     No
                                                 </div>
                                             )}
                                         </td>
 
                                         <td className="px-6 py-4 text-center whitespace-nowrap">
-                                            {val.active ? (
-                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                                            {val.is_verified ? (
+                                                <div className="gap-1.5 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-700 inline-flex items-center rounded-full">
+                                                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
                                                     Yes
                                                 </div>
                                             ) : (
-                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+                                                <div className="gap-1.5 px-2.5 py-1 text-xs font-bold bg-red-50 text-red-700 inline-flex items-center rounded-full">
+                                                    <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
                                                     No
                                                 </div>
                                             )}
@@ -186,7 +197,9 @@ export default function ListCustomerTable() {
 
                                         <td className="px-6 py-4 text-center whitespace-nowrap">
                                             <span className="text-xs font-bold text-primary">
-                                                {val.created_at ? formatDate(val.created_at) : '—'}
+                                                {val.created_at
+                                                    ? formatDate(val.created_at)
+                                                    : '—'}
                                             </span>
                                         </td>
 
@@ -196,10 +209,18 @@ export default function ListCustomerTable() {
                                                     [
                                                         {
                                                             label: 'View Profile',
-                                                            icon: <Eye size={16} />,
-                                                            href: route('user.customers.show', {
-                                                                tracking_code: val.tracking_code,
-                                                            }),
+                                                            icon: (
+                                                                <Eye
+                                                                    size={16}
+                                                                />
+                                                            ),
+                                                            href: route(
+                                                                'user.customers.show',
+                                                                {
+                                                                    tracking_code:
+                                                                        val.tracking_code,
+                                                                },
+                                                            ),
                                                         },
                                                     ],
                                                 ]}
