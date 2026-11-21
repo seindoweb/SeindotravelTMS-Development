@@ -4,7 +4,7 @@ import TableActionMenu from '@/Components/TableActionMenu';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import TablePaginate from '@/Components/TablePaginate';
 import { formatDate, formatRupiah } from '@/helpers';
-import { useDebounce } from '@/Hooks/useDebounce';
+import { useDebounce } from '@/hooks/useDebounce';
 import { Paginate } from '@/types';
 import { router } from '@inertiajs/react';
 import { Edit, Eye, Globe, Plus, Power, Ticket, Trash2 } from 'lucide-react';
@@ -185,11 +185,15 @@ export default function ListVoucherTable({
                     },
                 ]}
                 actions={[
-                    {
-                        label: 'New Voucher',
-                        icon: <Plus size={16} />,
-                        onClick: () => router.visit(getCreateUrl()),
-                    },
+                    ...(product_attribute
+                        ? [
+                              {
+                                  label: 'New Voucher',
+                                  icon: <Plus size={16} />,
+                                  onClick: () => router.visit(getCreateUrl()),
+                              },
+                          ]
+                        : []),
                 ]}
             />
 

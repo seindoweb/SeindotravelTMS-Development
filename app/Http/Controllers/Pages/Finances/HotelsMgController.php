@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages\Finances;
 
+use App\Constants\ModelConstant;
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use App\Models\SupplierBalance;
@@ -30,7 +31,7 @@ class HotelsMgController extends Controller
                         ->orWhere('reference_id', 'like', "%{$search}%");
                 });
             })
-            ->when($transactionType, fn ($q, $type) => $q->where('transaction_type', $type))
+            ->when($transactionType, fn($q, $type) => $q->where('transaction_type', $type))
             ->with(['creator'])
             ->latest('transaction_date')
             ->latest('id')
@@ -77,8 +78,16 @@ class HotelsMgController extends Controller
             'description' => ['nullable', 'string'],
         ]);
 
-        return redirect()
-            ->route('finance.hotels.mg.index')
-            ->with('success', 'Transaction payload received successfully!');
+        $supplier = Supplier::query()->where('code', ModelConstant::ORDER_SUPPLIER_RESOURCE_MG)->first();
+        if ($supplier) {
+            FinanceSupplierController::balance($supplier, $validated);
+            return redirect()
+                ->route('finance.hotels.mg.index')
+                ->with('success', 'Transaction payload received successfully!');
+        } else {
+            return redirect()
+                ->route('finance.flights.via.index')
+                ->with('error', 'Payload failed to be received because the resource provider could not be found!');
+        }
     }
 }

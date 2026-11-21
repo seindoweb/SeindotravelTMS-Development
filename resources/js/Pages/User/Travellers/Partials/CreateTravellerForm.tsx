@@ -7,7 +7,7 @@ import SelectOption, {
     useSelectOption,
 } from '@/Components/SelectOption';
 import TextInput from '@/Components/TextInput';
-import { useDebounce } from '@/Hooks/useDebounce';
+import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/libs/http/api';
 import { router, useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';

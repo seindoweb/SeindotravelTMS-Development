@@ -43,8 +43,8 @@ class Voucher extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        if (empty($this->image_path)) {
-            return null;
+        if (!$this->image_path) {
+            return asset('assets/images/no-image-available.jpg');
         }
 
         return asset('storage/' . $this->image_path);

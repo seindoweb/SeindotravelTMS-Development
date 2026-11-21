@@ -12,6 +12,7 @@ import RecentBookingsTable from './Partials/RecentBookingsTable';
 import BookingStatusCard from './Partials/BookingStatusCard';
 import { Head } from '@inertiajs/react';
 import LastRegisteredCustomerCard from './Partials/LastRegisteredCustomerCard';
+import SupplierBalanceCard from './Partials/SupplierBalanceCard';
 
 function StatCard({
     title,
@@ -135,8 +136,9 @@ export default function Index() {
                 </div>
 
                 {/* Booking Overview */}
-                <div className="gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,0.75fr)] grid grid-cols-1">
+                <div className="gap-6 xl:grid-cols-3 grid grid-cols-1">
                     <BookingStatusCard />
+                    <SupplierBalanceCard />
                     <LastRegisteredCustomerCard />
                 </div>
 

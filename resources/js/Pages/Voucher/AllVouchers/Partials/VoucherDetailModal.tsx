@@ -1,3 +1,4 @@
+import { formatRupiah } from '@/helpers';
 import { router } from '@inertiajs/react';
 import { Edit, Globe, Image as ImageIcon, X } from 'lucide-react';
 import React, { useState } from 'react';
@@ -24,7 +25,7 @@ export interface VoucherItem {
     key?: string;
     product_attribute_id: number;
     image_path?: string | null;
-    image_url?: string | null;
+    image_url: string;
     discount_type: 'percentage' | 'fixed';
     discount_value: string | number;
     max_discount?: string | number | null;
@@ -55,21 +56,6 @@ interface VoucherDetailModalProps {
     voucher: VoucherItem | null;
     onOpenTranslation?: (voucher: VoucherItem) => void;
 }
-
-const formatRupiah = (amount: number | string | undefined | null) => {
-    const num =
-        typeof amount === 'string'
-            ? parseFloat(amount) || 0
-            : Number(amount) || 0;
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    })
-        .format(num)
-        .replace('Rp', 'Rp ');
-};
 
 const formatDateEnglish = (dateStr?: string | null) => {
     if (!dateStr) return 'Unlimited';
@@ -128,21 +114,13 @@ export default function VoucherDetailModal({
                 </div>
 
                 <div className="p-6 space-y-5 flex-1 overflow-y-auto">
-                    {voucher.image_path ? (
-                        <div className="rounded-lg border-slate-200 bg-slate-50 overflow-hidden border">
-                            <img
-                                src={voucher.image_path}
-                                alt={`Voucher ${voucher.id}`}
-                                className="h-44 w-full object-cover"
-                            />
-                        </div>
-                    ) : (
-                        <div className="h-20 gap-2 text-xs rounded-lg border-slate-200 bg-slate-50 text-slate-400 flex items-center justify-center border border-dashed">
-                            <ImageIcon size={16} />
-                            <span>No banner image available</span>
-                        </div>
-                    )}
-
+                    <div className="rounded-lg border-slate-200 bg-slate-50 overflow-hidden border">
+                        <img
+                            src={voucher?.image_url}
+                            alt={`Voucher ${voucher.id}`}
+                            className="h-44 m-auto w-auto object-cover"
+                        />
+                    </div>
                     <div className="py-4 text-xs gap-x-6 gap-y-4 border-slate-100 grid grid-cols-2 border-y">
                         <div>
                             <span className="text-slate-400 font-medium block text-[11px]">

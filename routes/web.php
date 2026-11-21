@@ -36,6 +36,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
         Route::match(['get', 'post'], '/retrieve-larecu', [DashboardController::class, 'retrieveLarecu'])->name('retrieveLarecu');
+        Route::match(['get', 'post'], '/retrieve-supbal', [DashboardController::class, 'retrieveSupbal'])->name('retrieveSupbal');
     });
 
     Route::prefix('finance')->name('finance.')->group(function () {
@@ -43,7 +44,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::prefix('via')->name('via.')->group(function () {
                 Route::match(['get', 'post'], '/', [FlightsViaController::class, 'index'])->name('index');
                 Route::match(['get', 'post'], '/create', [FlightsViaController::class, 'create'])->name('create');
-                Route::post('/store', [FlightsViaController::class, 'store'])->name('store');
+                Route::match(['get', 'post'], '/store', [FlightsViaController::class, 'store'])->name('store');
             });
         });
 
@@ -51,7 +52,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::prefix('mg')->name('mg.')->group(function () {
                 Route::match(['get', 'post'], '/', [HotelsMgController::class, 'index'])->name('index');
                 Route::match(['get', 'post'], '/create', [HotelsMgController::class, 'create'])->name('create');
-                Route::post('/store', [HotelsMgController::class, 'store'])->name('store');
+                Route::match(['get', 'post'], '/store', [HotelsMgController::class, 'store'])->name('store');
             });
         });
     });
@@ -169,5 +170,5 @@ Route::get('/test', function () {
     }
 });
 
-require __DIR__.'/auth.php';
-require __DIR__.'/locale.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/locale.php';

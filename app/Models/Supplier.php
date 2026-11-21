@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Services\Systems\TriadIdMask;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class Supplier extends Model
 {
@@ -29,7 +30,7 @@ class Supplier extends Model
      *
      * @var array
      */
-    protected $appends = ['index', 'key'];
+    protected $appends = ['index', 'key', 'name_initials'];
 
     public function getIndexAttribute()
     {
@@ -38,7 +39,12 @@ class Supplier extends Model
 
     public function getKeyAttribute()
     {
-        return Crypt::encryptString($this->id); // atau logika dinamis
+        return Crypt::encryptString($this->id);
+    }
+
+    public function getNameInitialsAttribute()
+    {
+        return Str::substr($this->name, 0, 1);
     }
 
     /**

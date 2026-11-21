@@ -26,6 +26,12 @@ export type PageProps<
         roles: string[] | undefined;
         user: UserProps;
     };
+    flash: {
+        success?: string | null;
+        error?: string | null;
+        warning?: string | null;
+        info?: string | null;
+    };
 };
 
 export interface CountryProps {
@@ -644,4 +650,31 @@ export interface PrebookRoomData {
     };
     selectedRoom?: HotelRoomDetail;
     hotelInfo?: any;
+}
+
+export interface SupplierProps {
+    id: number;
+    index: string;
+    key: string;
+    code: string;
+    name: string;
+    name_initials: string;
+    created_at: string | null;
+    updated_at: string | null;
+}
+
+export interface SupplierBalanceProps {
+    id: number;
+    index: string;
+    key: string;
+    supplier_id: number;
+    currency_code: string;
+    balance_type: string;
+    initial_balance: string;
+    current_balance: string;
+    balance_type: string;
+    is_active: boolean;
+    supplier?: SupplierProps | null;
+    created_at: string | null;
+    updated_at: string | null;
 }

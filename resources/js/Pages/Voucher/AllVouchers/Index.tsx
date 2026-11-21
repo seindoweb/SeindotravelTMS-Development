@@ -5,6 +5,7 @@ import { ChevronRight, Compass, Hotel, Plane } from 'lucide-react';
 import React from 'react';
 import ListVoucherTable from './Partials/ListVoucherTable';
 import { VoucherItem } from './Partials/VoucherDetailModal';
+import { PRODUCT_ATTRIBUTE } from '@/constants/global';
 
 interface Props {
     product_attribute: 'flight' | 'hotel' | 'tour' | string;
@@ -58,12 +59,18 @@ export default function Index({
         },
     ];
 
-    const productTitle =
-        product_attribute === 'flight'
-            ? 'Flight'
-            : product_attribute === 'tour'
-              ? 'Tour'
-              : 'Hotel';
+    const productTitle = (() => {
+        switch (product_attribute) {
+            case PRODUCT_ATTRIBUTE.FLIGHT:
+                return 'Flight';
+            case PRODUCT_ATTRIBUTE.TOUR:
+                return 'Tour';
+            case PRODUCT_ATTRIBUTE.HOTEL:
+                return 'Tour';
+            default:
+                return title;
+        }
+    })();
 
     return (
         <AuthenticatedLayout

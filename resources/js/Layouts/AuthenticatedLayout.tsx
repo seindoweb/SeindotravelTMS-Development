@@ -16,6 +16,7 @@ import AuthenticatedMenuSales from './Partials/AuthenticatedMenuSales';
 import AuthenticatedMenuHotels from './Partials/AuthenticatedMenuHotels';
 import AuthenticatedMenuVouchers from './Partials/AuthenticatedMenuVouchers';
 import AuthenticatedMenuFinances from './Partials/AuthenticatedMenuFinances';
+import FlashMessage from '@/Components/FlashMessage';
 
 export default function Authenticated({
     header,
@@ -254,6 +255,7 @@ export default function Authenticated({
 
             <main className="min-h-screen pt-[72px] pl-[72px]">
                 <div className="p-2 sm:p-3 lg:p-4 mx-auto w-full max-w-[1290px]">
+                    <FlashMessage />
                     {children}
                 </div>
             </main>

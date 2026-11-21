@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Pages\Finances;
 
+use App\Constants\ModelConstant;
+use App\Constants\SupplierAndBalanceConstant;
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use App\Models\SupplierBalance;
 use App\Models\SupplierBalanceTransaction;
+use App\Services\Systems\SupplierBalanceService;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,7 +34,7 @@ class FlightsViaController extends Controller
                         ->orWhere('reference_id', 'like', "%{$search}%");
                 });
             })
-            ->when($transactionType, fn ($q, $type) => $q->where('transaction_type', $type))
+            ->when($transactionType, fn($q, $type) => $q->where('transaction_type', $type))
             ->with(['creator'])
             ->latest('transaction_date')
             ->latest('id')
@@ -77,8 +81,16 @@ class FlightsViaController extends Controller
             'description' => ['nullable', 'string'],
         ]);
 
-        return redirect()
-            ->route('finance.flights.via.index')
-            ->with('success', 'Transaction payload received successfully!');
+        $supplier = Supplier::query()->where('code', ModelConstant::ORDER_SUPPLIER_RESOURCE_VIA)->first();
+        if ($supplier) {
+            FinanceSupplierController::balance($supplier, $validated);
+            return redirect()
+                ->route('finance.flights.via.index')
+                ->with('success', 'Transaction payload received successfully!');
+        } else {
+            return redirect()
+                ->route('finance.flights.via.index')
+                ->with('error', 'Payload failed to be received because the resource provider could not be found!');
+        }
     }
 }

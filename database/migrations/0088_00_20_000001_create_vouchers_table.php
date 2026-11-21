@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
 
             // Menghubungkan voucher dengan produk spesifik yang digunakan
             $table->unsignedBigInteger('product_attribute_id')->nullable();

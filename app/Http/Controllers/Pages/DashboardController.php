@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Models\SupplierBalance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -33,5 +34,20 @@ class DashboardController extends Controller
             ->get();
 
         return response()->json($customers);
+    }
+
+    /**
+     * retrieveSupbal
+     *
+     * @return void
+     */
+    public function retrieveSupbal()
+    {
+        $supplierBalance = SupplierBalance::query()
+            ->where('is_active', true)
+            ->with(['supplier'])
+            ->get();
+
+        return response()->json($supplierBalance);
     }
 }

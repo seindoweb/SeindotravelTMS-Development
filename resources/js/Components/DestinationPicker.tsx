@@ -1,4 +1,4 @@
-import { useDebounce } from '@/Hooks/useDebounce';
+import { useDebounce } from '@/hooks/useDebounce';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
 import { DestinationProps, HotelProps, SearchSelectionProps } from '@/types';
 import { Popover, Transition } from '@headlessui/react';
@@ -175,8 +175,12 @@ export default function DestinationPicker({ selection, onSelect }: Props) {
                                                             onSelect({
                                                                 type: 'htl',
                                                                 name: hotel.name,
-                                                                code: hotel.hotelCode || hotel.code,
-                                                                hotel: hotel.hotelCode || hotel.code,
+                                                                code:
+                                                                    hotel.hotelCode ||
+                                                                    hotel.code,
+                                                                hotel:
+                                                                    hotel.hotelCode ||
+                                                                    hotel.code,
                                                                 destination:
                                                                     hotel.destinationCode ||
                                                                     '',
@@ -232,7 +236,8 @@ export default function DestinationPicker({ selection, onSelect }: Props) {
                                                                 code: dest.destinationCode,
                                                                 destination:
                                                                     dest.destinationCode,
-                                                                country: countryCode,
+                                                                country:
+                                                                    countryCode,
                                                             });
                                                             close();
                                                         }}
@@ -284,7 +289,9 @@ export default function DestinationPicker({ selection, onSelect }: Props) {
                                                     <button
                                                         key={city}
                                                         onClick={() => {
-                                                            setLocalSearch(city);
+                                                            setLocalSearch(
+                                                                city,
+                                                            );
                                                         }}
                                                         className="gap-3 px-2 py-2.5 rounded-lg group flex w-full items-center text-left transition-colors hover:bg-[#F8FAFC]"
                                                     >

@@ -1,8 +1,8 @@
 import TableOnlySkeleton from '@/Components/Skeleton/TableOnlySkeleton';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import TablePaginate from '@/Components/TablePaginate';
-import { formatDate } from '@/helpers';
-import { useDebounce } from '@/Hooks/useDebounce';
+import { formatDate, formatRupiah } from '@/helpers';
+import { useDebounce } from '@/hooks/useDebounce';
 import { Paginate } from '@/types';
 import { router } from '@inertiajs/react';
 import {
@@ -11,7 +11,7 @@ import {
     Coins,
     CreditCard,
     Plus,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -66,21 +66,6 @@ interface SupplierTransactionTableProps {
     };
 }
 
-const formatRupiah = (amount: number | string | undefined | null) => {
-    const num =
-        typeof amount === 'string'
-            ? parseFloat(amount) || 0
-            : Number(amount) || 0;
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    })
-        .format(num)
-        .replace('Rp', 'Rp ');
-};
-
 export default function SupplierTransactionTable({
     supplier,
     balance,
@@ -92,7 +77,9 @@ export default function SupplierTransactionTable({
     filters = {},
 }: SupplierTransactionTableProps) {
     const [search, setSearch] = useState(filters.search || '');
-    const [typeFilter, setTypeFilter] = useState(filters.transaction_type || '');
+    const [typeFilter, setTypeFilter] = useState(
+        filters.transaction_type || '',
+    );
     const [loading, setLoading] = useState(false);
 
     const debouncedSearch = useDebounce(search, 400);
@@ -137,56 +124,56 @@ export default function SupplierTransactionTable({
         switch (type) {
             case 'topup':
                 return (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span className="gap-1 px-2.5 py-0.5 text-xs font-semibold bg-emerald-50 text-emerald-700 border-emerald-200 inline-flex items-center rounded-full border">
                         <ArrowUpRight size={13} />
                         Top Up
                     </span>
                 );
             case 'initial':
                 return (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                    <span className="gap-1 px-2.5 py-0.5 text-xs font-semibold bg-blue-50 text-blue-700 border-blue-200 inline-flex items-center rounded-full border">
                         <Coins size={13} />
                         Initial Balance
                     </span>
                 );
             case 'refund':
                 return (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                    <span className="gap-1 px-2.5 py-0.5 text-xs font-semibold bg-teal-50 text-teal-700 border-teal-200 inline-flex items-center rounded-full border">
                         <RefreshCw size={12} />
                         Refund
                     </span>
                 );
             case 'adjustment_in':
                 return (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
+                    <span className="gap-1 px-2.5 py-0.5 text-xs font-semibold bg-green-50 text-green-700 border-green-200 inline-flex items-center rounded-full border">
                         <ArrowUpRight size={13} />
                         Adjustment In
                     </span>
                 );
             case 'usage':
                 return (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                    <span className="gap-1 px-2.5 py-0.5 text-xs font-semibold bg-rose-50 text-rose-700 border-rose-200 inline-flex items-center rounded-full border">
                         <ArrowDownRight size={13} />
                         Usage (Booking)
                     </span>
                 );
             case 'adjustment_out':
                 return (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+                    <span className="gap-1 px-2.5 py-0.5 text-xs font-semibold bg-orange-50 text-orange-700 border-orange-200 inline-flex items-center rounded-full border">
                         <ArrowDownRight size={13} />
                         Adjustment Out
                     </span>
                 );
             case 'payment':
                 return (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    <span className="gap-1 px-2.5 py-0.5 text-xs font-semibold bg-indigo-50 text-indigo-700 border-indigo-200 inline-flex items-center rounded-full border">
                         <CreditCard size={13} />
                         Payment
                     </span>
                 );
             default:
                 return (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 capitalize">
+                    <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 inline-flex items-center rounded-full capitalize">
                         {type}
                     </span>
                 );
@@ -212,173 +199,195 @@ export default function SupplierTransactionTable({
     };
 
     return (
-        <div className="overflow-hidden bg-white border border-[#E2E8F0] rounded-2xl shadow-sm">
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-[#E2E8F0]">
             <TableHeader
                 title={`${supplierTitle} Transactions`}
                 subtitle={`Historical deposit transactions and adjustments for ${supplierTitle} (${categoryTitle}).`}
-                    searchValue={search}
-                    onSearchChange={setSearch}
-                    dropdownLabel={getDropdownFilterLabel()}
-                    dropdownActions={[
-                        { label: 'All Types', onClick: () => handleTypeChange('') },
-                        { label: 'Top Up', onClick: () => handleTypeChange('topup') },
-                        { label: 'Initial Balance', onClick: () => handleTypeChange('initial') },
-                        { label: 'Usage (Booking)', onClick: () => handleTypeChange('usage') },
-                        { label: 'Refund', onClick: () => handleTypeChange('refund') },
-                        { label: 'Adjustment In', onClick: () => handleTypeChange('adjustment_in') },
-                        { label: 'Adjustment Out', onClick: () => handleTypeChange('adjustment_out') },
-                        { label: 'Payment', onClick: () => handleTypeChange('payment') },
-                    ]}
-                    actions={[
-                        {
-                            label: 'New Transaction',
-                            icon: <Plus size={16} />,
-                            onClick: () => router.visit(createUrl),
-                            variant: 'primary',
-                        },
-                    ]}
-                />
+                searchValue={search}
+                onSearchChange={setSearch}
+                dropdownLabel={getDropdownFilterLabel()}
+                dropdownActions={[
+                    { label: 'All Types', onClick: () => handleTypeChange('') },
+                    {
+                        label: 'Top Up',
+                        onClick: () => handleTypeChange('topup'),
+                    },
+                    {
+                        label: 'Initial Balance',
+                        onClick: () => handleTypeChange('initial'),
+                    },
+                    {
+                        label: 'Usage (Booking)',
+                        onClick: () => handleTypeChange('usage'),
+                    },
+                    {
+                        label: 'Refund',
+                        onClick: () => handleTypeChange('refund'),
+                    },
+                    {
+                        label: 'Adjustment In',
+                        onClick: () => handleTypeChange('adjustment_in'),
+                    },
+                    {
+                        label: 'Adjustment Out',
+                        onClick: () => handleTypeChange('adjustment_out'),
+                    },
+                    {
+                        label: 'Payment',
+                        onClick: () => handleTypeChange('payment'),
+                    },
+                ]}
+                actions={[
+                    {
+                        label: 'New Balance',
+                        icon: <Plus size={16} />,
+                        onClick: () => router.visit(createUrl),
+                        variant: 'primary',
+                    },
+                ]}
+            />
 
-                <div className="overflow-x-auto">
-                    {loading ? (
-                        <TableOnlySkeleton />
-                    ) : (
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC]">
-                                    <th className="px-6 py-3.5 text-xs font-bold text-primary">
-                                        Date & ID
-                                    </th>
-                                    <th className="px-6 py-3.5 text-xs font-bold text-primary">
-                                        Type
-                                    </th>
-                                    <th className="px-6 py-3.5 text-xs font-bold text-primary">
-                                        Reference
-                                    </th>
-                                    <th className="px-6 py-3.5 text-xs font-bold text-primary text-right">
-                                        Amount
-                                    </th>
-                                    <th className="px-6 py-3.5 text-xs font-bold text-primary text-right">
-                                        Balance After
-                                    </th>
-                                    <th className="px-6 py-3.5 text-xs font-bold text-primary">
-                                        Description
-                                    </th>
-                                    <th className="px-6 py-3.5 text-xs font-bold text-primary text-center">
-                                        Recorded By
-                                    </th>
+            <div className="overflow-x-auto">
+                {loading ? (
+                    <TableOnlySkeleton />
+                ) : (
+                    <table className="w-full border-collapse text-left">
+                        <thead>
+                            <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC]">
+                                <th className="px-6 py-3.5 text-xs font-bold text-primary">
+                                    Date & ID
+                                </th>
+                                <th className="px-6 py-3.5 text-xs font-bold text-primary">
+                                    Type
+                                </th>
+                                <th className="px-6 py-3.5 text-xs font-bold text-primary">
+                                    Reference
+                                </th>
+                                <th className="px-6 py-3.5 text-xs font-bold text-primary text-right">
+                                    Amount
+                                </th>
+                                <th className="px-6 py-3.5 text-xs font-bold text-primary text-right">
+                                    Balance After
+                                </th>
+                                <th className="px-6 py-3.5 text-xs font-bold text-primary">
+                                    Description
+                                </th>
+                                <th className="px-6 py-3.5 text-xs font-bold text-primary text-center">
+                                    Recorded By
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#E2E8F0]">
+                            {items.length === 0 ? (
+                                <tr>
+                                    <td
+                                        colSpan={7}
+                                        className="px-6 py-12 text-sm text-gray-500 text-center"
+                                    >
+                                        No balance transactions recorded yet for{' '}
+                                        {supplierTitle}.
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#E2E8F0]">
-                                {items.length === 0 ? (
-                                    <tr>
-                                        <td
-                                            colSpan={7}
-                                            className="px-6 py-12 text-center text-sm text-gray-500"
+                            ) : (
+                                items.map((row) => {
+                                    const isPositive = isPositiveDelta(
+                                        row.transaction_type,
+                                    );
+
+                                    return (
+                                        <tr
+                                            key={row.id}
+                                            className="hover:bg-gray-50/50 transition-colors"
                                         >
-                                            No balance transactions recorded yet for{' '}
-                                            {supplierTitle}.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    items.map((row) => {
-                                        const isPositive = isPositiveDelta(
-                                            row.transaction_type,
-                                        );
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-bold text-primary">
+                                                        {row.transaction_date
+                                                            ? formatDate(
+                                                                  row.transaction_date,
+                                                              )
+                                                            : formatDate(
+                                                                  row.created_at,
+                                                              )}
+                                                    </span>
+                                                    <span className="text-quaternary font-mono text-[11px]">
+                                                        Tx #{row.id}
+                                                    </span>
+                                                </div>
+                                            </td>
 
-                                        return (
-                                            <tr
-                                                key={row.id}
-                                                className="hover:bg-gray-50/50 transition-colors"
-                                            >
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-xs font-bold text-primary">
-                                                            {row.transaction_date
-                                                                ? formatDate(
-                                                                      row.transaction_date,
-                                                                  )
-                                                                : formatDate(
-                                                                      row.created_at,
-                                                                  )}
-                                                        </span>
-                                                        <span className="text-[11px] text-quaternary font-mono">
-                                                            Tx #{row.id}
-                                                        </span>
-                                                    </div>
-                                                </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                {getTransactionTypeBadge(
+                                                    row.transaction_type,
+                                                )}
+                                            </td>
 
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    {getTransactionTypeBadge(
-                                                        row.transaction_type,
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-medium text-gray-800 capitalize">
+                                                        {row.reference_type?.replace(
+                                                            /_/g,
+                                                            ' ',
+                                                        ) || '—'}
+                                                    </span>
+                                                    {row.reference_id && (
+                                                        <span className="text-gray-400 font-mono text-[11px]">
+                                                            Ref:{' '}
+                                                            {row.reference_id}
+                                                        </span>
                                                     )}
-                                                </td>
+                                                </div>
+                                            </td>
 
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-xs font-medium text-gray-800 capitalize">
-                                                            {row.reference_type?.replace(
-                                                                /_/g,
-                                                                ' ',
-                                                            ) || '—'}
-                                                        </span>
-                                                        {row.reference_id && (
-                                                            <span className="text-[11px] text-gray-400 font-mono">
-                                                                Ref: {row.reference_id}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </td>
+                                            <td className="px-6 py-4 text-right whitespace-nowrap">
+                                                <span
+                                                    className={`text-xs font-bold font-mono ${
+                                                        isPositive
+                                                            ? 'text-emerald-600'
+                                                            : 'text-rose-600'
+                                                    }`}
+                                                >
+                                                    {isPositive ? '+' : '-'}
+                                                    {formatRupiah(row.amount)}
+                                                </span>
+                                            </td>
 
-                                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <span
-                                                        className={`text-xs font-bold font-mono ${
-                                                            isPositive
-                                                                ? 'text-emerald-600'
-                                                                : 'text-rose-600'
-                                                        }`}
-                                                    >
-                                                        {isPositive ? '+' : '-'}
-                                                        {formatRupiah(row.amount)}
-                                                    </span>
-                                                </td>
+                                            <td className="px-6 py-4 text-right whitespace-nowrap">
+                                                <span className="font-mono text-xs font-semibold text-gray-900">
+                                                    {formatRupiah(
+                                                        row.balance_after,
+                                                    )}
+                                                </span>
+                                            </td>
 
-                                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <span className="text-xs font-semibold text-gray-900 font-mono">
-                                                        {formatRupiah(
-                                                            row.balance_after,
-                                                        )}
-                                                    </span>
-                                                </td>
+                                            <td className="px-6 py-4">
+                                                <span className="max-w-xs text-xs text-gray-600 line-clamp-2">
+                                                    {row.description || '—'}
+                                                </span>
+                                            </td>
 
-                                                <td className="px-6 py-4">
-                                                    <span className="text-xs text-gray-600 line-clamp-2 max-w-xs">
-                                                        {row.description || '—'}
-                                                    </span>
-                                                </td>
-
-                                                <td className="px-6 py-4 whitespace-nowrap text-center">
-                                                    <span className="text-xs font-medium text-quaternary-dark">
-                                                        {row.creator?.full_name ||
-                                                            'System'}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                )}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-
-                {transactions && (
-                    <TablePaginate
-                        page={transactions}
-                        loading={loading}
-                        onNavigate={(url) => handlePageNavigate(url)}
-                    />
+                                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                                                <span className="text-xs font-medium text-quaternary-dark">
+                                                    {row.creator?.full_name ||
+                                                        'System'}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
+                        </tbody>
+                    </table>
                 )}
             </div>
+
+            {transactions && (
+                <TablePaginate
+                    page={transactions}
+                    loading={loading}
+                    onNavigate={(url) => handlePageNavigate(url)}
+                />
+            )}
+        </div>
     );
 }
