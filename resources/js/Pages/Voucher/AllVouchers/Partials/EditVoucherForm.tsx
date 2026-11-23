@@ -60,6 +60,7 @@ export default function EditVoucherForm({
 
     const { data, setData, post, processing, errors } = useForm({
         _method: 'patch',
+        name: voucher.name || '',
         product_attribute: productAttribute,
         image: null as File | null,
         delete_image: false,
@@ -178,6 +179,7 @@ export default function EditVoucherForm({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
                 <div>
                     <InputLabel value="Banner / Voucher Image (Optional)" />
                     <div className="mt-1.5 gap-4 flex items-center">
@@ -239,6 +241,24 @@ export default function EditVoucherForm({
                         className="hidden"
                     />
                     <InputError message={errors.image} className="mt-1" />
+                </div>
+
+                    <div>
+                        <InputLabel value="Voucher Name" />
+                            <textarea
+                                rows={3}
+                                value={data.name}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
+                                placeholder="Add voucher name here..."
+                                className="p-3 mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring-primary placeholder:text-gray-400 block w-full"
+                            />
+                            <InputError
+                                message={errors.name}
+                                className="mt-1"
+                            />
+                    </div>
                 </div>
 
                 <div className="gap-5 md:grid-cols-2 grid grid-cols-1">

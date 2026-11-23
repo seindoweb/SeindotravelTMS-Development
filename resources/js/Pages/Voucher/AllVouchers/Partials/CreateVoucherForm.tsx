@@ -189,7 +189,7 @@ export default function CreateVoucherForm({
                                     Change Image
                                 </button>
                             )}
-                        </div>
+                            </div>
                     </div>
                     <input
                         type="file"
@@ -200,8 +200,9 @@ export default function CreateVoucherForm({
                     />
                     <InputError message={errors.image} className="mt-1" />
                     </div>
-                        <div>
-                            <InputLabel value="Voucher Name" />
+
+                    <div>
+                        <InputLabel value="Voucher Name" />
                             <textarea
                                 rows={3}
                                 value={data.name}
@@ -215,7 +216,7 @@ export default function CreateVoucherForm({
                                 message={errors.name}
                                 className="mt-1"
                             />
-                        </div>
+                    </div>
                 </div>
 
                 <div className="gap-5 md:grid-cols-2 grid grid-cols-1">
