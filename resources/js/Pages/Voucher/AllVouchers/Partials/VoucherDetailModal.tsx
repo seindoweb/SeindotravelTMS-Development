@@ -122,6 +122,16 @@ export default function VoucherDetailModal({
                             className="h-44 m-auto w-auto object-cover"
                         />
                     </div>
+
+                    <div>
+                        <span className="text-slate-400 font-medium block text-[11px]">
+                            Voucher Name
+                        </span>
+                        <span className="font-semibold text-slate-800 mt-0.5 text-xs block capitalize">
+                            {voucher.name}
+                        </span>
+                    </div>
+
                     <div className="py-4 text-xs gap-x-6 gap-y-4 border-slate-100 grid grid-cols-2 border-y">
                         <div>
                             <span className="text-slate-400 font-medium block text-[11px]">

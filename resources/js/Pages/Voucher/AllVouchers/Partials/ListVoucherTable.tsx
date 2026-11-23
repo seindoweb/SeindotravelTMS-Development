@@ -297,7 +297,7 @@ export default function ListVoucherTable({
                                                         </div>
                                                     )}
                                                     <div className="flex flex-col">
-                                                        <span className="text-xs font-bold text-primary">
+                                                        <span className="text-xs font-bold text-primary w-24 truncate">
                                                             {voucher.name}
                                                         </span>
                                                         <div className="gap-1 mt-1 flex items-center">

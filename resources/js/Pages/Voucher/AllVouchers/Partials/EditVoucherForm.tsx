@@ -60,6 +60,7 @@ export default function EditVoucherForm({
 
     const { data, setData, post, processing, errors } = useForm({
         _method: 'patch',
+        name: voucher.name || '',
         product_attribute: productAttribute,
         image: null as File | null,
         delete_image: false,
@@ -178,67 +179,83 @@ export default function EditVoucherForm({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <InputLabel value="Banner / Voucher Image (Optional)" />
-                    <div className="mt-1.5 gap-4 flex items-center">
-                        {imagePreview ? (
-                            <div className="w-40 h-24 rounded-lg bg-slate-50 relative shrink-0 overflow-hidden border border-[#E2E8F0]">
-                                <img
-                                    src={imagePreview}
-                                    alt="Preview"
-                                    className="h-full w-full object-cover"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleRemoveImage}
-                                    className="p-1 text-white top-1 right-1 bg-black/60 hover:bg-black/80 absolute rounded-full transition-colors"
-                                >
-                                    <X size={12} />
-                                </button>
-                            </div>
-                        ) : (
-                            <div
-                                onClick={() => fileInputRef.current?.click()}
-                                className="w-40 h-24 border-gray-300 rounded-lg hover:border-gray-400 bg-gray-50 hover:bg-gray-100/60 flex shrink-0 cursor-pointer flex-col items-center justify-center border border-dashed transition-colors"
-                            >
-                                <ImageIcon
-                                    size={22}
-                                    className="text-gray-400"
-                                />
-                                <span className="text-gray-500 mt-1 font-medium text-[11px]">
-                                    Select Image
-                                </span>
-                            </div>
-                        )}
-                        <div className="text-xs text-gray-500">
-                            <p className="font-semibold text-gray-700">
-                                Supported formats
-                            </p>
-                            <p className="text-gray-400 mt-0.5 text-[11px]">
-                                PNG, JPG, WebP up to 2MB. Recommended landscape
-                                aspect ratio.
-                            </p>
-                            {imagePreview && (
-                                <button
-                                    type="button"
+                <div className="md:grid-cols-2 gap-2 grid grid-cols-1">
+                    <div>
+                        <InputLabel value="Banner / Voucher Image (Optional)" />
+                        <div className="mt-1.5 gap-4 flex items-center">
+                            {imagePreview ? (
+                                <div className="w-40 h-24 rounded-lg bg-slate-50 relative shrink-0 overflow-hidden border border-[#E2E8F0]">
+                                    <img
+                                        src={imagePreview}
+                                        alt="Preview"
+                                        className="h-full w-full object-cover"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveImage}
+                                        className="p-1 text-white top-1 right-1 bg-black/60 hover:bg-black/80 absolute rounded-full transition-colors"
+                                    >
+                                        <X size={12} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div
                                     onClick={() =>
                                         fileInputRef.current?.click()
                                     }
-                                    className="mt-1 text-xs font-medium text-primary block hover:underline"
+                                    className="w-40 h-24 border-gray-300 rounded-lg hover:border-gray-400 bg-gray-50 hover:bg-gray-100/60 flex shrink-0 cursor-pointer flex-col items-center justify-center border border-dashed transition-colors"
                                 >
-                                    Change Image
-                                </button>
+                                    <ImageIcon
+                                        size={22}
+                                        className="text-gray-400"
+                                    />
+                                    <span className="text-gray-500 mt-1 font-medium text-[11px]">
+                                        Select Image
+                                    </span>
+                                </div>
                             )}
+                            <div className="text-xs text-gray-500">
+                                <p className="font-semibold text-gray-700">
+                                    Supported formats
+                                </p>
+                                <p className="text-gray-400 mt-0.5 text-[11px]">
+                                    PNG, JPG, WebP up to 2MB. Recommended
+                                    landscape aspect ratio.
+                                </p>
+                                {imagePreview && (
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            fileInputRef.current?.click()
+                                        }
+                                        className="mt-1 text-xs font-medium text-primary block hover:underline"
+                                    >
+                                        Change Image
+                                    </button>
+                                )}
+                            </div>
                         </div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleImageChange}
+                            accept="image/png,image/jpeg,image/jpg,image/webp"
+                            className="hidden"
+                        />
+                        <InputError message={errors.image} className="mt-1" />
                     </div>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleImageChange}
-                        accept="image/png,image/jpeg,image/jpg,image/webp"
-                        className="hidden"
-                    />
-                    <InputError message={errors.image} className="mt-1" />
+
+                    <div>
+                        <InputLabel value="Voucher Name" />
+                        <textarea
+                            rows={3}
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            placeholder="Add voucher name here..."
+                            className="p-3 mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring-primary placeholder:text-gray-400 block w-full"
+                        />
+                        <InputError message={errors.name} className="mt-1" />
+                    </div>
                 </div>
 
                 <div className="gap-5 md:grid-cols-2 grid grid-cols-1">
