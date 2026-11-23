@@ -1,3 +1,4 @@
+import OrderStatusBadge from '@/Components/OrderStatusBadge';
 import { Link } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -12,6 +13,7 @@ import {
     PhoneCall,
     Printer,
     ShieldAlert,
+    Star,
     User,
     Users,
 } from 'lucide-react';
@@ -25,45 +27,7 @@ export interface HotelOrderDetailProps {
 }
 
 const StatusBadge = ({ status }: { status?: string }) => {
-    const s = (status || '').toUpperCase();
-    if (s === 'ISSUED' || s === 'PAID' || s === 'D' || s === 'DONE') {
-        return (
-            <div className="gap-1.5 px-3 py-1.5 text-xs font-bold bg-emerald-100 text-emerald-800 inline-flex items-center rounded-full shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                <CheckCircle2 size={14} className="text-emerald-600" />
-                {s === 'D' ? 'ISSUED' : s}
-            </div>
-        );
-    }
-    if (s === 'CONFIRMED' || s === 'C') {
-        return (
-            <div className="gap-1.5 px-3 py-1.5 text-xs font-bold bg-blue-100 text-blue-800 inline-flex items-center rounded-full shadow-[0_0_10px_rgba(59,130,246,0.2)]">
-                <CheckCircle2 size={14} className="text-blue-600" />
-                CONFIRMED
-            </div>
-        );
-    }
-    if (s === 'PENDING' || s === 'UNPAID' || s === 'B' || s === 'BOOKING') {
-        return (
-            <div className="gap-1.5 px-3 py-1.5 text-xs font-bold bg-amber-100 text-amber-800 inline-flex items-center rounded-full shadow-[0_0_10px_rgba(245,158,11,0.2)]">
-                <AlertCircle size={14} className="text-amber-600" />
-                {s === 'B' ? 'BOOKING' : s}
-            </div>
-        );
-    }
-    if (s === 'CANCELLED' || s === 'FAILED' || s === 'EXPIRED' || s === 'F') {
-        return (
-            <div className="gap-1.5 px-3 py-1.5 text-xs font-bold bg-rose-100 text-rose-800 inline-flex items-center rounded-full shadow-[0_0_10px_rgba(244,63,94,0.2)]">
-                <AlertCircle size={14} className="text-rose-600" />
-                {s === 'F' ? 'CANCELLED' : s}
-            </div>
-        );
-    }
-
-    return (
-        <div className="gap-1.5 px-3 py-1.5 text-xs font-bold bg-gray-100 text-gray-800 inline-flex items-center rounded-full">
-            {status || 'UNKNOWN'}
-        </div>
-    );
+    return <OrderStatusBadge status={status} size="lg" />;
 };
 
 const formatRupiah = (amount: number | string | undefined | null) => {
@@ -169,9 +133,6 @@ export default function HotelOrdersDetail({
     const previewResults = hotelPreview?.results;
     const hotelName =
         previewResults?.name || hotelBooking?.hotel_booking_details?.name;
-
-    console.log('hotel name:', hotelName);
-    console.log('orderProductAttribute:', orderProductAttribute);
 
     const locationObj = previewResults?.locations;
     const hotelAddress = locationObj?.addressMain
@@ -314,13 +275,15 @@ export default function HotelOrdersDetail({
                         </div>
 
                         <div className="px-6 py-4 bg-gray-50 sm:flex-row gap-3 mt-auto flex flex-col items-center justify-end border-t border-[#E2E8F0]">
-                            <button
-                                type="button"
-                                onClick={() => setIsBookRefModalOpen(true)}
-                                className="sm:w-auto px-5 py-2.5 bg-white border-gray-300 hover:border-emerald-500 rounded-xl text-sm font-bold text-gray-700 hover:text-emerald-700 hover:bg-emerald-50/50 shadow-xs gap-2 inline-flex w-full cursor-pointer items-center justify-center border transition-all active:scale-98"
-                            >
-                                See Book Reference
-                            </button>
+                            {['C', 'D'].includes(orderStatus?.toUpperCase() ?? '') && (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsBookRefModalOpen(true)}
+                                    className="sm:w-auto px-5 py-2.5 bg-white border-gray-300 hover:border-emerald-500 rounded-xl text-sm font-bold text-gray-700 hover:text-emerald-700 hover:bg-emerald-50/50 shadow-xs gap-2 inline-flex w-full cursor-pointer items-center justify-center border transition-all active:scale-98"
+                                >
+                                    See Book Reference
+                                </button>
+                            )}
                             <button
                                 type="button"
                                 className="sm:w-auto px-5 py-2.5 bg-rose-50 border-rose-200 rounded-xl text-sm font-bold text-rose-700 hover:bg-rose-100 shadow-sm gap-2 inline-flex w-full cursor-pointer items-center justify-center border transition-colors"
@@ -816,6 +779,7 @@ export default function HotelOrdersDetail({
                 onClose={() => setIsBookRefModalOpen(false)}
                 orderProductAttribute={orderProductAttribute}
                 hotelPreview={hotelPreview}
+                orderCode={rawOrderCode}
             />
 
             <FloatingIssuedAction

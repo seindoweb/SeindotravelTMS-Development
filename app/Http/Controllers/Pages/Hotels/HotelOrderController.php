@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderProductAttribute;
 use App\Services\HotelMicroserviceApi\BookingPreview;
+use App\Services\HotelMicroserviceApi\ReservationDetails;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -102,7 +103,7 @@ class HotelOrderController extends Controller
     {
         $rawCode = helperReplaceSeparator($code, '-', '/');
         $orderAtt = OrderProductAttribute::query()->where('code', $rawCode)->first();
-        if ($orderAtt->order) {
+        if ($orderAtt && $orderAtt->order) {
 
             $orderAtt->order->payment_status = ModelConstant::PAYMENT_STATUS_PAID;
 
@@ -111,9 +112,43 @@ class HotelOrderController extends Controller
                 MonitoringHotelProductAttributeOrderEvent::dispatch($orderAtt);
             }
         }
-        dd('OK!!!!!!!!!!', [
-            'order_code' => $code,
-            'payload' => request()->all(),
-        ]);
+
+        return redirect()->back();
+    }
+
+    public function orderBookReference(string $code)
+    {
+        $rawCode = helperReplaceSeparator($code, '-', '/');
+
+        $orderAtt = OrderProductAttribute::query()
+            ->where('code', $rawCode)
+            ->firstOrFail();
+
+        $allowedStatuses = [
+            ModelConstant::ORDER_STATUS_CONFIRMED,
+            ModelConstant::ORDER_STATUS_DONE,
+        ];
+
+        if (! in_array($orderAtt->order_status, $allowedStatuses)) {
+            return response()->json([
+                'message' => 'Book reference is only available for Confirmed or Done orders.',
+            ], 403);
+        }
+
+        $reqHttp = [
+            'providerBookingID' => $orderAtt->reference_id ?: null,
+            'agencyBookingID' => $rawCode,
+        ];
+
+        try {
+            $data = ReservationDetails::getReservationDetails($reqHttp);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to fetch reservation details from supplier.',
+                'error' => $e->getMessage(),
+            ], 502);
+        }
+
+        return response()->json($data);
     }
 }

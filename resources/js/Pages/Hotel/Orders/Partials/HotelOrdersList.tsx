@@ -1,3 +1,4 @@
+import OrderStatusBadge from '@/Components/OrderStatusBadge';
 import TableActionMenu from '@/Components/TableActionMenu';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import { Paginate } from '@/types';
@@ -66,37 +67,7 @@ export interface HotelOrdersListProps {
 }
 
 const StatusBadge = ({ status }: { status?: string }) => {
-    const s = (status || '').toLowerCase();
-    let label = 'Pending';
-    let colorClass = 'bg-amber-50 text-amber-700';
-    let dotClass = 'bg-amber-500';
-
-    if (s === 'd' || s === 'issued' || s === 'done') {
-        label = 'Issued';
-        colorClass = 'bg-emerald-50 text-emerald-700';
-        dotClass = 'bg-emerald-500';
-    } else if (s === 'c' || s === 'confirmed') {
-        label = 'Confirmed';
-        colorClass = 'bg-blue-50 text-blue-700';
-        dotClass = 'bg-blue-500';
-    } else if (s === 'b' || s === 'booking' || s === 'pending') {
-        label = 'Booking';
-        colorClass = 'bg-amber-50 text-amber-700';
-        dotClass = 'bg-amber-500';
-    } else if (s === 'f' || s === 'failed' || s === 'cancelled') {
-        label = 'Cancelled';
-        colorClass = 'bg-red-50 text-red-700';
-        dotClass = 'bg-red-500';
-    }
-
-    return (
-        <div
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${colorClass}`}
-        >
-            <div className={`w-1.5 h-1.5 rounded-full ${dotClass}`}></div>
-            {label}
-        </div>
-    );
+    return <OrderStatusBadge status={status} withDot={true} size="md" />;
 };
 
 const PaymentStatusText = ({ status }: { status?: string }) => {

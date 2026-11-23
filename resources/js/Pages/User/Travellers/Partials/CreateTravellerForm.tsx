@@ -105,15 +105,8 @@ function CreateTravellerForm() {
 
         post(route('user.travellers.store'), {
             preserveScroll: true,
-            onSuccess: (page) => {
-                console.log('Submit success response (Inertia page):', page);
-            },
-            onError: (errors) => {
-                console.log('Submit validation errors:', errors);
+            onError: () => {
                 setApiError('Please check the form fields and try again.');
-            },
-            onFinish: () => {
-                console.log('Submit request completed');
             },
         });
     };

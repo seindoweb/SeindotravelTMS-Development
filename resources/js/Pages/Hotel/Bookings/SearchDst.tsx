@@ -113,13 +113,6 @@ export default function SearchDst({
     }, [destinationCode, country, checkIn, checkOut, room, initialPage]);
 
     const fetchDestinationPrices = useCallback(async () => {
-        console.log('[SearchDst] fetchDestinationPrices checking params:', {
-            destinationCode,
-            checkIn,
-            checkOut,
-            country,
-        });
-
         if (!destinationCode || !checkIn || !checkOut) {
             console.warn(
                 '[SearchDst] Aborting fetch: missing destinationCode, checkIn, or checkOut',
@@ -147,7 +140,6 @@ export default function SearchDst({
                 '/price-search-by-destination',
                 payload,
             );
-            console.log('resp des:', res)
 
             if (res.data?.meta?.status === 'success' || res.data?.data) {
                 setSearchData(res.data.data);
