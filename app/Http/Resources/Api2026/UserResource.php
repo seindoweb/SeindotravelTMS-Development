@@ -15,6 +15,9 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'index' => $this->index,
+            'key' => $this->key,
+
             'title' => $this->title,
             'fullName' => $this->full_name,
             'email' => $this->email,
@@ -36,8 +39,11 @@ class UserResource extends JsonResource
 
             'uplineId' => $this->upline_id,
             'countryId' => $this->country_id,
+            'countryName' => $this->countries?->name,
             'stateId' => $this->state_id,
+            'stateName' => $this->states?->name,
             'cityId' => $this->city_id,
+            'cityName' => $this->cities?->name,
 
             'address' => $this->address,
             'zipCode' => $this->zip_code,
@@ -51,13 +57,6 @@ class UserResource extends JsonResource
 
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
-            'deletedAt' => $this->deleted_at,
-
-            'createdBy' => $this->created_by,
-            'updatedBy' => $this->updated_by,
-
-            'index' => $this->index,
-            'key' => $this->key,
         ];
     }
 }

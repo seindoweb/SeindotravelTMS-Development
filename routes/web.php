@@ -37,6 +37,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
         Route::match(['get', 'post'], '/retrieve-larecu', [DashboardController::class, 'retrieveLarecu'])->name('retrieveLarecu');
         Route::match(['get', 'post'], '/retrieve-supbal', [DashboardController::class, 'retrieveSupbal'])->name('retrieveSupbal');
+        Route::match(['get', 'post'], '/retrieve-actus', [DashboardController::class, 'retrieveActus'])->name('retrieveActus');
     });
 
     Route::prefix('finance')->name('finance.')->group(function () {

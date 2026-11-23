@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api2026\AuthController as V2026AuthController;
+use App\Http\Controllers\Api2026\ProfileController as V2026ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,10 @@ Route::middleware('api.client')->prefix('v2026')->group(function () {
         Route::post('logout', [V2026AuthController::class, 'logout'])->middleware('auth:sanctum');
     });
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::prefix('/customer')->group(function () {});
+        Route::prefix('/customer')->group(function () {
+            Route::post('/fetch', [V2026ProfileController::class, 'fetch']);
+            Route::post('/update-identity', [V2026ProfileController::class, 'updateIdentity']);
+            Route::post('/update-address', [V2026ProfileController::class, 'updateAddress']);
+        });
     });
 });

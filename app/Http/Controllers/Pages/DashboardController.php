@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use App\Models\SupplierBalance;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -49,5 +50,30 @@ class DashboardController extends Controller
             ->get();
 
         return response()->json($supplierBalance);
+    }
+
+    public function retrieveActus()
+    {
+        $currentUsers = User::whereBetween('last_active_at', [
+            now()->startOfMonth(),
+            now(),
+        ])->count();
+
+        $previousUsers = User::whereBetween('last_active_at', [
+            now()->subMonth()->startOfMonth(),
+            now()->subMonth()->endOfMonth(),
+        ])->count();
+
+        $growth = $previousUsers > 0
+            ? (($currentUsers - $previousUsers) / $previousUsers) * 100
+            : 0;
+
+        $response = [
+            'value' => $currentUsers,
+            'change' => round($growth, 1),
+            'positive' => $growth >= 0,
+        ];
+
+        return response()->json($response);
     }
 }
