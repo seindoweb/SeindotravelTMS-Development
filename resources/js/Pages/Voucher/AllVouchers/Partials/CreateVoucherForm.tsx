@@ -42,6 +42,7 @@ export default function CreateVoucherForm({
 
     const { data, setData, post, processing, errors } = useForm({
         product_attribute: productAttribute,
+        name: '',
         image: null as File | null,
         voucher_type: 'general',
         distribution_type: 'public',
@@ -136,6 +137,7 @@ export default function CreateVoucherForm({
             </div>
 
             <form onSubmit={handleSubmit} className="px-4 pt-4 pb-4 space-y-6">
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <div>
                     <InputLabel value="Banner / Voucher Image (Optional)" />
                     <div className="mt-1.5 gap-4 flex items-center">
@@ -197,6 +199,23 @@ export default function CreateVoucherForm({
                         className="hidden"
                     />
                     <InputError message={errors.image} className="mt-1" />
+                    </div>
+                        <div>
+                            <InputLabel value="Voucher Name" />
+                            <textarea
+                                rows={3}
+                                value={data.name}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
+                                placeholder="Add voucher name here..."
+                                className="p-3 mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring-primary placeholder:text-gray-400 block w-full"
+                            />
+                            <InputError
+                                message={errors.name}
+                                className="mt-1"
+                            />
+                        </div>
                 </div>
 
                 <div className="gap-5 md:grid-cols-2 grid grid-cols-1">

@@ -4,13 +4,13 @@ import TableActionMenu from '@/Components/TableActionMenu';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import TablePaginate from '@/Components/TablePaginate';
 import { formatDate, formatRupiah } from '@/helpers';
-import { useDebounce } from '@/hooks/useDebounce';
 import { Paginate } from '@/types';
 import { router } from '@inertiajs/react';
 import { Edit, Eye, Globe, Plus, Power, Ticket, Trash2 } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import VoucherDetailModal, { VoucherItem } from './VoucherDetailModal';
 import VoucherTranslationModal from './VoucherTranslationModal';
+import { useDebounce } from '@/Hooks/useDebounce';
 
 interface ListVoucherTableProps {
     vouchers: Paginate<VoucherItem>;
@@ -298,12 +298,7 @@ export default function ListVoucherTable({
                                                     )}
                                                     <div className="flex flex-col">
                                                         <span className="text-xs font-bold text-primary">
-                                                            Voucher #
-                                                            {voucher.id}
-                                                        </span>
-                                                        <span className="font-mono text-xs text-quaternary">
-                                                            {voucher.index ??
-                                                                '—'}
+                                                            {voucher.name}
                                                         </span>
                                                         <div className="gap-1 mt-1 flex items-center">
                                                             <button

@@ -23,6 +23,7 @@ export interface VoucherItem {
     id: number;
     index?: string;
     key?: string;
+    name: string;
     product_attribute_id: number;
     image_path?: string | null;
     image_url: string;

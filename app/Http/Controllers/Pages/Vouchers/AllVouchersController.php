@@ -139,6 +139,7 @@ class AllVouchersController extends Controller
     {
         $validated = $request->validate([
             'product_attribute' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
             'discount_type' => ['required', 'in:percentage,fixed'],
             'discount_value' => ['required', 'numeric', 'min:0'],
@@ -179,6 +180,7 @@ class AllVouchersController extends Controller
         }
 
         Voucher::create([
+            'name' => $validated['name'],
             'product_attribute_id' => $att->id,
             'image_path' => $imagePath,
             'discount_type' => $validated['discount_type'],
@@ -229,6 +231,7 @@ class AllVouchersController extends Controller
     public function update(Request $request, Voucher $voucher): RedirectResponse
     {
         $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
             'product_attribute' => ['required', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
             'delete_image' => ['nullable', 'boolean'],
@@ -246,6 +249,7 @@ class AllVouchersController extends Controller
         ]);
 
         $updateData = [
+            'name' => $validated['name'],
             'discount_type' => $validated['discount_type'],
             'discount_value' => $validated['discount_value'],
             'max_discount' => $validated['discount_type'] === 'percentage'
