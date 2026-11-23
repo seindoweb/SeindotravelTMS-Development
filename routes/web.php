@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::match(['get', 'post'], '/list', [HotelOrderController::class, 'orderList'])->name('list');
             Route::match(['get', 'post'], '/{code}/details', [HotelOrderController::class, 'orderDetails'])->name('orderDetails');
             Route::match(['get', 'post'], '/{code}/issued', [HotelOrderController::class, 'orderIssued'])->name('orderIssued');
+            Route::get('/{code}/book-reference', [HotelOrderController::class, 'orderBookReference'])->name('orderBookReference');
         });
 
         Route::prefix('bookings')->name('bookings.')->group(function () {

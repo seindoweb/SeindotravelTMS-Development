@@ -216,16 +216,6 @@ export default function Guest(props: GuestPageProps) {
     const [isSubmittingBooking, setIsSubmittingBooking] =
         useState<boolean>(false);
     const [bookingError, setBookingError] = useState<string | null>(null);
-    const [bookingSuccessData, setBookingSuccessData] = useState<any | null>(
-        () => {
-            try {
-                const stored = sessionStorage.getItem('hotelBookingResultData');
-                return stored ? JSON.parse(stored) : null;
-            } catch {
-                return null;
-            }
-        },
-    );
 
     useEffect(() => {
         try {
@@ -317,13 +307,11 @@ export default function Guest(props: GuestPageProps) {
 
     const results = prebookData?.results;
     const params = prebookData?.params;
-    console.log('params', params);
     const selectedRoom =
         prebookData?.selectedRoom ||
         (results?.roomDetails && results.roomDetails.length > 0
             ? results.roomDetails[0]
             : null);
-    console.log('selectedRoom', selectedRoom);
 
     const checkInDate = params?.checkIn || props.checkIn || '';
     const checkOutDate = params?.checkOut || props.checkOut || '';
@@ -607,14 +595,8 @@ export default function Guest(props: GuestPageProps) {
                 '/booking-room',
                 payload,
             );
-            console.log('resp:', res);
 
-            const responseData = res.data;
-            setBookingSuccessData(responseData);
-            sessionStorage.setItem(
-                'hotelBookingResultData',
-                JSON.stringify(responseData),
-            );
+            const responseData = res.data;;
 
             const responseSessionId =
                 responseData?.data?.results?.sessionID ||
@@ -702,34 +684,6 @@ export default function Guest(props: GuestPageProps) {
                         </span>
                     </div>
                 </div>
-
-                {bookingSuccessData && (
-                    <div className="p-5 mb-6 shadow-sm bg-emerald-50 border-emerald-300/90 rounded-2xl animate-in fade-in slide-in-from-top-4 border duration-300">
-                        <div className="gap-3.5 flex items-start">
-                            <div className="space-y-2 flex-1">
-                                <div className="gap-2 flex flex-wrap items-center justify-between">
-                                    <div className="gap-2 flex items-center">
-                                        <h4 className="text-sm font-bold sm:text-base text-emerald-950">
-                                            Booking Room Berhasil (HTTP 200 OK)
-                                        </h4>
-                                    </div>
-                                </div>
-                                <details className="mt-2 text-xs">
-                                    <summary className="py-1 font-bold text-emerald-900 hover:text-emerald-700 cursor-pointer select-none">
-                                        Lihat Detail Response API (JSON)
-                                    </summary>
-                                    <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded-xl font-mono leading-relaxed max-h-60 border-slate-800 overflow-x-auto border text-[11px]">
-                                        {JSON.stringify(
-                                            bookingSuccessData,
-                                            null,
-                                            2,
-                                        )}
-                                    </pre>
-                                </details>
-                            </div>
-                        </div>
-                    </div>
-                )}
 
                 {fetchError && (
                     <div className="gap-3 p-4 mb-6 bg-amber-50 border-amber-200 rounded-2xl flex items-start border">

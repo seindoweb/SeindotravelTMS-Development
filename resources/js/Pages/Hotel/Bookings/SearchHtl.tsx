@@ -134,7 +134,6 @@ export default function SearchHtl({
                     '/price-discovery-by-hotel',
                     payload,
                 );
-            console.log('Hotel price search response:', res.data);
 
             if (res.data?.meta?.status === 'success' || res.data?.data) {
                 setSearchData(res.data.data);
