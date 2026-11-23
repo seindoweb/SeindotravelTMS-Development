@@ -105,11 +105,9 @@ export default function RoomCard({ room, hotel, nights, searchParams }: RoomCard
             },
         };
 
-        console.log('payload pre book:', payload)
 
         try {
             const res = await hotelMicroserviceApi.post('/prebook-room', payload);
-            console.log('resp pre book:', res)
 
             if (res.data?.data) {
                 sessionStorage.setItem('hotelPrebookData', JSON.stringify({

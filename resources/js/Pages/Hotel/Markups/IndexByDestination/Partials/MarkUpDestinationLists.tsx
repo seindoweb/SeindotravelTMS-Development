@@ -94,8 +94,6 @@ export default function MarkUpDestinationLists() {
         } else if (action === 'edit') {
             if (item.key == null) return;
             router.visit(route('hotel.markups.destination.edit', item.key));
-        } else {
-            // console.log(action, item);
         }
     };
 
@@ -136,11 +134,6 @@ export default function MarkUpDestinationLists() {
                                 ),
                         },
                     ]}
-                    // dropdownLabel="Sort"
-                    // dropdownActions={[
-                    //     { label: "Newest First", onClick: () => console.log('Sort Newest') },
-                    //     { label: "Oldest First", onClick: () => console.log('Sort Oldest') },
-                    // ]}
                 />
 
                 <div className="overflow-x-auto">

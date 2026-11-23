@@ -48,19 +48,6 @@ export default function ListCustomerTable() {
                 subtitle="Manage registered members and profiles"
                 searchValue={search}
                 onSearchChange={setSearch}
-                dropdownLabel="Sort"
-                dropdownActions={[
-                    {
-                        label: 'Name A-Z',
-                        icon: <ArrowDownAZ size={16} />,
-                        onClick: () => console.log('sort user A-Z'),
-                    },
-                    {
-                        label: 'Name Z-A',
-                        icon: <ArrowUpZA size={16} />,
-                        onClick: () => console.log('sort user Z-A'),
-                    },
-                ]}
             />
             <div className="min-h-[300px] overflow-x-auto">
                 {loading ? (

@@ -27,7 +27,6 @@ export default function LastRegisteredCustomerCard() {
 
     const items = page ?? [];
 
-    console.log(items);
     return (
         <div className="rounded-2xl bg-white p-5 shadow-sm border border-[#E2E8F0]">
             <div className="mb-5 flex items-start justify-between">

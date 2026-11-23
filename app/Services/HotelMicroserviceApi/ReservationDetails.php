@@ -2,8 +2,6 @@
 
 namespace App\Services\HotelMicroserviceApi;
 
-use Exception;
-
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
@@ -13,13 +11,13 @@ class ReservationDetails
     {
         $request = [
             'providerBookingID' => isset($params['providerBookingID']) ? $params['providerBookingID'] : null,
-            'agencyBookingID' => isset($params['agencyBookingID']) ? $params['agencyBookingID'] : null
+            'agencyBookingID' => isset($params['agencyBookingID']) ? $params['agencyBookingID'] : null,
         ];
 
-        $url = config('services.hotelMicroserviceApi.base_url') . '/reservation-details';
+        $url = config('services.hotelMicroserviceApi.base_url').'/reservation-details';
 
         $headers = [
-            'AccessPermissionToken: ' . config('services.hotelMicroserviceApi.access_permission_token'),
+            'AccessPermissionToken: '.config('services.hotelMicroserviceApi.access_permission_token'),
             'Content-Type: application/json',
         ];
 
@@ -35,8 +33,8 @@ class ReservationDetails
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_TIMEOUT => 45,
+                CURLOPT_CONNECTTIMEOUT => 15,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2_0,
                 CURLOPT_CUSTOMREQUEST => 'POST',
@@ -46,7 +44,38 @@ class ReservationDetails
 
             $response = curl_exec($curl);
 
+            if ($response === false) {
+                $err = curl_error($curl);
+                Log::error('ReservationDetails cURL error: '.$err, ['request' => $request]);
+
+                return [
+                    'meta' => [
+                        'status' => 'error',
+                        'code' => 500,
+                        'message' => 'cURL error: '.$err,
+                    ],
+                    'data' => [
+                        'errors' => ['general' => $err],
+                    ],
+                ];
+            }
+
             $res = json_decode($response, true);
+
+            if (! is_array($res)) {
+                Log::error('ReservationDetails invalid JSON response: '.$response, ['request' => $request]);
+
+                return [
+                    'meta' => [
+                        'status' => 'error',
+                        'code' => 500,
+                        'message' => 'Invalid JSON response from hotel microservice',
+                    ],
+                    'data' => [
+                        'errors' => ['general' => 'Invalid JSON response'],
+                    ],
+                ];
+            }
 
             return $res;
         } finally {

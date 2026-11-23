@@ -8,8 +8,6 @@ use App\Models\OrderProductAttribute;
 use App\Services\HotelMicroserviceApi\IssueBooking as IssueBookingMg;
 use App\Services\HotelMicroserviceApi\ReservationDetails;
 use Illuminate\Support\Carbon;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class MonitoringHotelProductAttributeOrderListener
 {
@@ -67,7 +65,6 @@ class MonitoringHotelProductAttributeOrderListener
         }
     }
 
-
     public function handleBookingToIssue(OrderProductAttribute $orderProductAttribute)
     {
         if ($orderProductAttribute->supplier_source === ModelConstant::ORDER_SUPPLIER_RESOURCE_MG) {
@@ -78,17 +75,17 @@ class MonitoringHotelProductAttributeOrderListener
     public function handleOrderStatusMg(string $order_status)
     {
         switch ($order_status) {
-            case "CONF":
+            case 'CONF':
                 return ModelConstant::ORDER_STATUS_CONFIRMED;
-            case "RESERVED":
+            case 'RESERVED':
                 return ModelConstant::ORDER_STATUS_PROGRESS;
-            case "NOTCONF":
+            case 'NOTCONF':
                 return ModelConstant::ORDER_STATUS_ABORTED;
-            case "CANCEL":
+            case 'CANCEL':
                 return ModelConstant::ORDER_STATUS_CANCELED;
-            case "CANCELCONF":
+            case 'CANCELCONF':
                 return ModelConstant::ORDER_STATUS_CANCELED;
-            case "CANCELCHARGE":
+            case 'CANCELCHARGE':
                 return ModelConstant::ORDER_STATUS_CANCELED;
             default:
                 return ModelConstant::ORDER_STATUS_BOOKING;
@@ -97,10 +94,10 @@ class MonitoringHotelProductAttributeOrderListener
 
     public function handleIssueBookingMg(OrderProductAttribute $orderProductAttribute)
     {
-        $reqHttp = array(
-            "sessionId" => $orderProductAttribute->details->session_id,
-            "agencyBookingID" => $orderProductAttribute->code
-        );
+        $reqHttp = [
+            'sessionId' => $orderProductAttribute->details->session_id,
+            'agencyBookingID' => $orderProductAttribute->code,
+        ];
 
         $http = null;
         $dataCollectionCount = 0;
@@ -108,10 +105,9 @@ class MonitoringHotelProductAttributeOrderListener
 
         do {
             $http = IssueBookingMg::postIssueBooking($reqHttp);
-            $dataCollectionStatus = $http['meta']['status'];
+            $dataCollectionStatus = $http['meta']['status'] ?? 'error';
             $dataCollectionCount++;
         } while ($dataCollectionCount < 1 && $dataCollectionStatus === 'error');
-
 
         if ($dataCollectionStatus === 'success') {
             if (isset($http['data']['results']['status'])) {
@@ -124,6 +120,13 @@ class MonitoringHotelProductAttributeOrderListener
                 }
             }
         } else {
+            $errorMessage = $http['data']['errors']['general'] ?? $http['meta']['message'] ?? '';
+            if (is_string($errorMessage) && (str_contains(strtolower($errorMessage), 'duplicate entry') || str_contains(strtolower($errorMessage), 'already'))) {
+                $this->handleReservationDetailsMg($orderProductAttribute);
+
+                return;
+            }
+
             $orderProductAttribute->order_status = ModelConstant::ORDER_STATUS_FAILED;
             $orderProductAttribute->is_retryable = true;
 
@@ -137,7 +140,7 @@ class MonitoringHotelProductAttributeOrderListener
 
     public function handleReservationDetailsMg(OrderProductAttribute $orderProductAttribute)
     {
-        $reqHttp = array();
+        $reqHttp = [];
 
         if ($orderProductAttribute->reference_id != null) {
             $reqHttp['providerBookingID'] = $orderProductAttribute->reference_id;

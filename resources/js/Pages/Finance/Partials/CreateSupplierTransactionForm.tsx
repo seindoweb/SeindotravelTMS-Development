@@ -66,8 +66,6 @@ export default function CreateSupplierTransactionForm({
         description: '',
     });
 
-    console.log('data:', data)
-
     const {
         selected: selectedTransactionType,
         onChange: onTransactionTypeChange,
