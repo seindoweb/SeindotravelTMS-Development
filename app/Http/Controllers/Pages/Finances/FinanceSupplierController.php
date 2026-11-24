@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class FinanceSupplierController extends Controller
 {
-    public static function balance(Supplier $supplier, array $validated)
+    final public static function balance(Supplier $supplier, array $validated)
     {
         if ($validated['transaction_type'] == SupplierAndBalanceConstant::TRANSACTION_INITIAL) {
             $validated['description'] = 'Initial supplier balance';

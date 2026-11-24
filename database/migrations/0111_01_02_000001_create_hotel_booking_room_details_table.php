@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('meal_plan_name');
             $table->string('cancellation_policy_type', 50);
             $table->boolean('package_rate')->default(false);
+            $table->char('currency_code', 3)->nullable()->default('IDR');
             $table->decimal('msp', 18, 2)->default(0);
             $table->decimal('gross_price', 18, 2)->default(0);
             $table->decimal('nta_price', 18, 2)->default(0);

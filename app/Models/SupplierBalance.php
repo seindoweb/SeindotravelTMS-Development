@@ -39,7 +39,6 @@ class SupplierBalance extends Model
         return [
             'initial_balance' => 'decimal:2',
             'current_balance' => 'decimal:2',
-            'credit_limit' => 'decimal:2',
             'is_active' => 'boolean',
         ];
     }

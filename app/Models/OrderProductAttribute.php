@@ -51,6 +51,11 @@ class OrderProductAttribute extends Model
         return $this->belongsTo(ProductAttribute::class, 'product_attribute_id', 'id');
     }
 
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_source', 'code');
+    }
+
     public function hotelBooking(): HasOne
     {
         return $this->hasOne(HotelBooking::class, 'order_prod_attr_id', 'id');

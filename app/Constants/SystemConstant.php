@@ -7,6 +7,9 @@ final class SystemConstant
     public const DEFAULT_LOCALE = "id";
     public const DEFAULT_CURRENCY = "IDR";
 
+    public const AVAILABLE_LOCALE = ["id", "en"];
+    public const AVAILABLE_CURRENCY = ["IDR", "USD"];
+
     // SYSTEM  PLATFORMS
     public const SYSTEM_PLATFORMS_TMS = "tms";
     public const SYSTEM_PLATFORMS_WEB = "web";

@@ -17,9 +17,12 @@ Route::middleware('api.client')->prefix('v2026')->group(function () {
     });
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('/customer')->group(function () {
-            Route::post('/fetch', [V2026ProfileController::class, 'fetch']);
+            Route::post('/fetch-profile', [V2026ProfileController::class, 'fetchProfile']);
             Route::post('/update-identity', [V2026ProfileController::class, 'updateIdentity']);
             Route::post('/update-address', [V2026ProfileController::class, 'updateAddress']);
+            Route::post('/change-password', [V2026ProfileController::class, 'changePassword']);
+            Route::post('/change-currency', [V2026ProfileController::class, 'changeCurrency']);
+            Route::post('/change-locale', [V2026ProfileController::class, 'changeLocale']);
         });
     });
 });
