@@ -326,7 +326,7 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                 </div>
                             )}
 
-                            {isIssued ? (
+                            {isIssued && (
                                 <div className="space-y-1.5">
                                     <label className="text-[11px] font-bold text-primary uppercase tracking-wider block">
                                         Status Pembayaran
@@ -348,7 +348,9 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                         karena voucher sudah diterbitkan.
                                     </p>
                                 </div>
-                            ) : (
+                            )}
+
+                            {!isIssued && !countdown.isExpired && (
                                 <div className="space-y-1.5">
                                     <label className="text-[11px] font-bold text-primary uppercase tracking-wider block">
                                         Status Pembayaran (Select)
@@ -436,28 +438,32 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                         </div>
                                     </div>
                                 ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setIsConfirmModalOpen(true)
-                                        }
-                                        className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-extrabold shadow-md hover:shadow-lg active:scale-[0.98] transition-all cursor-pointer group"
-                                    >
-                                        ISSUE HOTEL SEKARANG
-                                    </button>
-                                )
-                                    //     : (
-                                    // <button
-                                    //     type="button"
-                                    //     disabled
-                                    //     className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-slate-100 border border-slate-200 text-slate-400 rounded-xl text-sm font-bold cursor-not-allowed opacity-80"
-                                    // >
-                                    //     {countdown.isExpired
-                                    //         ? 'WAKTU EXPIRED'
-                                    //         : 'MENUNGGU PEMBAYARAN'}
-                                    // </button>
-                                    // )
-                                 }
+                                <div>
+                                    {selectedPaymentStatus == 'paid' ? (
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setIsConfirmModalOpen(true)
+                                            }
+                                            className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-extrabold shadow-md hover:shadow-lg active:scale-[0.98] transition-all cursor-pointer group"
+                                        >
+                                            ISSUE HOTEL SEKARANG
+                                        </button>
+                                    ) : (
+                                            <button
+                                            type="button"
+                                            disabled
+                                            className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-slate-100 border border-slate-200 text-slate-400 rounded-xl text-sm font-bold cursor-not-allowed opacity-80"
+                                        >
+                                            {countdown.isExpired
+                                                ? 'WAKTU EXPIRED'
+                                                : 'MENUNGGU PEMBAYARAN'}
+                                        </button>
+                                    )}
+                                </div>
+                                )}
+
+
                             </div>
                         </div>
                     </div>
