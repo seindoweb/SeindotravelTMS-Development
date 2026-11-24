@@ -350,7 +350,7 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                                 </div>
                             )}
 
-                            {!isIssued && !countdown.isExpired && (
+                            {!isIssued && (
                                 <div className="space-y-1.5">
                                     <label className="text-[11px] font-bold text-primary uppercase tracking-wider block">
                                         Status Pembayaran (Select)
