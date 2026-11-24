@@ -26,6 +26,7 @@ use Illuminate\Support\Str;
     'title',
     'full_name',
     'email',
+    'email_verified_at',
     'password',
     'dial_code',
     'phone_number',
@@ -50,7 +51,7 @@ use Illuminate\Support\Str;
     'created_by',
     'updated_by',
 ])]
-#[Hidden(['password', 'password_reset_otp', 'remember_token'])]
+#[Hidden(['password', 'remember_token'])]
 
 class User extends Authenticatable implements MustVerifyEmail
 {

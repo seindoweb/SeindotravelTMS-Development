@@ -88,6 +88,12 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * register
+     *
+     * @param Request $request
+     * @return void
+     */
     public function register(Request $request)
     {
         try {
@@ -139,14 +145,26 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * logout
+     *
+     * @param Request $request
+     * @return void
+     */
     public function logout(Request $request)
     {
-        $token = $request->user()->currentAccessToken()->delete();
+        try {
+            $request->user()->currentAccessToken()->delete();
 
-        return ResponseFormatter::success(
-            [
-                'info' => 'Logged out successfully'
-            ]
-        );
+            return ResponseFormatter::success(
+                [
+                    'info' => 'Logged out successfully'
+                ]
+            );
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'error' => $error->getMessage(),
+            ], null, 422);
+        }
     }
 }
