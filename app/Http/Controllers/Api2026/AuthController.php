@@ -76,6 +76,7 @@ class AuthController extends Controller
                     'access_token' => $tokenResults,
                     'token_type' => 'Bearer',
                     'customer' => new UserResource($user),
+                    'info' => ''
                 ],
             );
         } catch (Exception $error) {
@@ -123,11 +124,14 @@ class AuthController extends Controller
 
             RegisterActivityEvent::dispatch($user);
 
-            return ResponseFormatter::success([
-                'access_token' => $user->createToken('authToken')->plainTextToken,
-                'token_type' => 'Bearer',
-                'customer' => new UserResource($user),
-            ], 'Authenticated');
+            return ResponseFormatter::success(
+                [
+                    'access_token' => $user->createToken('authToken')->plainTextToken,
+                    'token_type' => 'Bearer',
+                    'customer' => new UserResource($user),
+                    'info' => ''
+                ]
+            );
         } catch (Exception $error) {
             return ResponseFormatter::error([
                 'error' => $error->getMessage(),
@@ -140,8 +144,9 @@ class AuthController extends Controller
         $token = $request->user()->currentAccessToken()->delete();
 
         return ResponseFormatter::success(
-            $token,
-            'Logged out successfully'
+            [
+                'info' => 'Logged out successfully'
+            ]
         );
     }
 }

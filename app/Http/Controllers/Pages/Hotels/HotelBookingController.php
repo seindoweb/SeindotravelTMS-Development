@@ -191,6 +191,7 @@ class HotelBookingController extends Controller
                                 $roomDet->meal_plan_name = $res['results']['roomDetails']['mealPlanName'];
                                 $roomDet->cancellation_policy_type = $res['results']['roomDetails']['cancellationPolicyType'];
                                 $roomDet->package_rate = $res['results']['roomDetails']['packageRate'];
+                                $roomDet->currency_code = $res['results']['currency'];
                                 $roomDet->msp = $res['results']['roomDetails']['msp'] == '' ? 0 : (int) $res['results']['roomDetails']['msp'];
                                 $roomDet->gross_price = (int) $res['results']['roomDetails']['grossPrice'];
                                 $roomDet->nta_price = (int) $res['results']['roomDetails']['ntaPrice'];

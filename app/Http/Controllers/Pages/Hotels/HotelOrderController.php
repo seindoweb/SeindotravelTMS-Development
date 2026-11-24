@@ -11,9 +11,11 @@ use App\Models\Order;
 use App\Models\OrderProductAttribute;
 use App\Services\HotelMicroserviceApi\BookingPreview;
 use App\Services\HotelMicroserviceApi\ReservationDetails;
+use App\Services\Systems\SupplierBalanceService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class HotelOrderController extends Controller
 {
@@ -99,11 +101,23 @@ class HotelOrderController extends Controller
         ]);
     }
 
+    /**
+     * orderIssued
+     *
+     * @param string $code
+     * @return void
+     */
     public function orderIssued(string $code)
     {
         $rawCode = helperReplaceSeparator($code, '-', '/');
         $orderAtt = OrderProductAttribute::query()->where('code', $rawCode)->first();
         if ($orderAtt && $orderAtt->order) {
+            if (!SupplierBalanceService::hasSufficientBalance($orderAtt)) {
+
+                return redirect()
+                    ->route('hotel.orders.orderDetails', $code)
+                    ->with('error', 'Insufficient supplier balance to process this booking.');
+            }
 
             $orderAtt->order->payment_status = ModelConstant::PAYMENT_STATUS_PAID;
 
@@ -116,13 +130,17 @@ class HotelOrderController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * orderBookReference
+     *
+     * @param string $code
+     * @return void
+     */
     public function orderBookReference(string $code)
     {
         $rawCode = helperReplaceSeparator($code, '-', '/');
 
-        $orderAtt = OrderProductAttribute::query()
-            ->where('code', $rawCode)
-            ->firstOrFail();
+        $orderAtt = OrderProductAttribute::query()->where('code', $rawCode)->firstOrFail();
 
         $allowedStatuses = [
             ModelConstant::ORDER_STATUS_CONFIRMED,
@@ -150,5 +168,56 @@ class HotelOrderController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    /**
+     * orderDataPdf
+     *
+     * @param string $code
+     * @return array
+     */
+    public function orderDataPdf(string $code): array
+    {
+        $rawCode = helperReplaceSeparator($code, '-', '/');
+
+        $orderAtt = OrderProductAttribute::query()->where('code', $rawCode)->firstOrFail();
+        $content = [
+            'logo' => asset('assets/images/logo.png')
+        ];
+
+        $customer = [
+            'full_name' => $orderAtt?->order?->user?->full_name
+        ];
+
+        $order = [
+            'code' => $orderAtt->code
+        ];
+
+        $hotel = [];
+
+        $data = [
+            'content' => $content,
+            'customer' => $customer,
+            'order' => $order,
+            'hotel' => $hotel
+        ];
+
+        return $data;
+    }
+    public function orderDownloadPdf(string $code)
+    {
+        $data = $this->orderDataPdf($code);
+
+        return Pdf::view('pdfs.hotel-e-voucher', [
+            'data' => $data,
+        ])
+            ->format('a4')
+            ->name("e-voucher-({$data['customer']['full_name']})-{$data['order']['code']}.pdf");
+    }
+    public function orderPreviewPdf(string $code)
+    {
+        $data = $this->orderDataPdf($code);
+
+        return view('pdfs.hotel-e-voucher', compact('data'));
     }
 }

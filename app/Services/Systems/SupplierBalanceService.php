@@ -2,7 +2,9 @@
 
 namespace App\Services\Systems;
 
+use App\Constants\ModelConstant;
 use App\Constants\SupplierAndBalanceConstant;
+use App\Models\OrderProductAttribute;
 use App\Models\Supplier;
 use App\Models\SupplierBalance;
 use App\Models\SupplierBalanceTransaction;
@@ -30,8 +32,38 @@ class SupplierBalanceService
         ?string $transactionDate = null,
     ): SupplierBalanceTransaction {
 
-        $supplier = Supplier::query()->where('code', $supplierResourceCode)->firstOrFail();
+        // Validate supplier.
+        $supplier = Supplier::query()
+            ->where('code', $supplierResourceCode)
+            ->firstOrFail();
+
         $supplierId = $supplier->id;
+
+        // Validate balance type.
+        if (!in_array($balanceType, [
+            SupplierAndBalanceConstant::TYPE_PREPAID,
+            SupplierAndBalanceConstant::TYPE_POSTPAID,
+        ], true)) {
+            throw ValidationException::withMessages([
+                'balance_type' => 'Invalid supplier balance type.',
+            ]);
+        }
+
+        // Validate amount.
+        $amount = bcadd((string) $amount, '0', 2);
+
+        if (bccomp($amount, '0', 2) <= 0) {
+            throw ValidationException::withMessages([
+                'amount' => 'Transaction amount must be greater than zero.',
+            ]);
+        }
+
+        // Validate transaction type and determine direction.
+        $delta = $this->getBalanceDelta(
+            $balanceType,
+            $transactionType
+        );
+
         return DB::transaction(function () use (
             $supplierId,
             $currencyCode,
@@ -43,9 +75,16 @@ class SupplierBalanceService
             $description,
             $supplierResourceCode,
             $transactionDate,
+            $delta,
         ) {
 
-            // Find or create supplier balance.
+            // Lock supplier to prevent concurrent balance creation.
+            Supplier::query()
+                ->whereKey($supplierId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            // Find supplier balance.
             $balance = SupplierBalance::query()
                 ->where('supplier_id', $supplierId)
                 ->where('currency_code', $currencyCode)
@@ -53,6 +92,7 @@ class SupplierBalanceService
                 ->lockForUpdate()
                 ->first();
 
+            // Create balance if not exists.
             if (!$balance) {
                 $balance = SupplierBalance::create([
                     'supplier_id' => $supplierId,
@@ -60,39 +100,14 @@ class SupplierBalanceService
                     'balance_type' => $balanceType,
                     'initial_balance' => 0,
                     'current_balance' => 0,
-                    'credit_limit' => 0,
                     'is_active' => true,
                 ]);
-
-                // Lock newly created balance.
-                $balance = SupplierBalance::query()
-                    ->lockForUpdate()
-                    ->findOrFail($balance->id);
             }
 
+            // Validate active balance.
             if (!$balance->is_active) {
                 throw ValidationException::withMessages([
                     'supplier_balance' => 'Supplier balance is inactive.',
-                ]);
-            }
-
-            // Validate amount.
-            $amount = bcadd((string) $amount, '0', 2);
-
-            if (bccomp($amount, '0', 2) <= 0) {
-                throw ValidationException::withMessages([
-                    'amount' => 'Transaction amount must be greater than zero.',
-                ]);
-            }
-
-            $balanceType = $balance->balance_type;
-
-            if (!in_array($balanceType, [
-                SupplierAndBalanceConstant::TYPE_PREPAID,
-                SupplierAndBalanceConstant::TYPE_POSTPAID,
-            ], true)) {
-                throw ValidationException::withMessages([
-                    'balance_type' => 'Invalid supplier balance type.',
                 ]);
             }
 
@@ -100,12 +115,6 @@ class SupplierBalanceService
                 (string) $balance->current_balance,
                 '0',
                 2
-            );
-
-            // Determine transaction direction.
-            $delta = $this->getBalanceDelta(
-                $balanceType,
-                $transactionType
             );
 
             // Initial balance can only be recorded once.
@@ -143,30 +152,15 @@ class SupplierBalanceService
                 ]);
             }
 
-            // Postpaid cannot exceed credit limit.
-            if (
-                $balanceType === SupplierAndBalanceConstant::TYPE_POSTPAID &&
-                $transactionType ===
-                SupplierAndBalanceConstant::TRANSACTION_USAGE &&
-                bccomp($after, (string) $balance->credit_limit, 2) > 0
-            ) {
-                throw ValidationException::withMessages([
-                    'amount' => 'Supplier credit limit exceeded.',
-                ]);
-            }
-
             // Postpaid outstanding cannot become negative.
             if (
                 $balanceType === SupplierAndBalanceConstant::TYPE_POSTPAID &&
                 bccomp($after, '0', 2) < 0
             ) {
                 throw ValidationException::withMessages([
-                    'amount' =>
-                    'Payment or refund exceeds outstanding balance.',
+                    'amount' => 'Payment or refund exceeds outstanding balance.',
                 ]);
             }
-
-            $now = now();
 
             // Create transaction history.
             $transaction = SupplierBalanceTransaction::create([
@@ -179,7 +173,7 @@ class SupplierBalanceService
                 'amount' => $amount,
                 'balance_before' => $before,
                 'balance_after' => $after,
-                'transaction_date' => $transactionDate ?? $now,
+                'transaction_date' => $transactionDate ?? now(),
             ]);
 
             // Update current balance.
@@ -196,6 +190,72 @@ class SupplierBalanceService
 
             return $transaction;
         });
+    }
+
+    /**
+     * Check whether supplier has sufficient balance
+     * to process a booking.
+     *
+     * PREPAID:
+     * Current balance must be >= booking amount.
+     *
+     * POSTPAID:
+     * Current outstanding + booking amount
+     * must not exceed credit limit.
+     */
+    public static function hasSufficientBalance(OrderProductAttribute $orderAtt): bool
+    {
+        $supplierResourceCode = $orderAtt->supplier_source;
+        $currencyCode = 'IDR';
+        $amount = 0;
+        /**
+         * =======================================================================
+         * Initial section for customization per supplier
+         * =======================================================================
+         */
+        if ($supplierResourceCode == ModelConstant::ORDER_SUPPLIER_RESOURCE_MG) {
+            $currencyCode = $orderAtt->details->hotelBookingRoomDetails->first()->currency_code;
+            foreach ($orderAtt->details->hotelBookingRoomDetails ?: [] as $hbrd) {
+                $amount += (int) $hbrd->nta_price;
+            }
+        }
+
+        /**
+         * =======================================================================
+         * End of supplier customization
+         * =======================================================================
+         */
+
+        $supplier = Supplier::query()
+            ->where('code', $supplierResourceCode)
+            ->first();
+
+        if (!$supplier) {
+            return false;
+        }
+
+        $balance = SupplierBalance::query()
+            ->where('supplier_id', $supplier->id)
+            ->where('currency_code', $currencyCode)
+            ->first();
+
+        if (!$balance || !$balance->is_active) {
+            return false;
+        }
+
+        $amount = bcadd((string) $amount, '0', 2);
+
+        if (bccomp($amount, '0', 2) <= 0) {
+            return false;
+        }
+
+        $currentBalance = bcadd(
+            (string) $balance->current_balance,
+            '0',
+            2
+        );
+
+        return bccomp($currentBalance, $amount, 2) >= 0;
     }
 
     /**
