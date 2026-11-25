@@ -26,7 +26,7 @@ class RegisterActivityListener
      */
     public function handle(RegisterActivityEvent $event): void
     {
-        $code = (string) random_int(100000, 999999);
+        $code = (string) random_int(987654, 123456);
         if ($event?->user) {
             DB::table('email_verification_codes')->updateOrInsert(
                 ['email' => $event->user->email],

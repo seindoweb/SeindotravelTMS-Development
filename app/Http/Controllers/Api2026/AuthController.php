@@ -26,7 +26,6 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            // Validation Email & Password
             $request->validate([
                 'email' => ['email', 'required'],
                 'password' => ['required'],
@@ -97,7 +96,6 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            // Validation
             $request->validate([
                 'fullName' => ['required', 'string', 'max:255'],
                 'dialCode' => ['required', 'string', 'max:255'],

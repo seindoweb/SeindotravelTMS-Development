@@ -261,8 +261,8 @@
                                     <td align="center">
                                         <img src="{{ asset('assets/images/select-a-destination.png') }}"
                                             alt="Select a destination" />
-                                        <h3>Pilih Destinasi</h3>
-                                        <p>Tentukan tujuan wisata favorit dari pilihan menarik.</p>
+                                        <h3>Choose a Destination</h3>
+                                        <p>Select a travel destination that appeals to you.</p>
                                     </td>
                                 </tr>
                             </table>
@@ -273,8 +273,8 @@
                                 <tr>
                                     <td align="center">
                                         <img src="{{ asset('assets/images/easy-booking.png') }}" alt="Easy Booking" />
-                                        <h3>Booking Mudah</h3>
-                                        <p>Proses pemesanan cepat, aman, dan tanpa ribet.</p>
+                                        <h3>Easy Booking</h3>
+                                        <p>A fast, secure, and hassle-free booking process.</p>
                                     </td>
                                 </tr>
                             </table>
@@ -286,8 +286,8 @@
                                     <td align="center">
                                         <img src="{{ asset('assets/images/heading-off-on-vacation.png') }}"
                                             alt="Heading Off on Vacation" />
-                                        <h3>Berangkat</h3>
-                                        <p>Kami siapkan segalanya, Anda tinggal menikmati.</p>
+                                        <h3>Setting Off</h3>
+                                        <p>We take care of everything; all you have to do is enjoy.</p>
                                     </td>
                                 </tr>
                             </table>

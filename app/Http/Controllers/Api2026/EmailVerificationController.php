@@ -24,6 +24,13 @@ class EmailVerificationController extends Controller
     {
         try {
             $user = Auth::user();
+
+            if (!is_null($user->email_verified_at)) {
+                return ResponseFormatter::success([
+                    'info' => 'Your email is already verified. No further action is needed.',
+                ]);
+            }
+
             [$name, $domain] = explode('@', $user->email);
             $email = Str::mask($name, '*', 2) . '@' . $domain;
             RegisterActivityEvent::dispatch($user);
@@ -58,8 +65,8 @@ class EmailVerificationController extends Controller
                 throw new Exception('That code doesn’t match. Please double-check the 6-digit code sent to your email, or request a new one.');
             }
 
-            // OTP expires after 20 minutes.
-            $expiredAt = Carbon::parse($verification->created_at)->addMinutes(20);
+            // OTP expires after 18 minutes.
+            $expiredAt = Carbon::parse($verification->created_at)->addMinutes(18);
             if (Carbon::now()->greaterThan($expiredAt)) {
                 throw new Exception('This verification code has expired. Please request a new code to continue.');
             }

@@ -15,17 +15,8 @@
     </table>
 
     <p style="font-size: 14px; color: #888888;">
-        Kode ini berlaku selama 5 menit. <strong>Jangan pernah membagikan kode OTP ini kepada
-            siapapun</strong>.
+        This code is valid for 18 minutes. <strong>Never share this OTP code with anyone</strong>.
     </p>
 
-    <div class="divider"></div>
-
-    <p style="margin-top: 30px;">
-        Sambil merencanakan liburan, yuk intip promo menarik dari kami!
-    </p>
-
-    <div style="margin: 35px 0;">
-        <a href="#" class="btn">LIHAT PROMO KAMI</a>
-    </div>
+    @include('emails.component.check-out-our-promotions')
 @endsection

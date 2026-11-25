@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api2026\AuthController as V2026AuthController;
 use App\Http\Controllers\Api2026\EmailVerificationController as V2026EmailVerificationController;
 use App\Http\Controllers\Api2026\ProfileController as V2026ProfileController;
+use App\Http\Controllers\Api2026\ResetPasswordController as V2026ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,13 @@ Route::middleware('api.client')->prefix('v2026')->group(function () {
         Route::post('register', [V2026AuthController::class, 'register']);
         Route::post('logout', [V2026AuthController::class, 'logout'])->middleware('auth:sanctum');
     });
+
+    Route::prefix('/reset-password')->group(function () {
+        Route::post('forgot-password', [V2026ResetPasswordController::class, 'forgotPassword']);
+        Route::post('otp-validation', [V2026ResetPasswordController::class, 'otpValidation']);
+        Route::post('new-password', [V2026ResetPasswordController::class, 'newPassword']);
+    });
+
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('/email-verification')->group(function () {
             Route::post('/request', [V2026EmailVerificationController::class, 'request']);
