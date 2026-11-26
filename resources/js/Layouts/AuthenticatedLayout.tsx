@@ -17,6 +17,7 @@ import AuthenticatedMenuHotels from './Partials/AuthenticatedMenuHotels';
 import AuthenticatedMenuVouchers from './Partials/AuthenticatedMenuVouchers';
 import AuthenticatedMenuFinances from './Partials/AuthenticatedMenuFinances';
 import FlashMessage from '@/Components/FlashMessage';
+import AuthenticatedMenuFlights from './Partials/AuthenticatedMenuFlights';
 
 export default function Authenticated({
     header,
@@ -25,6 +26,7 @@ export default function Authenticated({
     const user = usePage().props.auth.user;
     const { url } = usePage();
     const [financesOpen, setFinancesOpen] = useState(false);
+    const [flightsOpen, setFlightsOpen] = useState(false);
     const [hotelsOpen, setHotelsOpen] = useState(false);
     const [vouchersOpen, setVouchersOpen] = useState(false);
     const [usersOpen, setUsersOpen] = useState(false);
@@ -37,6 +39,7 @@ export default function Authenticated({
     |--------------------------------------------------------------------------
     */
     const financesRef = useRef<HTMLDivElement>(null);
+    const flightsRef = useRef<HTMLDivElement>(null);
     const hotelsRef = useRef<HTMLDivElement>(null);
     const vouchersRef = useRef<HTMLDivElement>(null);
     const usersRef = useRef<HTMLDivElement>(null);
@@ -45,6 +48,7 @@ export default function Authenticated({
 
     useEffect(() => {
         setFinancesOpen(false);
+        setFlightsOpen(false);
         setHotelsOpen(false);
         setUsersOpen(false);
         setVouchersOpen(false);
@@ -61,6 +65,7 @@ export default function Authenticated({
         function handleClickOutside(event: MouseEvent) {
             const target = event.target as Node;
             const clickedInsideFinances = financesRef.current?.contains(target);
+            const clickedInsideFlights = flightsRef.current?.contains(target);
             const clickedInsideHotels = hotelsRef.current?.contains(target);
             const clickedInsideVouchers = vouchersRef.current?.contains(target);
             const clickedInsideUsers = usersRef.current?.contains(target);
@@ -71,6 +76,7 @@ export default function Authenticated({
 
             if (
                 !clickedInsideFinances &&
+                !clickedInsideFlights &&
                 !clickedInsideHotels &&
                 !clickedInsideVouchers &&
                 !clickedInsideUsers &&
@@ -78,6 +84,7 @@ export default function Authenticated({
                 !clickedInsideProfile
             ) {
                 setFinancesOpen(false);
+                setFlightsOpen(false);
                 setHotelsOpen(false);
                 setVouchersOpen(false);
                 setUsersOpen(false);
@@ -101,6 +108,7 @@ export default function Authenticated({
     const toggleMenu = (
         menu:
             | 'finances'
+            | 'flights'
             | 'hotels'
             | 'vouchers'
             | 'users'
@@ -108,6 +116,7 @@ export default function Authenticated({
             | 'profile',
     ) => {
         setFinancesOpen(menu === 'finances' ? (current) => !current : false);
+        setFlightsOpen(menu === 'flights' ? (current) => !current : false);
         setHotelsOpen(menu === 'hotels' ? (current) => !current : false);
         setVouchersOpen(menu === 'vouchers' ? (current) => !current : false);
         setUsersOpen(menu === 'users' ? (current) => !current : false);
@@ -153,6 +162,16 @@ export default function Authenticated({
                         SALES
                     ================================================== */}
                     <AuthenticatedMenuSales />
+
+                    {/* =================================================
+                        FLIGHTS
+                    ================================================== */}
+                    <AuthenticatedMenuFlights
+                        url={url}
+                        open={flightsOpen}
+                        onToggle={() => toggleMenu('flights')}
+                        containerRef={flightsRef}
+                    />
 
                     {/* =================================================
                         HOTELS

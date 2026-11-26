@@ -3,6 +3,7 @@
 use App\Http\Controllers\Pages\DashboardController;
 use App\Http\Controllers\Pages\Finances\FlightsViaController;
 use App\Http\Controllers\Pages\Finances\HotelsMgController;
+use App\Http\Controllers\Pages\Flights\FlightOrderController;
 use App\Http\Controllers\Pages\Hotels\HotelBookingController;
 use App\Http\Controllers\Pages\Hotels\HotelMarkupController;
 use App\Http\Controllers\Pages\Hotels\HotelOrderController;
@@ -64,6 +65,11 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
     Route::prefix('events')->name('events.')->group(function () {
         Route::match(['get', 'post'], '/', [DashboardController::class, 'index'])->name('index');
+    });
+    Route::prefix('flight')->name('flight.')->group(function () {
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::match(['get', 'post'], '/list', [FlightOrderController::class, 'orderList'])->name('list');
+        });
     });
 
     Route::prefix('hotel')->name('hotel.')->group(function () {

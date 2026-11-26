@@ -1,6 +1,7 @@
 import Pagination from '@/Components/Pagination';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
+import { SearchSelectionProps } from '@/types';
 import {
     HotelSearchResultItem,
     PriceSearchDestinationData,
@@ -9,14 +10,9 @@ import {
     PriceSearchFilterReq,
     PriceSearchRoomReq,
     RoomGuestProps,
-    SearchSelectionProps,
-} from '@/types';
+} from '@/types/index-hotel';
 import { Head, router } from '@inertiajs/react';
-import {
-    AlertCircle,
-    Building,
-    ChevronRight,
-} from 'lucide-react';
+import { AlertCircle, Building, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import HotelBookingForm from './Partials/HotelBookingForm';
 import HotelCard from './Partials/HotelCard';
@@ -99,13 +95,16 @@ export default function SearchDst({
         : null;
 
     const [currentPage, setCurrentPage] = useState<number>(initialPage || 1);
-    const [activeFilters, setActiveFilters] = useState<PriceSearchFilterReq>({});
-    const [searchData, setSearchData] = useState<PriceSearchDestinationData | null>(
-        null,
+    const [activeFilters, setActiveFilters] = useState<PriceSearchFilterReq>(
+        {},
     );
+    const [searchData, setSearchData] =
+        useState<PriceSearchDestinationData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [selectingHotelCode, setSelectingHotelCode] = useState<string | null>(null);
+    const [selectingHotelCode, setSelectingHotelCode] = useState<string | null>(
+        null,
+    );
 
     useEffect(() => {
         setCurrentPage(initialPage || 1);
@@ -136,19 +135,25 @@ export default function SearchDst({
         };
 
         try {
-            const res = await hotelMicroserviceApi.post<PriceSearchDestinationResponse>(
-                '/price-search-by-destination',
-                payload,
-            );
+            const res =
+                await hotelMicroserviceApi.post<PriceSearchDestinationResponse>(
+                    '/price-search-by-destination',
+                    payload,
+                );
 
             if (res.data?.meta?.status === 'success' || res.data?.data) {
                 setSearchData(res.data.data);
             } else {
-                setError(res.data?.meta?.message || 'Gagal memuat daftar hotel.');
+                setError(
+                    res.data?.meta?.message || 'Gagal memuat daftar hotel.',
+                );
             }
         } catch (err: unknown) {
             console.error('Error fetching destination prices:', err);
-            const errObj = err as { response?: { data?: { meta?: { message?: string } } }; message?: string };
+            const errObj = err as {
+                response?: { data?: { meta?: { message?: string } } };
+                message?: string;
+            };
             const msg =
                 errObj.response?.data?.meta?.message ||
                 errObj.message ||
@@ -157,7 +162,15 @@ export default function SearchDst({
         } finally {
             setLoading(false);
         }
-    }, [destinationCode, country, checkIn, checkOut, room, activeFilters, currentPage]);
+    }, [
+        destinationCode,
+        country,
+        checkIn,
+        checkOut,
+        room,
+        activeFilters,
+        currentPage,
+    ]);
 
     useEffect(() => {
         fetchDestinationPrices();
@@ -182,8 +195,10 @@ export default function SearchDst({
         const hotelCode = selectedHotel.hotelCode || selectedHotel.code;
         setSelectingHotelCode(hotelCode);
 
-        const destCode = destinationCode || selectedHotel.locations?.cityCode || '';
-        const countryCode = country || selectedHotel.locations?.countryCode || 'ID';
+        const destCode =
+            destinationCode || selectedHotel.locations?.cityCode || '';
+        const countryCode =
+            country || selectedHotel.locations?.countryCode || 'ID';
 
         const queryParams = [
             `type="htl"`,
@@ -210,21 +225,21 @@ export default function SearchDst({
         <AuthenticatedLayout
             header={
                 <>
-                    <span className="text-sm font-bold truncate text-primary">
+                    <span className="text-sm font-bold text-primary truncate">
                         Hotel
                     </span>
                     <ChevronRight
                         size={14}
                         className="sm:block hidden text-[#CBD5E1]"
                     />
-                    <span className="text-sm font-bold truncate text-primary">
+                    <span className="text-sm font-bold text-primary truncate">
                         Search
                     </span>
                     <ChevronRight
                         size={14}
                         className="sm:block hidden text-[#CBD5E1]"
                     />
-                    <span className="text-sm font-bold truncate text-primary">
+                    <span className="text-sm font-bold text-primary truncate">
                         {destinationTitle}
                     </span>
                 </>
@@ -243,21 +258,24 @@ export default function SearchDst({
                 {loading ? (
                     <DestinationSearchSkeleton />
                 ) : error ? (
-                    <div className="max-w-xl p-8 mx-auto my-8 text-center bg-white border border-red-200 shadow-sm rounded-2xl">
-                        <AlertCircle className="mx-auto mb-3 text-red-500" size={36} />
+                    <div className="max-w-xl p-8 my-8 bg-white border-red-200 shadow-sm rounded-2xl mx-auto border text-center">
+                        <AlertCircle
+                            className="mb-3 text-red-500 mx-auto"
+                            size={36}
+                        />
                         <h3 className="mb-1 text-base font-bold text-gray-900">
                             Failed to Load Search Results
                         </h3>
                         <p className="mb-4 text-sm text-gray-600">{error}</p>
                         <button
                             onClick={fetchDestinationPrices}
-                            className="px-5 py-2 text-xs font-bold text-white transition-all shadow-sm bg-primary hover:bg-primary-bright rounded-xl"
+                            className="px-5 py-2 text-xs font-bold text-white shadow-sm bg-primary hover:bg-primary-bright rounded-xl transition-all"
                         >
                             Try Again
                         </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+                    <div className="gap-6 lg:grid-cols-4 grid grid-cols-1">
                         <div className="lg:col-span-1">
                             <HotelSearchFilterSidebar
                                 availableFilters={searchData?.filters || null}
@@ -268,7 +286,7 @@ export default function SearchDst({
                         </div>
 
                         <div className="space-y-4 lg:col-span-3">
-                            <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+                            <div className="bg-white rounded-xl p-4 sm:flex-row sm:items-center gap-3 shadow-sm flex flex-col justify-between border border-[#E2E8F0]">
                                 <div>
                                     <h2 className="text-base font-bold text-primary">
                                         Hotels in {destinationTitle}
@@ -283,19 +301,25 @@ export default function SearchDst({
                                 </div>
                             </div>
 
-                            {searchData?.results && searchData.results.length > 0 ? (
+                            {searchData?.results &&
+                            searchData.results.length > 0 ? (
                                 <div className="space-y-4">
-                                    {searchData.results.map((hotel: HotelSearchResultItem) => (
-                                        <HotelCard
-                                            key={hotel.key || hotel.hotelCode}
-                                            hotel={hotel}
-                                            onSelect={handleSelectHotel}
-                                            isLoading={
-                                                selectingHotelCode ===
-                                                (hotel.hotelCode || hotel.code)
-                                            }
-                                        />
-                                    ))}
+                                    {searchData.results.map(
+                                        (hotel: HotelSearchResultItem) => (
+                                            <HotelCard
+                                                key={
+                                                    hotel.key || hotel.hotelCode
+                                                }
+                                                hotel={hotel}
+                                                onSelect={handleSelectHotel}
+                                                isLoading={
+                                                    selectingHotelCode ===
+                                                    (hotel.hotelCode ||
+                                                        hotel.code)
+                                                }
+                                            />
+                                        ),
+                                    )}
 
                                     <Pagination
                                         currentPage={searchData.page}
@@ -307,23 +331,25 @@ export default function SearchDst({
                                     />
                                 </div>
                             ) : (
-                                <div className="bg-white rounded-2xl border border-[#E2E8F0] p-12 text-center shadow-sm">
+                                <div className="bg-white rounded-2xl p-12 shadow-sm border border-[#E2E8F0] text-center">
                                     <Building
                                         size={44}
-                                        className="mx-auto mb-3 text-gray-300"
+                                        className="mb-3 text-gray-300 mx-auto"
                                     />
                                     <h3 className="mb-1 text-base font-bold text-gray-800">
                                         No Hotel Found
                                     </h3>
-                                    <p className="max-w-md mx-auto mb-4 text-xs text-quaternary">
-                                        We did not find any hotels that match your search criteria or filters.
-                                        Try adjusting the filters or changing the dates.
+                                    <p className="max-w-md mb-4 text-xs text-quaternary mx-auto">
+                                        We did not find any hotels that match
+                                        your search criteria or filters. Try
+                                        adjusting the filters or changing the
+                                        dates.
                                     </p>
                                     {Object.keys(activeFilters).length > 0 && (
                                         <button
                                             type="button"
                                             onClick={handleResetFilters}
-                                            className="px-4 py-2 text-xs font-bold text-white transition-all shadow-sm bg-primary hover:bg-primary-bright rounded-xl"
+                                            className="px-4 py-2 text-xs font-bold text-white shadow-sm bg-primary hover:bg-primary-bright rounded-xl transition-all"
                                         >
                                             Reset Filter
                                         </button>

@@ -1,6 +1,9 @@
-import { PriceSearchFilterReq, PriceSearchFiltersResponse } from '@/types';
-import { Filter, RotateCcw, Star } from 'lucide-react';
 import { useState } from 'react';
+import { Filter, RotateCcw, Star } from 'lucide-react';
+import {
+    PriceSearchFilterReq,
+    PriceSearchFiltersResponse,
+} from '@/types/index-hotel';
 
 interface Props {
     availableFilters: PriceSearchFiltersResponse | null;
@@ -15,8 +18,12 @@ export default function HotelSearchFilterSidebar({
     onChange,
     onReset,
 }: Props) {
-    const [minPriceInput, setMinPriceInput] = useState(activeFilters.minPrice ?? '');
-    const [maxPriceInput, setMaxPriceInput] = useState(activeFilters.maxPrice ?? '');
+    const [minPriceInput, setMinPriceInput] = useState(
+        activeFilters.minPrice ?? '',
+    );
+    const [maxPriceInput, setMaxPriceInput] = useState(
+        activeFilters.maxPrice ?? '',
+    );
     const [showAllFacilities, setShowAllFacilities] = useState(false);
 
     const handlePriceBlur = () => {
@@ -73,11 +80,11 @@ export default function HotelSearchFilterSidebar({
 
     const hasActiveFilters = Boolean(
         activeFilters.minPrice ||
-            activeFilters.maxPrice ||
-            activeFilters.minRating ||
-            (activeFilters.areas && activeFilters.areas.length > 0) ||
-            (activeFilters.mealPlans && activeFilters.mealPlans.length > 0) ||
-            (activeFilters.facilities && activeFilters.facilities.length > 0),
+        activeFilters.maxPrice ||
+        activeFilters.minRating ||
+        (activeFilters.areas && activeFilters.areas.length > 0) ||
+        (activeFilters.mealPlans && activeFilters.mealPlans.length > 0) ||
+        (activeFilters.facilities && activeFilters.facilities.length > 0),
     );
 
     const facilitiesList = availableFilters?.facilities || [];
@@ -86,11 +93,11 @@ export default function HotelSearchFilterSidebar({
         : facilitiesList.slice(0, 6);
 
     return (
-        <div className="bg-white rounded-2xl border border-[#E2E8F0] p-5 shadow-sm space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                <div className="flex items-center gap-2">
+        <div className="bg-white rounded-2xl p-5 shadow-sm space-y-6 border border-[#E2E8F0]">
+            <div className="pb-3 border-gray-100 flex items-center justify-between border-b">
+                <div className="gap-2 flex items-center">
                     <Filter size={16} className="text-primary" />
-                    <h3 className="font-bold text-base text-primary">Filter</h3>
+                    <h3 className="text-base font-bold text-primary">Filter</h3>
                 </div>
 
                 {hasActiveFilters && (
@@ -100,7 +107,7 @@ export default function HotelSearchFilterSidebar({
                             setMaxPriceInput('');
                             onReset();
                         }}
-                        className="text-xs font-semibold text-red-500 hover:text-red-700 flex items-center gap-1 transition-colors"
+                        className="gap-1 text-xs font-semibold text-red-500 hover:text-red-700 flex items-center transition-colors"
                     >
                         <RotateCcw size={12} />
                         Reset
@@ -109,12 +116,12 @@ export default function HotelSearchFilterSidebar({
             </div>
 
             <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
+                <h4 className="text-xs font-bold tracking-wider text-quaternary uppercase">
                     Price Range (IDR)
                 </h4>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="gap-2 grid grid-cols-2">
                     <div>
-                        <label className="text-[10px] text-quaternary font-medium block mb-1">
+                        <label className="text-quaternary font-medium mb-1 block text-[10px]">
                             Min Price
                         </label>
                         <input
@@ -123,11 +130,11 @@ export default function HotelSearchFilterSidebar({
                             value={minPriceInput}
                             onChange={(e) => setMinPriceInput(e.target.value)}
                             onBlur={handlePriceBlur}
-                            className="w-full text-xs font-medium border border-[#E2E8F0] rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                            className="text-xs font-medium rounded-lg px-2.5 py-1.5 focus:ring-primary focus:border-primary w-full border border-[#E2E8F0] outline-none focus:ring-1"
                         />
                     </div>
                     <div>
-                        <label className="text-[10px] text-quaternary font-medium block mb-1">
+                        <label className="text-quaternary font-medium mb-1 block text-[10px]">
                             Max Price
                         </label>
                         <input
@@ -136,15 +143,15 @@ export default function HotelSearchFilterSidebar({
                             value={maxPriceInput}
                             onChange={(e) => setMaxPriceInput(e.target.value)}
                             onBlur={handlePriceBlur}
-                            className="w-full text-xs font-medium border border-[#E2E8F0] rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                            className="text-xs font-medium rounded-lg px-2.5 py-1.5 focus:ring-primary focus:border-primary w-full border border-[#E2E8F0] outline-none focus:ring-1"
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="space-y-2.5 pt-4 border-t border-gray-100">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
-                   Hotel Star
+            <div className="space-y-2.5 pt-4 border-gray-100 border-t">
+                <h4 className="text-xs font-bold tracking-wider text-quaternary uppercase">
+                    Hotel Star
                 </h4>
                 <div className="space-y-1.5">
                     {[5, 4, 3, 2, 1].map((star) => {
@@ -154,21 +161,23 @@ export default function HotelSearchFilterSidebar({
                                 key={star}
                                 type="button"
                                 onClick={() => handleRatingToggle(star)}
-                                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex w-full items-center justify-between transition-colors ${
                                     isChecked
-                                        ? 'bg-amber-50 text-amber-900 border border-amber-200 font-bold'
+                                        ? 'bg-amber-50 text-amber-900 border-amber-200 font-bold border'
                                         : 'hover:bg-gray-50 text-gray-700'
                                 }`}
                             >
-                                <div className="flex items-center gap-1.5">
-                                    <div className="flex items-center text-amber-400">
-                                        {Array.from({ length: star }).map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                size={13}
-                                                className="fill-amber-400 text-amber-400"
-                                            />
-                                        ))}
+                                <div className="gap-1.5 flex items-center">
+                                    <div className="text-amber-400 flex items-center">
+                                        {Array.from({ length: star }).map(
+                                            (_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    size={13}
+                                                    className="fill-amber-400 text-amber-400"
+                                                />
+                                            ),
+                                        )}
                                     </div>
                                     <span>{star} Star</span>
                                 </div>
@@ -176,7 +185,7 @@ export default function HotelSearchFilterSidebar({
                                     type="radio"
                                     checked={isChecked}
                                     readOnly
-                                    className="text-primary focus:ring-0 cursor-pointer h-3.5 w-3.5"
+                                    className="text-primary h-3.5 w-3.5 cursor-pointer focus:ring-0"
                                 />
                             </button>
                         );
@@ -185,11 +194,11 @@ export default function HotelSearchFilterSidebar({
             </div>
 
             {availableFilters?.areas && availableFilters.areas.length > 0 && (
-                <div className="space-y-2.5 pt-4 border-t border-gray-100">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
+                <div className="space-y-2.5 pt-4 border-gray-100 border-t">
+                    <h4 className="text-xs font-bold tracking-wider text-quaternary uppercase">
                         Area / Location
                     </h4>
-                    <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                    <div className="space-y-1.5 max-h-48 pr-1 overflow-y-auto">
                         {availableFilters.areas.map((area) => {
                             const isChecked = Boolean(
                                 activeFilters.areas?.includes(area),
@@ -197,7 +206,7 @@ export default function HotelSearchFilterSidebar({
                             return (
                                 <label
                                     key={area}
-                                    className="flex items-center gap-2 text-xs text-gray-700 font-medium hover:text-primary cursor-pointer select-none py-0.5"
+                                    className="gap-2 text-xs text-gray-700 font-medium hover:text-primary py-0.5 flex cursor-pointer items-center select-none"
                                 >
                                     <input
                                         type="checkbox"
@@ -213,38 +222,41 @@ export default function HotelSearchFilterSidebar({
                 </div>
             )}
 
-            {availableFilters?.mealPlans && availableFilters.mealPlans.length > 0 && (
-                <div className="space-y-2.5 pt-4 border-t border-gray-100">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
-                        Breakfast Type / Meal Plan
-                    </h4>
-                    <div className="space-y-1.5">
-                        {availableFilters.mealPlans.map((plan) => {
-                            const isChecked = Boolean(
-                                activeFilters.mealPlans?.includes(plan),
-                            );
-                            return (
-                                <label
-                                    key={plan}
-                                    className="flex items-center gap-2 text-xs text-gray-700 font-medium hover:text-primary cursor-pointer select-none py-0.5"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={isChecked}
-                                        onChange={() => handleMealPlanToggle(plan)}
-                                        className="rounded text-primary focus:ring-primary h-3.5 w-3.5 border-gray-300"
-                                    />
-                                    <span>{plan}</span>
-                                </label>
-                            );
-                        })}
+            {availableFilters?.mealPlans &&
+                availableFilters.mealPlans.length > 0 && (
+                    <div className="space-y-2.5 pt-4 border-gray-100 border-t">
+                        <h4 className="text-xs font-bold tracking-wider text-quaternary uppercase">
+                            Breakfast Type / Meal Plan
+                        </h4>
+                        <div className="space-y-1.5">
+                            {availableFilters.mealPlans.map((plan) => {
+                                const isChecked = Boolean(
+                                    activeFilters.mealPlans?.includes(plan),
+                                );
+                                return (
+                                    <label
+                                        key={plan}
+                                        className="gap-2 text-xs text-gray-700 font-medium hover:text-primary py-0.5 flex cursor-pointer items-center select-none"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={isChecked}
+                                            onChange={() =>
+                                                handleMealPlanToggle(plan)
+                                            }
+                                            className="rounded text-primary focus:ring-primary h-3.5 w-3.5 border-gray-300"
+                                        />
+                                        <span>{plan}</span>
+                                    </label>
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
             {facilitiesList.length > 0 && (
-                <div className="space-y-2.5 pt-4 border-t border-gray-100">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-quaternary">
+                <div className="space-y-2.5 pt-4 border-gray-100 border-t">
+                    <h4 className="text-xs font-bold tracking-wider text-quaternary uppercase">
                         Facilities
                     </h4>
                     <div className="space-y-1.5">
@@ -255,12 +267,14 @@ export default function HotelSearchFilterSidebar({
                             return (
                                 <label
                                     key={fac}
-                                    className="flex items-center gap-2 text-xs text-gray-700 font-medium hover:text-primary cursor-pointer select-none py-0.5"
+                                    className="gap-2 text-xs text-gray-700 font-medium hover:text-primary py-0.5 flex cursor-pointer items-center select-none"
                                 >
                                     <input
                                         type="checkbox"
                                         checked={isChecked}
-                                        onChange={() => handleFacilityToggle(fac)}
+                                        onChange={() =>
+                                            handleFacilityToggle(fac)
+                                        }
                                         className="rounded text-primary focus:ring-primary h-3.5 w-3.5 border-gray-300"
                                     />
                                     <span className="line-clamp-1">{fac}</span>
@@ -270,8 +284,10 @@ export default function HotelSearchFilterSidebar({
                         {facilitiesList.length > 6 && (
                             <button
                                 type="button"
-                                onClick={() => setShowAllFacilities(!showAllFacilities)}
-                                className="text-[11px] font-bold text-primary hover:underline pt-1 block"
+                                onClick={() =>
+                                    setShowAllFacilities(!showAllFacilities)
+                                }
+                                className="font-bold text-primary pt-1 block text-[11px] hover:underline"
                             >
                                 {showAllFacilities
                                     ? 'Hide'

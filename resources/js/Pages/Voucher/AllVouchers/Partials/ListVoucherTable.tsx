@@ -10,7 +10,7 @@ import { Edit, Eye, Globe, Plus, Power, Ticket, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import VoucherDetailModal, { VoucherItem } from './VoucherDetailModal';
 import VoucherTranslationModal from './VoucherTranslationModal';
-import { useDebounce } from '@/Hooks/useDebounce';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface ListVoucherTableProps {
     vouchers: Paginate<VoucherItem>;
@@ -297,7 +297,7 @@ export default function ListVoucherTable({
                                                         </div>
                                                     )}
                                                     <div className="flex flex-col">
-                                                        <span className="text-xs font-bold text-primary w-24 truncate">
+                                                        <span className="w-24 text-xs font-bold text-primary truncate">
                                                             {voucher.name}
                                                         </span>
                                                         <div className="gap-1 mt-1 flex items-center">

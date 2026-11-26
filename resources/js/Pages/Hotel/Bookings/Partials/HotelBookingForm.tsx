@@ -1,7 +1,8 @@
 import DateRangePicker from '@/Components/DateRangePicker';
 import DestinationPicker from '@/Components/DestinationPicker';
 import GuestRoomPicker from '@/Components/GuestRoomPicker';
-import { RoomGuestProps, SearchSelectionProps } from '@/types';
+import { SearchSelectionProps } from '@/types';
+import { RoomGuestProps } from '@/types/index-hotel';
 import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -84,8 +85,8 @@ function HotelBookingForm({
 
         const isHotel = selection.type === 'htl' || Boolean(selection.hotel);
         const destinationVal = isHotel
-            ? (selection.destination || '')
-            : (selection.destination || selection.code);
+            ? selection.destination || ''
+            : selection.destination || selection.code;
         const countryVal = selection.country || 'ID';
 
         const queryParams = [
@@ -96,7 +97,7 @@ function HotelBookingForm({
 
         if (isHotel) {
             queryParams.push(
-                `hotel=${encodeURIComponent(selection.hotel || selection.code)}`
+                `hotel=${encodeURIComponent(selection.hotel || selection.code)}`,
             );
         }
 
@@ -104,7 +105,7 @@ function HotelBookingForm({
             `checkIn=${formatDate(checkIn)}`,
             `checkOut=${formatDate(checkOut)}`,
             `room=${roomStr}`,
-            `page=1`
+            `page=1`,
         );
 
         const query = queryParams.join('&');
@@ -116,57 +117,57 @@ function HotelBookingForm({
     };
 
     return (
-            <div className="bg-white p-4 rounded-2xl shadow-sm border border-[#E2E8F0]">
-                <div className="flex flex-col items-start justify-between gap-4 mb-2 sm:flex-row sm:items-center">
-                    <div>
-                        <h1 className="text-2xl font-bold text-primary">
-                            Search Hotels
-                        </h1>
-                        <p className="mt-1 text-sm text-quaternary">
-                            Find and book accommodations for your clients.
-                        </p>
-                    </div>
-                </div>
-
-                {error && (
-                    <div className="p-3 mb-4 text-sm font-medium text-red-600 border border-red-100 rounded-lg bg-red-50">
-                        {error}
-                    </div>
-                )}
-
-                <div className="flex flex-col items-center w-full gap-3 xl:flex-row">
-                    <div className="relative w-full xl:w-1/3">
-                        <DestinationPicker
-                            selection={selection}
-                            onSelect={setSelection}
-                        />
-                    </div>
-
-                    <div className="relative w-full xl:w-1/3">
-                        <DateRangePicker
-                            checkIn={checkIn}
-                            checkOut={checkOut}
-                            setCheckIn={setCheckIn}
-                            setCheckOut={setCheckOut}
-                        />
-                    </div>
-
-                    <div className="relative w-full xl:w-1/4">
-                        <GuestRoomPicker rooms={rooms} setRooms={setRooms} />
-                    </div>
-
-                    <div className="flex items-stretch self-stretch w-full xl:w-auto">
-                        <button
-                            type="button"
-                            onClick={handleSearch}
-                            className="gap-2 bg-primary hover:bg-primary-bright text-white px-8 rounded-xl font-bold shadow-sm hover:shadow-md flex w-full items-center justify-center transition-all active:scale-[0.98]"
-                        >
-                            <Search size={18} strokeWidth={2.5} />
-                            <span>Search</span>
-                        </button>
-                    </div>
+        <div className="bg-white p-4 rounded-2xl shadow-sm border border-[#E2E8F0]">
+            <div className="gap-4 mb-2 sm:flex-row sm:items-center flex flex-col items-start justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-primary">
+                        Search Hotels
+                    </h1>
+                    <p className="mt-1 text-sm text-quaternary">
+                        Find and book accommodations for your clients.
+                    </p>
                 </div>
             </div>
+
+            {error && (
+                <div className="p-3 mb-4 text-sm font-medium text-red-600 border-red-100 rounded-lg bg-red-50 border">
+                    {error}
+                </div>
+            )}
+
+            <div className="gap-3 xl:flex-row flex w-full flex-col items-center">
+                <div className="xl:w-1/3 relative w-full">
+                    <DestinationPicker
+                        selection={selection}
+                        onSelect={setSelection}
+                    />
+                </div>
+
+                <div className="xl:w-1/3 relative w-full">
+                    <DateRangePicker
+                        checkIn={checkIn}
+                        checkOut={checkOut}
+                        setCheckIn={setCheckIn}
+                        setCheckOut={setCheckOut}
+                    />
+                </div>
+
+                <div className="xl:w-1/4 relative w-full">
+                    <GuestRoomPicker rooms={rooms} setRooms={setRooms} />
+                </div>
+
+                <div className="xl:w-auto flex w-full items-stretch self-stretch">
+                    <button
+                        type="button"
+                        onClick={handleSearch}
+                        className="gap-2 bg-primary hover:bg-primary-bright text-white px-8 rounded-xl font-bold shadow-sm hover:shadow-md flex w-full items-center justify-center transition-all active:scale-[0.98]"
+                    >
+                        <Search size={18} strokeWidth={2.5} />
+                        <span>Search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }
 

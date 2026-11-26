@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
+import { SearchSelectionProps } from '@/types';
 import {
     HotelDetailInfo,
     HotelRoomDetail,
@@ -8,8 +9,7 @@ import {
     PriceSearchHotelResponse,
     PriceSearchRoomReq,
     RoomGuestProps,
-    SearchSelectionProps,
-} from '@/types';
+} from '@/types/index-hotel';
 import { Head } from '@inertiajs/react';
 import { AlertCircle, BedDouble, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -200,7 +200,7 @@ export default function SearchHtl({
                 {loading && <HotelSearchSkeleton />}
 
                 {!loading && error && !hotelDetail && (
-                    <div className="bg-white border-red-100 rounded-2xl py-16 px-6 gap-3 flex flex-col items-center justify-center border text-center">
+                    <div className="gap-3 px-6 py-16 bg-white border-red-100 rounded-2xl flex flex-col items-center justify-center border text-center">
                         <AlertCircle size={40} className="text-red-400" />
                         <p className="font-semibold text-primary">
                             Hotel is not available at the moment. Please try

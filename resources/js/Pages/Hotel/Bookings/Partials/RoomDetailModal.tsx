@@ -1,5 +1,6 @@
 import PhotoLightbox from '@/Components/PhotoLightBox';
-import { HotelDetailInfo, HotelRoomDetail } from '@/types';
+import { formatRupiah } from '@/helpers';
+import { HotelDetailInfo, HotelRoomDetail } from '@/types/index-hotel';
 import {
     AlertCircle,
     BedDouble,
@@ -85,19 +86,6 @@ export default function RoomDetailModal({
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
     }, []);
-
-    const formatRupiah = (amount: number | string) => {
-        const num =
-            typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        })
-            .format(num)
-            .replace('Rp', '');
-    };
 
     const formatPolicyDate = (dateStr: string) => {
         if (!dateStr) return '';

@@ -1,5 +1,5 @@
 import PhotoLightbox from '@/Components/PhotoLightBox';
-import { HotelDetailInfo } from '@/types';
+import { HotelDetailInfo } from '@/types/index-hotel';
 import {
     ArrowUpDown,
     Building2,
@@ -17,7 +17,7 @@ import {
     Waves,
     Wifi,
     Wind,
-    Wine
+    Wine,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import HotelDetailModal from './HotelDetailModal';
@@ -25,20 +25,45 @@ import HotelDetailModal from './HotelDetailModal';
 const getFacilityIcon = (name: string) => {
     const lower = name.toLowerCase();
     if (lower.includes('wifi') || lower.includes('internet')) return Wifi;
-    if (lower.includes('pool') || lower.includes('kolam') || lower.includes('renang')) return Waves;
-    if (lower.includes('restoran') || lower.includes('restaurant') || lower.includes('dining') || lower.includes('makan') || lower.includes('breakfast') || lower.includes('cafe')) return Utensils;
+    if (
+        lower.includes('pool') ||
+        lower.includes('kolam') ||
+        lower.includes('renang')
+    )
+        return Waves;
+    if (
+        lower.includes('restoran') ||
+        lower.includes('restaurant') ||
+        lower.includes('dining') ||
+        lower.includes('makan') ||
+        lower.includes('breakfast') ||
+        lower.includes('cafe')
+    )
+        return Utensils;
     if (lower.includes('parkir') || lower.includes('parking')) return Car;
     if (lower.includes('ac') || lower.includes('air condition')) return Wind;
-    if (lower.includes('24') || lower.includes('resepsionis') || lower.includes('front desk')) return Clock;
+    if (
+        lower.includes('24') ||
+        lower.includes('resepsionis') ||
+        lower.includes('front desk')
+    )
+        return Clock;
     if (lower.includes('gym') || lower.includes('fitness')) return Dumbbell;
     if (lower.includes('spa') || lower.includes('massage')) return Sparkles;
     if (lower.includes('bar') || lower.includes('lounge')) return Wine;
     if (lower.includes('smoking') || lower.includes('rokok')) return Cigarette;
-    if (lower.includes('lift') || lower.includes('elevator')) return ArrowUpDown;
+    if (lower.includes('lift') || lower.includes('elevator'))
+        return ArrowUpDown;
     return CheckCircle2;
 };
 
-export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo; nights: number }) {
+export default function HotelHeader({
+    hotel,
+    nights,
+}: {
+    hotel: HotelDetailInfo;
+    nights: number;
+}) {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
 
@@ -68,7 +93,8 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
         if (Array.isArray(hotel.roomDetails)) {
             hotel.roomDetails.forEach((r) => {
                 addPhoto(r.roomInformations?.thumbnail);
-                const moreImages = r.roomInformations?.moreInformations?.photo?.image;
+                const moreImages =
+                    r.roomInformations?.moreInformations?.photo?.image;
                 if (Array.isArray(moreImages)) {
                     moreImages.forEach((img) => addPhoto(img?.url));
                 }
@@ -79,7 +105,9 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
     }, [hotel]);
 
     const facilitiesList = useMemo(() => {
-        const list = (hotel.facilities || []).map((f) => f.type?.trim() || f.name?.trim()).filter(Boolean);
+        const list = (hotel.facilities || [])
+            .map((f) => f.type?.trim() || f.name?.trim())
+            .filter(Boolean);
         return Array.from(new Set(list));
     }, [hotel.facilities]);
 
@@ -91,20 +119,26 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
 
     return (
         <>
-            <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 sm:p-6 shadow-xs space-y-5">
-                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 border border-[#E2E8F0]">
+                <div className="gap-4 md:flex-row md:items-start flex flex-col justify-between">
                     <div className="space-y-1.5 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md">
+                        <div className="gap-2 flex flex-wrap items-center">
+                            <span className="gap-1 font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md inline-flex items-center text-[11px]">
                                 <Building2 size={12} />
                                 Hotel
                             </span>
 
                             {ratingNum > 0 && (
-                                <div className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 border border-amber-200/70 px-2 py-0.5 rounded-md text-[11px] font-bold">
+                                <div className="gap-1 bg-amber-50 text-amber-900 border-amber-200/70 px-2 py-0.5 rounded-md font-bold inline-flex items-center border text-[11px]">
                                     <div className="flex items-center">
-                                        {Array.from({ length: Math.min(5, ratingNum) }).map((_, i) => (
-                                            <Star key={i} size={11} className="fill-amber-400 text-amber-500" />
+                                        {Array.from({
+                                            length: Math.min(5, ratingNum),
+                                        }).map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                size={11}
+                                                className="fill-amber-400 text-amber-500"
+                                            />
                                         ))}
                                     </div>
                                     {/* <span className="ml-0.5">Bintang {ratingNum}</span> */}
@@ -112,29 +146,34 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                             )}
 
                             {nights > 0 && (
-                                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-quaternary bg-slate-100 border border-slate-200/60 px-2.5 py-0.5 rounded-md">
+                                <span className="gap-1 font-semibold text-quaternary bg-slate-100 border-slate-200/60 px-2.5 py-0.5 rounded-md inline-flex items-center border text-[11px]">
                                     <Calendar size={11} />
                                     {nights} Nights
                                 </span>
                             )}
                         </div>
 
-                        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-primary leading-tight tracking-tight">
+                        <h1 className="text-xl font-black leading-tight tracking-tight sm:text-2xl md:text-3xl text-primary">
                             {hotel.name}
                         </h1>
 
-                        <div className="flex items-center gap-2 text-xs text-quaternary flex-wrap">
-                            <div className="flex items-center gap-1">
-                                <MapPin size={13} className="text-primary shrink-0" />
-                                <span className="line-clamp-1 font-medium">{locationDisplay}</span>
+                        <div className="gap-2 text-xs text-quaternary flex flex-wrap items-center">
+                            <div className="gap-1 flex items-center">
+                                <MapPin
+                                    size={13}
+                                    className="text-primary shrink-0"
+                                />
+                                <span className="font-medium line-clamp-1">
+                                    {locationDisplay}
+                                </span>
                             </div>
                             <span className="text-gray-300">•</span>
                             <button
                                 type="button"
                                 onClick={() => setShowDetailModal(true)}
-                                className="text-primary hover:text-primary-bright font-semibold hover:underline cursor-pointer"
+                                className="font-semibold text-primary hover:text-primary-bright cursor-pointer hover:underline"
                             >
-                               View Full Address
+                                View Full Address
                             </button>
                         </div>
                     </div>
@@ -143,7 +182,7 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                         <button
                             type="button"
                             onClick={() => setShowDetailModal(true)}
-                            className="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-primary font-bold text-xs px-3.5 py-2 rounded-xl transition-all shadow-2xs hover:shadow-xs active:scale-[0.98] cursor-pointer"
+                            className="gap-1.5 bg-slate-50 hover:bg-slate-100 border-slate-200/80 text-primary font-bold text-xs px-3.5 py-2 rounded-xl shadow-2xs hover:shadow-xs inline-flex cursor-pointer items-center border transition-all active:scale-[0.98]"
                         >
                             <span>View Hotel Detail</span>
                         </button>
@@ -151,42 +190,44 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                 </div>
 
                 {allPhotos.length === 0 ? (
-                    <div className="w-full h-52 sm:h-64 rounded-2xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center text-gray-400 gap-2">
+                    <div className="gap-2 text-gray-400 h-52 sm:h-64 rounded-2xl bg-slate-50 border-slate-200 flex w-full flex-col items-center justify-center border border-dashed">
                         <Building2 size={36} className="text-gray-300" />
-                        <span className="text-xs font-medium">Hotel photos not available</span>
+                        <span className="text-xs font-medium">
+                            Hotel photos not available
+                        </span>
                     </div>
                 ) : allPhotos.length === 1 ? (
                     <div
                         onClick={() => setLightboxIndex(0)}
-                        className="relative w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-gray-100 border border-gray-100 cursor-pointer group shadow-2xs"
+                        className="h-64 bg-gray-100 border-gray-100 sm:h-80 md:h-96 rounded-2xl group shadow-2xs relative w-full cursor-pointer overflow-hidden border"
                     >
                         <img
                             src={allPhotos[0].url}
                             alt={hotel.name}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                             loading="eager"
                         />
-                        <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-xs text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                        <span className="bottom-3 right-3 bg-black/60 backdrop-blur-xs text-white text-xs font-semibold px-3 py-1 gap-1.5 shadow-sm absolute flex items-center rounded-full">
                             <Images size={13} />
                             View Photos
                         </span>
                     </div>
                 ) : allPhotos.length === 2 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 h-64 sm:h-80 rounded-2xl overflow-hidden">
+                    <div className="h-64 gap-3 sm:grid-cols-2 sm:h-80 rounded-2xl grid grid-cols-1 overflow-hidden">
                         {allPhotos.slice(0, 2).map((photo, idx) => (
                             <div
                                 key={idx}
                                 onClick={() => setLightboxIndex(idx)}
-                                className="relative h-full overflow-hidden rounded-2xl bg-gray-100 cursor-pointer group shadow-2xs"
+                                className="bg-gray-100 rounded-2xl group shadow-2xs relative h-full cursor-pointer overflow-hidden"
                             >
                                 <img
                                     src={photo.url}
                                     alt={`${hotel.name} foto ${idx + 1}`}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                     loading="lazy"
                                 />
                                 {idx === 1 && (
-                                    <span className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-xs text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                                    <span className="bottom-3 right-3 bg-black/60 backdrop-blur-xs text-white text-xs font-semibold px-3 py-1 gap-1.5 shadow-sm absolute flex items-center rounded-full">
                                         <Images size={13} />
                                         View All Photos (2)
                                     </span>
@@ -195,57 +236,60 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full rounded-2xl overflow-hidden">
+                    <div className="gap-3 md:grid-cols-3 rounded-2xl grid h-full grid-cols-1 overflow-hidden">
                         <div
                             onClick={() => setLightboxIndex(0)}
-                            className="relative md:col-span-2 h-full rounded-2xl overflow-hidden bg-gray-100 cursor-pointer group shadow-2xs"
+                            className="bg-gray-100 md:col-span-2 rounded-2xl group shadow-2xs relative h-full cursor-pointer overflow-hidden"
                         >
                             <img
                                 src={allPhotos[0].url}
                                 alt={hotel.name}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 loading="eager"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                                <span className="text-white text-xs font-bold drop-shadow-sm">
+                            <div className="inset-0 p-4 from-black/40 absolute flex items-end bg-gradient-to-t via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100">
+                                <span className="text-xs font-bold text-white drop-shadow-sm">
                                     Click to Enlarge
                                 </span>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-1 gap-3 h-28 sm:h-36 md:h-full">
+                        <div className="gap-3 md:grid-cols-1 h-28 sm:h-36 md:h-full grid grid-cols-2">
                             <div
                                 onClick={() => setLightboxIndex(1)}
-                                className="relative h-full rounded-2xl overflow-hidden bg-gray-100 cursor-pointer group shadow-2xs"
+                                className="bg-gray-100 rounded-2xl group shadow-2xs relative h-full cursor-pointer overflow-hidden"
                             >
                                 <img
                                     src={allPhotos[1].url}
                                     alt={`${hotel.name} foto 2`}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                     loading="lazy"
                                 />
                             </div>
 
                             <div
                                 onClick={() => setLightboxIndex(2)}
-                                className="relative h-full rounded-2xl overflow-hidden bg-gray-100 cursor-pointer group shadow-2xs"
+                                className="bg-gray-100 rounded-2xl group shadow-2xs relative h-full cursor-pointer overflow-hidden"
                             >
                                 <img
                                     src={allPhotos[2].url}
                                     alt={`${hotel.name} foto 3`}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                     loading="lazy"
                                 />
 
-                                <div className="absolute inset-0 bg-black/40 hover:bg-black/50 transition-colors flex items-center justify-center p-2 text-center backdrop-blur-2xs">
-                                    <div className="flex flex-col items-center gap-1 text-white">
-                                        <Images size={20} className="drop-shadow-sm" />
-                                        <span className="text-xs sm:text-sm font-black tracking-tight drop-shadow-sm">
+                                <div className="inset-0 p-2 bg-black/40 hover:bg-black/50 backdrop-blur-2xs absolute flex items-center justify-center text-center transition-colors">
+                                    <div className="gap-1 text-white flex flex-col items-center">
+                                        <Images
+                                            size={20}
+                                            className="drop-shadow-sm"
+                                        />
+                                        <span className="text-xs font-black tracking-tight sm:text-sm drop-shadow-sm">
                                             {allPhotos.length > 3
                                                 ? `+${allPhotos.length - 3} Other Photos`
                                                 : 'View All Photos'}
                                         </span>
-                                        <span className="text-[10px] text-white/80 hidden sm:block">
+                                        <span className="text-white/80 sm:block hidden text-[10px]">
                                             Total {allPhotos.length} Photos
                                         </span>
                                     </div>
@@ -255,9 +299,9 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                     </div>
                 )}
 
-                <div className="pt-2 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-bold text-quaternary mr-1 hidden sm:inline">
+                <div className="gap-3 pt-2 border-gray-100 sm:flex-row sm:items-center flex flex-col justify-between border-t">
+                    <div className="gap-2 flex flex-wrap items-center">
+                        <span className="mr-1 text-xs font-bold text-quaternary sm:inline hidden">
                             Populer Facilities:
                         </span>
                         {highlightFacilities.map((chip, idx) => {
@@ -265,9 +309,12 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                             return (
                                 <span
                                     key={idx}
-                                    className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200/70 px-3 py-1.5 rounded-xl shadow-2xs hover:border-slate-300 transition-colors"
+                                    className="gap-1.5 text-xs font-semibold bg-slate-50 text-slate-700 border-slate-200/70 px-3 py-1.5 rounded-xl shadow-2xs hover:border-slate-300 inline-flex items-center border transition-colors"
                                 >
-                                    <IconComp size={13} className="text-primary" />
+                                    <IconComp
+                                        size={13}
+                                        className="text-primary"
+                                    />
                                     <span>{chip}</span>
                                 </span>
                             );
@@ -277,9 +324,15 @@ export default function HotelHeader({ hotel, nights }: { hotel: HotelDetailInfo;
                             <button
                                 type="button"
                                 onClick={() => setShowDetailModal(true)}
-                                className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-bright px-2 py-1 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer"
+                                className="gap-1 px-2 py-1 text-xs font-bold rounded-lg text-primary hover:text-primary-bright hover:bg-primary/5 inline-flex cursor-pointer items-center transition-colors"
                             >
-                                View <span>+{facilitiesList.length - highlightFacilities.length} Other Facilities</span>
+                                View{' '}
+                                <span>
+                                    +
+                                    {facilitiesList.length -
+                                        highlightFacilities.length}{' '}
+                                    Other Facilities
+                                </span>
                             </button>
                         )}
                     </div>

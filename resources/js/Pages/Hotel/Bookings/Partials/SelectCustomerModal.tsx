@@ -5,7 +5,12 @@ import TextInput from '@/Components/TextInput';
 import { formatDate } from '@/helpers';
 import { api } from '@/libs/http/api';
 import { Paginate, UserProps } from '@/types';
-import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
+import {
+    Dialog,
+    DialogPanel,
+    Transition,
+    TransitionChild,
+} from '@headlessui/react';
 import { Check, Loader2, Search, User, X } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
 
@@ -32,10 +37,13 @@ export default function SelectCustomerModal({
             const res =
                 typeof urlOrPage === 'string'
                     ? await api.get<Paginate<UserProps>>(urlOrPage, { search })
-                    : await api.get<Paginate<UserProps>>(route('user.customers.retrieveData'), {
-                          page: urlOrPage,
-                          search,
-                      });
+                    : await api.get<Paginate<UserProps>>(
+                          route('user.customers.retrieveData'),
+                          {
+                              page: urlOrPage,
+                              search,
+                          },
+                      );
             setPageData(res);
         } catch (error) {
             console.error('Failed to retrieve customers:', error);
@@ -67,10 +75,10 @@ export default function SelectCustomerModal({
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" />
+                    <div className="inset-0 bg-slate-900/60 backdrop-blur-xs fixed transition-opacity" />
                 </TransitionChild>
 
-                <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-10 flex items-center justify-center">
+                <div className="inset-0 p-4 sm:p-6 md:p-10 fixed z-10 flex items-center justify-center overflow-y-auto">
                     <TransitionChild
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -80,10 +88,10 @@ export default function SelectCustomerModal({
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <DialogPanel className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
-                            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                        <DialogPanel className="max-w-4xl bg-white rounded-2xl shadow-2xl border-slate-200 flex max-h-[90vh] w-full flex-col overflow-hidden border">
+                            <div className="px-6 py-4 border-slate-100 bg-slate-50/50 flex items-center justify-between border-b">
+                                <div className="gap-3 flex items-center">
+                                    <div className="w-10 h-10 font-bold rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                                         <User size={20} />
                                     </div>
                                     <div>
@@ -91,7 +99,8 @@ export default function SelectCustomerModal({
                                             Select Customer
                                         </h3>
                                         <p className="text-xs text-slate-500">
-                                            Select registered customer data as ticket purchaser
+                                            Select registered customer data as
+                                            ticket purchaser
                                         </p>
                                     </div>
                                 </div>
@@ -104,74 +113,113 @@ export default function SelectCustomerModal({
                                 </button>
                             </div>
 
-                            <div className="p-4 border-b border-slate-100 bg-white">
+                            <div className="p-4 bg-white border-slate-100 border-b">
                                 <div className="relative">
                                     <Search
                                         size={16}
-                                        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                                        className="left-3.5 text-slate-400 absolute top-1/2 -translate-y-1/2"
                                     />
                                     <TextInput
                                         type="text"
                                         placeholder="Search by customer name..."
-                                        className="w-full pl-10 pr-4 text-xs sm:text-sm py-2"
+                                        className="py-2 pl-10 pr-4 text-xs sm:text-sm w-full"
                                         value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
+                                        onChange={(e) =>
+                                            setSearch(e.target.value)
+                                        }
                                         autoFocus
                                     />
                                 </div>
                             </div>
 
-                            <div className="overflow-x-auto flex-1 p-4">
+                            <div className="p-4 flex-1 overflow-x-auto">
                                 {loading && !pageData ? (
-                                    <div className="py-16 flex flex-col items-center justify-center text-slate-400 gap-3">
-                                        <Loader2 size={28} className="animate-spin text-primary" />
-                                        <span className="text-xs">Loading customer data...</span>
+                                    <div className="gap-3 py-16 text-slate-400 flex flex-col items-center justify-center">
+                                        <Loader2
+                                            size={28}
+                                            className="animate-spin text-primary"
+                                        />
+                                        <span className="text-xs">
+                                            Loading customer data...
+                                        </span>
                                     </div>
                                 ) : customers.length === 0 ? (
-                                    <div className="py-16 text-center text-slate-400 text-xs">
+                                    <div className="py-16 text-xs text-slate-400 text-center">
                                         No customer found.
                                     </div>
                                 ) : (
-                                    <table className="w-full text-left text-xs">
+                                    <table className="text-xs w-full text-left">
                                         <thead>
-                                            <tr className="border-b border-slate-100 text-slate-400 uppercase text-[10px] tracking-wider">
-                                                <th className="py-3 px-3 font-bold">Customer Name</th>
-                                                <th className="py-3 px-3 font-bold">Email</th>
-                                                <th className="py-3 px-3 font-bold">Phone</th>
-                                                <th className="py-3 px-3 font-bold">Birthdate</th>
-                                                <th className="py-3 px-3 text-right font-bold">Action</th>
+                                            <tr className="border-slate-100 text-slate-400 tracking-wider border-b text-[10px] uppercase">
+                                                <th className="px-3 py-3 font-bold">
+                                                    Customer Name
+                                                </th>
+                                                <th className="px-3 py-3 font-bold">
+                                                    Email
+                                                </th>
+                                                <th className="px-3 py-3 font-bold">
+                                                    Phone
+                                                </th>
+                                                <th className="px-3 py-3 font-bold">
+                                                    Birthdate
+                                                </th>
+                                                <th className="px-3 py-3 font-bold text-right">
+                                                    Action
+                                                </th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-slate-50">
+                                        <tbody className="divide-slate-50 divide-y">
                                             {customers.map((c, idx) => {
                                                 const isSelected =
-                                                    String(selectedCustomerId) === String(c.index || c.key || idx);
+                                                    String(
+                                                        selectedCustomerId,
+                                                    ) ===
+                                                    String(
+                                                        c.index || c.key || idx,
+                                                    );
                                                 return (
                                                     <tr
-                                                        key={c.key || c.index || idx}
+                                                        key={
+                                                            c.key ||
+                                                            c.index ||
+                                                            idx
+                                                        }
                                                         className={`hover:bg-slate-50/80 transition-colors ${
-                                                            isSelected ? 'bg-primary/5' : ''
+                                                            isSelected
+                                                                ? 'bg-primary/5'
+                                                                : ''
                                                         }`}
                                                     >
-                                                        <td className="py-3 px-3">
+                                                        <td className="px-3 py-3">
                                                             <div className="font-bold text-slate-800">
-                                                                {c.title ? `${c.title} ` : ''}
+                                                                {c.title
+                                                                    ? `${c.title} `
+                                                                    : ''}
                                                                 {c.full_name}
                                                             </div>
-                                                            <span className="text-[10px] text-slate-400">
-                                                                ID: {c.tracking_code || c.index || '-'}
+                                                            <span className="text-slate-400 text-[10px]">
+                                                                ID:{' '}
+                                                                {c.tracking_code ||
+                                                                    c.index ||
+                                                                    '-'}
                                                             </span>
                                                         </td>
-                                                        <td className="py-3 px-3 text-slate-600">
+                                                        <td className="px-3 py-3 text-slate-600">
                                                             {c.email || '-'}
                                                         </td>
-                                                        <td className="py-3 px-3 text-slate-600">
-                                                            {c.phone_number ? `${c.dial_code || ''} ${c.phone_number}` : '-'}
+                                                        <td className="px-3 py-3 text-slate-600">
+                                                            {c.phone_number
+                                                                ? `${c.dial_code || ''} ${c.phone_number}`
+                                                                : '-'}
                                                         </td>
-                                                        <td className="py-3 px-3 text-slate-600">
-                                                            {c.date_of_birth ? formatDate(c.date_of_birth) : '-'}
+                                                        <td className="px-3 py-3 text-slate-600">
+                                                            {c.date_of_birth
+                                                                ? formatDate(
+                                                                      c.date_of_birth,
+                                                                  )
+                                                                : '-'}
                                                         </td>
-                                                        <td className="py-3 px-3 text-right">
+                                                        <td className="px-3 py-3 text-right">
                                                             <PrimaryButton
                                                                 type="button"
                                                                 onClick={() => {
@@ -179,12 +227,19 @@ export default function SelectCustomerModal({
                                                                     onClose();
                                                                 }}
                                                                 className={`py-1.5 px-3 text-xs ${
-                                                                    isSelected ? 'bg-emerald-600 hover:bg-emerald-700' : ''
+                                                                    isSelected
+                                                                        ? 'bg-emerald-600 hover:bg-emerald-700'
+                                                                        : ''
                                                                 }`}
                                                             >
                                                                 {isSelected ? (
-                                                                    <span className="flex items-center gap-1">
-                                                                        <Check size={12} /> Selected
+                                                                    <span className="gap-1 flex items-center">
+                                                                        <Check
+                                                                            size={
+                                                                                12
+                                                                            }
+                                                                        />{' '}
+                                                                        Selected
                                                                     </span>
                                                                 ) : (
                                                                     'Select'
@@ -199,16 +254,24 @@ export default function SelectCustomerModal({
                                 )}
                             </div>
 
-                            {pageData && pageData.links && pageData.links.length > 3 && (
-                                <TablePaginate
-                                    page={pageData}
-                                    loading={loading}
-                                    onNavigate={(url) => fetchCustomers(url)}
-                                />
-                            )}
+                            {pageData &&
+                                pageData.links &&
+                                pageData.links.length > 3 && (
+                                    <TablePaginate
+                                        page={pageData}
+                                        loading={loading}
+                                        onNavigate={(url) =>
+                                            fetchCustomers(url)
+                                        }
+                                    />
+                                )}
 
-                            <div className="px-6 py-3 border-t border-slate-100 bg-slate-50 flex justify-end">
-                                <SecondaryButton type="button" onClick={onClose} className="text-xs py-2 px-4">
+                            <div className="px-6 py-3 border-slate-100 bg-slate-50 flex justify-end border-t">
+                                <SecondaryButton
+                                    type="button"
+                                    onClick={onClose}
+                                    className="px-4 py-2 text-xs"
+                                >
                                     Close
                                 </SecondaryButton>
                             </div>

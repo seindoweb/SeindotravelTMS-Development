@@ -20,6 +20,7 @@ import {
 import { useState } from 'react';
 import BookReferenceModal from './BookReferenceModal';
 import FloatingIssuedAction from './FloatingIssuedAction';
+import { formatRupiah } from '@/helpers';
 
 export interface HotelOrderDetailProps {
     orderProductAttribute?: any;
@@ -28,21 +29,6 @@ export interface HotelOrderDetailProps {
 
 const StatusBadge = ({ status }: { status?: string }) => {
     return <OrderStatusBadge status={status} size="lg" />;
-};
-
-const formatRupiah = (amount: number | string | undefined | null) => {
-    const num =
-        typeof amount === 'string'
-            ? parseFloat(amount) || 0
-            : Number(amount) || 0;
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    })
-        .format(num)
-        .replace('Rp', 'Rp ');
 };
 
 const formatPaymentMethod = (type?: string) => {
@@ -275,7 +261,9 @@ export default function HotelOrdersDetail({
                         </div>
 
                         <div className="px-6 py-4 bg-gray-50 sm:flex-row gap-3 mt-auto flex flex-col items-center justify-end border-t border-[#E2E8F0]">
-                            {['C', 'D'].includes(orderStatus?.toUpperCase() ?? '') && (
+                            {['C', 'D'].includes(
+                                orderStatus?.toUpperCase() ?? '',
+                            ) && (
                                 <button
                                     type="button"
                                     onClick={() => setIsBookRefModalOpen(true)}

@@ -114,7 +114,7 @@ export default function SelectTravellerModal({
                         <DialogPanel className="max-w-4xl bg-white rounded-2xl shadow-2xl border-slate-200 flex max-h-[90vh] w-full flex-col overflow-hidden border">
                             <div className="px-6 py-4 border-slate-100 bg-slate-50/50 flex items-center justify-between border-b">
                                 <div className="gap-3 flex items-center">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-bold flex items-center justify-center">
+                                    <div className="w-10 h-10 font-bold rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                                         <User size={20} />
                                     </div>
                                     <div>
@@ -138,7 +138,7 @@ export default function SelectTravellerModal({
                             </div>
 
                             {customerUserId && (
-                                <div className="p-4 border-slate-100 bg-white border-b">
+                                <div className="p-4 bg-white border-slate-100 border-b">
                                     <div className="relative">
                                         <Search
                                             size={16}
@@ -147,7 +147,7 @@ export default function SelectTravellerModal({
                                         <TextInput
                                             type="text"
                                             placeholder="Search by traveller name..."
-                                            className="pl-10 pr-4 text-xs sm:text-sm py-2 disabled:bg-slate-50 disabled:text-slate-400 w-full"
+                                            className="py-2 pl-10 pr-4 text-xs sm:text-sm disabled:bg-slate-50 disabled:text-slate-400 w-full"
                                             value={search}
                                             onChange={(e) =>
                                                 setSearch(e.target.value)
@@ -159,21 +159,21 @@ export default function SelectTravellerModal({
 
                             <div className="p-4 flex-1 overflow-x-auto">
                                 {!customerUserId ? (
-                                    <div className="py-16 text-slate-400 text-xs gap-2 flex flex-col items-center justify-center text-center">
-                                        <div className="w-12 h-12 bg-slate-100 text-slate-400 mb-1 flex items-center justify-center rounded-full">
+                                    <div className="gap-2 py-16 text-xs text-slate-400 flex flex-col items-center justify-center text-center">
+                                        <div className="w-12 h-12 mb-1 bg-slate-100 text-slate-400 flex items-center justify-center rounded-full">
                                             <UserX size={24} />
                                         </div>
-                                        <span className="font-bold text-slate-700 text-sm">
+                                        <span className="text-sm font-bold text-slate-700">
                                             Customer Belum Dipilih
                                         </span>
-                                        <span className="text-slate-400 max-w-sm">
+                                        <span className="max-w-sm text-slate-400">
                                             Silakan pilih customer terlebih
                                             dahulu untuk melihat daftar
                                             traveller yang terelasi.
                                         </span>
                                     </div>
                                 ) : loading && !pageData ? (
-                                    <div className="py-16 text-slate-400 gap-3 flex flex-col items-center justify-center">
+                                    <div className="gap-3 py-16 text-slate-400 flex flex-col items-center justify-center">
                                         <Loader2
                                             size={28}
                                             className="animate-spin text-primary"
@@ -183,20 +183,20 @@ export default function SelectTravellerModal({
                                         </span>
                                     </div>
                                 ) : travellers.length === 0 ? (
-                                    <div className="py-16 text-slate-400 text-xs text-center">
+                                    <div className="py-16 text-xs text-slate-400 text-center">
                                         No traveller found for this customer.
                                     </div>
                                 ) : (
                                     <table className="text-xs w-full text-left">
                                         <thead>
                                             <tr className="border-slate-100 text-slate-400 tracking-wider border-b text-[10px] uppercase">
-                                                <th className="py-3 px-3 font-bold">
+                                                <th className="px-3 py-3 font-bold">
                                                     Traveller Name
                                                 </th>
-                                                <th className="py-3 px-3 font-bold">
+                                                <th className="px-3 py-3 font-bold">
                                                     Birthdate
                                                 </th>
-                                                <th className="py-3 px-3 font-bold text-right">
+                                                <th className="px-3 py-3 font-bold text-right">
                                                     Action
                                                 </th>
                                             </tr>
@@ -223,7 +223,7 @@ export default function SelectTravellerModal({
                                                                 : ''
                                                         }`}
                                                     >
-                                                        <td className="py-3 px-3">
+                                                        <td className="px-3 py-3">
                                                             <div className="font-bold text-slate-800">
                                                                 {t.title
                                                                     ? `${t.title} `
@@ -232,11 +232,11 @@ export default function SelectTravellerModal({
                                                                 {t.last_name}
                                                             </div>
                                                         </td>
-                                                        <td className="py-3 px-3 text-slate-600">
+                                                        <td className="px-3 py-3 text-slate-600">
                                                             {t.date_of_birth ||
                                                                 '-'}
                                                         </td>
-                                                        <td className="py-3 px-3 text-right">
+                                                        <td className="px-3 py-3 text-right">
                                                             <PrimaryButton
                                                                 type="button"
                                                                 onClick={() => {
@@ -288,7 +288,7 @@ export default function SelectTravellerModal({
                                 <SecondaryButton
                                     type="button"
                                     onClick={onClose}
-                                    className="text-xs py-2 px-4"
+                                    className="px-4 py-2 text-xs"
                                 >
                                     Close
                                 </SecondaryButton>

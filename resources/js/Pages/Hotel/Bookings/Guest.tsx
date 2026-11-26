@@ -1,14 +1,13 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
+import { TravellerProps, UserProps } from '@/types';
 import {
     GuestPageProps,
     HotelRoomDetail,
     PrebookRoomData,
     PrebookRoomParam,
     RoomOccupancy,
-    TravellerProps,
-    UserProps,
-} from '@/types';
+} from '@/types/index-hotel';
 import { Head, router } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, Check } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -21,19 +20,8 @@ import GuestSkeleton from './Partials/GuestSkeleton';
 import GuestSpecialRequests from './Partials/GuestSpecialRequests';
 import SelectCustomerModal from './Partials/SelectCustomerModal';
 import SelectTravellerModal from './Partials/SelectTravellerModal';
+import { formatRupiah } from '@/helpers';
 export type { PaxItem, RoomPaxGroup };
-
-const formatRupiah = (amount: number | string) => {
-    const num = typeof amount === 'string' ? parseFloat(amount) || 0 : amount;
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    })
-        .format(num)
-        .replace('Rp', '');
-};
 
 const countNights = (ci?: string, co?: string): number => {
     if (!ci || !co) return 1;
@@ -596,7 +584,7 @@ export default function Guest(props: GuestPageProps) {
                 payload,
             );
 
-            const responseData = res.data;;
+            const responseData = res.data;
 
             const responseSessionId =
                 responseData?.data?.results?.sessionID ||

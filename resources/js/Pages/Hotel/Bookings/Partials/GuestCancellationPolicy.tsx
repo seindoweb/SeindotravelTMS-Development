@@ -1,4 +1,4 @@
-import { HotelRoomDetail } from '@/types';
+import { HotelRoomDetail } from '@/types/index-hotel';
 import { AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
 
 export interface GuestCancellationPolicyProps {
@@ -34,63 +34,86 @@ export default function GuestCancellationPolicy({
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-[#E2E8F0] p-5 sm:p-6 shadow-2xs space-y-4">
-            <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-primary uppercase tracking-wider">
+        <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4 border border-[#E2E8F0]">
+            <div className="gap-2 flex items-center">
+                <h3 className="text-sm font-bold tracking-wider text-primary uppercase">
                     Cancellation Policy & Terms
                 </h3>
             </div>
 
-           {selectedRoom.cancellationPolicies && selectedRoom.cancellationPolicies.length > 0 && (
-            <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 sm:p-5 space-y-3.5">
-                <div className="space-y-3.5 pl-1">
-                    {selectedRoom.cancellationPolicies.map((policy, idx) => {
-                        const penalty = parseFloat(String(policy.percent ?? policy.value ?? 0)) || 0;
-                        const isFree = penalty === 0 || policy.type === 'freeCancellation';
+            {selectedRoom.cancellationPolicies &&
+                selectedRoom.cancellationPolicies.length > 0 && (
+                    <div className="bg-slate-50/80 border-slate-200/80 rounded-2xl p-4 sm:p-5 space-y-3.5 border">
+                        <div className="space-y-3.5 pl-1">
+                            {selectedRoom.cancellationPolicies.map(
+                                (policy, idx) => {
+                                    const penalty =
+                                        parseFloat(
+                                            String(
+                                                policy.percent ??
+                                                    policy.value ??
+                                                    0,
+                                            ),
+                                        ) || 0;
+                                    const isFree =
+                                        penalty === 0 ||
+                                        policy.type === 'freeCancellation';
 
-                        return (
-                            <div key={idx} className="space-y-1">
-                                <div className="flex items-center gap-2">
-                                    <span
-                                        className={`w-2.5 h-2.5 rounded-full shrink-0 ${
-                                            isFree
-                                                ? 'bg-emerald-500 ring-4 ring-emerald-100'
-                                                                : 'bg-rose-500 ring-4 ring-rose-100'
-                                                        }`}
-                                                    />
-                                                    <span className="text-xs sm:text-sm font-bold text-slate-800 tracking-tight">
-                                                        {formatPolicyDate(policy.fromDate)} – {formatPolicyDate(policy.toDate)}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-start gap-1.5 pl-4 sm:pl-5 text-xs">
-                                                    <span className="text-slate-400 font-mono select-none">└</span>
-                                                    <span
-                                                        className={
-                                                            isFree
-                                                                ? 'text-emerald-700 font-medium'
-                                                                : 'text-slate-600'
-                                                        }
-                                                    >
-                                                        {isFree
-                                                            ? 'Free cancellation. No penalty fees yet.'
-                                                            : `Cancellation penalty of ${penalty}% of the total price.`}
-                                                    </span>
-                                                </div>
+                                    return (
+                                        <div key={idx} className="space-y-1">
+                                            <div className="gap-2 flex items-center">
+                                                <span
+                                                    className={`w-2.5 h-2.5 shrink-0 rounded-full ${
+                                                        isFree
+                                                            ? 'bg-emerald-500 ring-emerald-100 ring-4'
+                                                            : 'bg-rose-500 ring-rose-100 ring-4'
+                                                    }`}
+                                                />
+                                                <span className="text-xs font-bold tracking-tight sm:text-sm text-slate-800">
+                                                    {formatPolicyDate(
+                                                        policy.fromDate,
+                                                    )}{' '}
+                                                    –{' '}
+                                                    {formatPolicyDate(
+                                                        policy.toDate,
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="gap-1.5 pl-4 sm:pl-5 text-xs flex items-start">
+                                                <span className="font-mono text-slate-400 select-none">
+                                                    └
+                                                </span>
+                                                <span
+                                                    className={
+                                                        isFree
+                                                            ? 'text-emerald-700 font-medium'
+                                                            : 'text-slate-600'
+                                                    }
+                                                >
+                                                    {isFree
+                                                        ? 'Free cancellation. No penalty fees yet.'
+                                                        : `Cancellation penalty of ${penalty}% of the total price.`}
+                                                </span>
+                                            </div>
                                         </div>
                                     );
-                                })}
-                            </div>
+                                },
+                            )}
                         </div>
-                    )}
+                    </div>
+                )}
 
             {selectedRoom.message && selectedRoom.message.trim() !== '' && (
-                <div className="flex items-start gap-2.5 bg-amber-50/90 border border-amber-200/80 rounded-xl p-3.5 text-xs text-amber-900">
-                    <AlertCircle size={16} className="text-amber-600 mt-0.5 shrink-0" />
+                <div className="gap-2.5 bg-amber-50/90 border-amber-200/80 rounded-xl p-3.5 text-xs text-amber-900 flex items-start border">
+                    <AlertCircle
+                        size={16}
+                        className="text-amber-600 mt-0.5 shrink-0"
+                    />
                     <div>
-                        <span className="font-bold text-amber-950 block mb-0.5">
-                           Additional Notes from the Hotel:
+                        <span className="font-bold text-amber-950 mb-0.5 block">
+                            Additional Notes from the Hotel:
                         </span>
-                        <p className="text-amber-800 leading-relaxed whitespace-pre-line">
+                        <p className="leading-relaxed text-amber-800 whitespace-pre-line">
                             {selectedRoom.message}
                         </p>
                     </div>
