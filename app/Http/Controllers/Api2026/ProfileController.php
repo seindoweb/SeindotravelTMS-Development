@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api2026;
 
 use App\Constants\SystemConstant;
+use App\Events\PasswordActivityEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api2026\UserResource;
 use App\Models\City;
@@ -164,6 +165,7 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->newPassword);
 
             if ($user->save()) {
+                PasswordActivityEvent::dispatch($user->email, SystemConstant::PASSWORD_TYPE_ACTIVITY_PASS_CHA);
                 return ResponseFormatter::success(
                     [
                         'info' => 'Password changed successfully.',

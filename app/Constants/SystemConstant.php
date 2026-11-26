@@ -25,4 +25,8 @@ final class SystemConstant
     public const NOTIFICATION_PLATFORM_WEBMOBILE = 2;
 
     public const NOTIFICATION_PLATFORM_WEBMOBILECRM = 3;
+
+    // PASSWORD TYPE ACTIVITY
+    public const PASSWORD_TYPE_ACTIVITY_REQ_OTP = "request-otp";
+    public const PASSWORD_TYPE_ACTIVITY_PASS_CHA = "password-changed";
 }

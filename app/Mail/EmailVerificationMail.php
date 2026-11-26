@@ -37,7 +37,7 @@ class EmailVerificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Email Verification',
+            subject: 'Seindo Travel – Email Verification',
         );
     }
 

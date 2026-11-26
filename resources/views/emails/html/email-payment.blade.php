@@ -19,18 +19,9 @@
     </table>
 
     <p style="font-size: 14px; color: #888888;">
-        Informasi ini dikirim oleh <strong>Seindo Travel</strong>. Silakan periksa detail transaksi dan status pembayaran
-        terbaru melalui
-        website Seindo Travel atau aplikasi Android dan iOS kami.
+        This information is sent by <strong>Seindo Travel</strong>. Please check your transaction details and the latest
+        payment status via the Seindo Travel website or our Android and iOS apps.
     </p>
 
-    <div class="divider"></div>
-
-    <p style="margin-top: 30px;">
-        Sambil merencanakan liburan, yuk intip promo menarik dari kami!
-    </p>
-
-    <div style="margin: 35px 0;">
-        <a href="#" class="btn">LIHAT PROMO KAMI</a>
-    </div>
+    @include('emails.component.check-out-our-promotions')
 @endsection
