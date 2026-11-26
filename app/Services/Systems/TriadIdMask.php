@@ -84,8 +84,7 @@ class TriadIdMask
     /**
      * encode
      *
-     * @param  mixed $number
-     * @return string
+     * @param  mixed  $number
      */
     public static function encode(int $number): string
     {
@@ -119,8 +118,7 @@ class TriadIdMask
     /**
      * encodeLeadingGroup
      *
-     * @param  mixed $number
-     * @return string
+     * @param  mixed  $number
      */
     private static function encodeLeadingGroup(int $number): string
     {
@@ -132,7 +130,7 @@ class TriadIdMask
             $tens = intdiv($number, 10);
             $ones = $number % 10;
 
-            return self::$cr[$tens] . '-' . self::$cv[$ones];
+            return self::$cr[$tens].'-'.self::$cv[$ones];
         }
 
         return self::encodeLastGroup($number);
@@ -141,8 +139,7 @@ class TriadIdMask
     /**
      * encodeLastGroup
      *
-     * @param  mixed $number
-     * @return string
+     * @param  mixed  $number
      */
     private static function encodeLastGroup(int $number): string
     {
@@ -152,14 +149,13 @@ class TriadIdMask
         $tens = (int) $number[1];
         $ones = (int) $number[2];
 
-        return self::$cn[$hundreds] . '-' . self::$cr[$tens] . '-' . self::$cv[$ones];
+        return self::$cn[$hundreds].'-'.self::$cr[$tens].'-'.self::$cv[$ones];
     }
 
     /**
      * decode
      *
-     * @param  mixed $code
-     * @return int
+     * @param  mixed  $code
      */
     public static function decode(string $code): int
     {
@@ -174,7 +170,7 @@ class TriadIdMask
 
         $groups = [];
 
-        if (!empty($beforeParts)) {
+        if (! empty($beforeParts)) {
             $remaining = count($beforeParts) % 3;
 
             if ($remaining === 0) {
@@ -209,8 +205,7 @@ class TriadIdMask
     /**
      * decodeLeadingGroup
      *
-     * @param  mixed $parts
-     * @return int
+     * @param  mixed  $parts
      */
     private static function decodeLeadingGroup(array $parts): int
     {
@@ -235,8 +230,7 @@ class TriadIdMask
     /**
      * decodeLastGroup
      *
-     * @param  mixed $parts
-     * @return int
+     * @param  mixed  $parts
      */
     private static function decodeLastGroup(array $parts): int
     {
@@ -254,9 +248,8 @@ class TriadIdMask
     /**
      * decodeByMap
      *
-     * @param  mixed $value
-     * @param  mixed $map
-     * @return int
+     * @param  mixed  $value
+     * @param  mixed  $map
      */
     private static function decodeByMap(string $value, array $map): int
     {

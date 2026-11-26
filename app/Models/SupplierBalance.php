@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Models\Concerns\LogsActivity;
-use Spatie\Activitylog\Support\LogOptions;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Services\Systems\TriadIdMask;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Crypt;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class SupplierBalance extends Model
 {
-    use LogsActivity, HasFactory;
+    use HasFactory, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,7 @@ class SupplierBalance extends Model
         'balance_type',
         'initial_balance',
         'current_balance',
-        'is_active'
+        'is_active',
     ];
 
     /**
@@ -62,8 +62,6 @@ class SupplierBalance extends Model
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

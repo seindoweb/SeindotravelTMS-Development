@@ -79,6 +79,5 @@ return new class extends Migration
      * balance_before  = 3_000_000
      * balance_after   = 1_500_000
      * source          = booking
-     *
      */
 };

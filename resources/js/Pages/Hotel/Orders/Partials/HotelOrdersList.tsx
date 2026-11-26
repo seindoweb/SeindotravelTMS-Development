@@ -1,15 +1,10 @@
 import OrderStatusBadge from '@/Components/OrderStatusBadge';
 import TableActionMenu from '@/Components/TableActionMenu';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
-import { Paginate } from '@/types';
+import { formatDate, formatTime } from '@/helpers';
+import { OrderProductAttributeProps, Paginate } from '@/types';
 import { router } from '@inertiajs/react';
-import {
-    Download,
-    Edit,
-    Eye,
-    Filter,
-    Inbox,
-} from 'lucide-react';
+import { Download, Edit, Eye, Filter, Inbox, Printer } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
 export interface OrderUser {
@@ -23,44 +18,8 @@ export interface OrderCreator {
     full_name: string;
 }
 
-export interface OrderProductAttributeItem {
-    id: number;
-    order_id: number;
-    code: string;
-    product_attribute_id: number;
-    order_status: string;
-    created_at: string;
-    updated_at: string;
-    hotel_booking?: any;
-}
-
-export interface HotelOrderItem {
-    id: number;
-    invoice_number: string;
-    user_id: number;
-    base_currency_code: string;
-    subtotal_base_amount: string | number;
-    total_base_amount: string | number;
-    currency_code: string;
-    total_amount: string | number;
-    type_of_payment: string;
-    payment_status: string;
-    payment_url?: string | null;
-    system: string;
-    expired_at?: string | null;
-    created_by?: number | null;
-    updated_by?: number | null;
-    created_at: string;
-    updated_at: string;
-    index?: string;
-    key?: string;
-    user?: OrderUser | null;
-    creator?: OrderCreator | null;
-    order_product_attributes?: OrderProductAttributeItem[];
-}
-
 export interface HotelOrdersListProps {
-    orders?: Paginate<HotelOrderItem>;
+    orders?: Paginate<OrderProductAttributeProps>;
     filters?: {
         search?: string;
     };
@@ -99,53 +58,10 @@ const PaymentStatusText = ({ status }: { status?: string }) => {
     );
 };
 
-const formatPaymentMethod = (type?: string) => {
-    switch (type) {
-        case 'CH':
-            return 'Cash';
-        case 'TF':
-            return 'Bank Transfer';
-        case 'PG':
-            return 'Online Pay';
-        case 'UC':
-            return 'User Credit';
-        default:
-            return type || 'Manual';
-    }
-};
-
-const formatDate = (dateString?: string) => {
-    if (!dateString) return { date: '-', time: '-' };
-    const d = new Date(dateString);
-    if (isNaN(d.getTime())) return { date: '-', time: '-' };
-
-    const day = String(d.getDate()).padStart(2, '0');
-    const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'Mei',
-        'Jun',
-        'Jul',
-        'Agu',
-        'Sep',
-        'Okt',
-        'Nov',
-        'Des',
-    ];
-    const month = months[d.getMonth()];
-    const year = String(d.getFullYear()).slice(-2);
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-
-    return {
-        date: `${day} ${month} '${year}`,
-        time: `${hours}:${minutes}`,
-    };
-};
-
-export default function HotelOrdersList({ orders, filters }: HotelOrdersListProps) {
+export default function HotelOrdersList({
+    orders,
+    filters,
+}: HotelOrdersListProps) {
     const [searchQuery, setSearchQuery] = useState(filters?.search || '');
     const isFirstRender = useRef(true);
 
@@ -166,12 +82,12 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    const orderList = orders?.data || [];
-    const totalOrders = orders?.total ?? orderList.length;
+    const orderAttList = orders?.data || [];
+    const totalOrders = orders?.total ?? orderAttList.length;
 
     return (
         <div className="mt-6">
-            <div className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-[#E2E8F0]">
                 <TableHeader
                     title="Hotel Orders List"
                     subtitle={
@@ -195,40 +111,40 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                 />
 
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full border-collapse text-left">
                         <thead>
-                            <tr className="border-b border-[#E2E8F0] bg-white">
-                                <th className="py-4 px-6 text-[10px] font-bold text-quaternary uppercase tracking-wider whitespace-nowrap">
+                            <tr className="bg-white border-b border-[#E2E8F0]">
+                                <th className="py-4 px-6 font-bold text-quaternary tracking-wider text-[10px] whitespace-nowrap uppercase">
                                     Customer
                                 </th>
-                                <th className="py-4 px-6 text-[10px] font-bold text-quaternary uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-4 px-6 font-bold text-quaternary tracking-wider text-[10px] whitespace-nowrap uppercase">
                                     Order Code
                                 </th>
-                                <th className="py-4 px-6 text-[10px] font-bold text-quaternary uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-4 px-6 font-bold text-quaternary tracking-wider text-[10px] whitespace-nowrap uppercase">
                                     Status
                                 </th>
-                                <th className="py-4 px-6 text-[10px] font-bold text-quaternary uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-4 px-6 font-bold text-quaternary tracking-wider text-[10px] whitespace-nowrap uppercase">
                                     Payment
                                 </th>
-                                <th className="py-4 px-6 text-[10px] font-bold text-quaternary uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-4 px-6 font-bold text-quaternary tracking-wider text-[10px] whitespace-nowrap uppercase">
                                     Admin
                                 </th>
-                                <th className="py-4 px-6 text-[10px] font-bold text-quaternary uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-4 px-6 font-bold text-quaternary tracking-wider text-[10px] whitespace-nowrap uppercase">
                                     Order Date
                                 </th>
-                                <th className="py-4 px-6 text-[10px] font-bold text-quaternary uppercase tracking-wider whitespace-nowrap text-right">
+                                <th className="py-4 px-6 font-bold text-quaternary tracking-wider text-right text-[10px] whitespace-nowrap uppercase">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[#E2E8F0]">
-                            {orderList.length === 0 ? (
+                            {orderAttList.length === 0 ? (
                                 <tr>
                                     <td
                                         colSpan={7}
-                                        className="py-12 px-6 text-center text-quaternary"
+                                        className="px-6 py-12 text-quaternary text-center"
                                     >
-                                        <div className="flex flex-col items-center justify-center gap-2">
+                                        <div className="gap-2 flex flex-col items-center justify-center">
                                             <Inbox
                                                 size={36}
                                                 className="text-gray-300"
@@ -240,92 +156,84 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                                     </td>
                                 </tr>
                             ) : (
-                                orderList.map((order) => {
-                                    const productAttr =
-                                        order.order_product_attributes?.[0];
-                                    const rawCode =
-                                        productAttr?.code ||
-                                        order.invoice_number ||
-                                        String(order.id);
-                                    const urlCode = rawCode.replace(/\//g, '-');
-                                    const { date, time } = formatDate(
-                                        order.created_at,
-                                    );
-                                    const customerName =
-                                        order.user?.full_name || 'No Customer';
-                                    const customerEmail =
-                                        order.user?.email || '-';
-                                    const adminName =
-                                        order.creator?.full_name || 'Customer';
-
+                                orderAttList.map((orderAtt) => {
                                     return (
                                         <tr
-                                            key={order.id}
-                                            className="hover:bg-gray-50/50 transition-colors group"
+                                            key={orderAtt.index}
+                                            className="hover:bg-gray-50/50 group transition-colors"
                                         >
-                                            <td className="py-4 px-6">
+                                            <td className="px-6 py-4">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-xs text-primary">
-                                                        {customerName}
+                                                    <span className="text-xs font-bold text-primary">
+                                                        {orderAtt?.order?.user
+                                                            .full_name ?? 'n/a'}
                                                     </span>
                                                     <span className="text-xs text-quaternary">
-                                                        {customerEmail}
+                                                        {orderAtt?.order?.user
+                                                            .email ?? 'n/a'}
                                                     </span>
                                                 </div>
                                             </td>
 
-                                            <td className="py-4 px-6">
+                                            <td className="px-6 py-4">
                                                 <div
-                                                    className="inline-flex items-center px-2 py-1 bg-gray-100 rounded-md"
-                                                    title={rawCode}
+                                                    className="px-2 py-1 bg-gray-100 rounded-md inline-flex items-center"
+                                                    title={orderAtt.code}
                                                 >
-                                                    <span className="text-xs font-mono font-medium text-gray-700">
-                                                        {rawCode}
+                                                    <span className="font-mono text-xs font-medium text-gray-700">
+                                                        {orderAtt.code}
                                                     </span>
                                                 </div>
                                             </td>
 
-                                            <td className="py-4 px-6">
+                                            <td className="px-6 py-4">
                                                 <StatusBadge
                                                     status={
-                                                        productAttr?.order_status
+                                                        orderAtt?.order_status
                                                     }
                                                 />
                                             </td>
 
-                                            <td className="py-4 px-6">
-                                                <div className="flex flex-col gap-0.5">
+                                            <td className="px-6 py-4">
+                                                <div className="gap-0.5 flex flex-col">
                                                     <PaymentStatusText
                                                         status={
-                                                            order.payment_status
+                                                            orderAtt?.order
+                                                                ?.payment_status ??
+                                                            'n/a'
                                                         }
                                                     />
                                                     <span className="text-xs font-medium text-quaternary">
-                                                        {formatPaymentMethod(
-                                                            order.type_of_payment,
+                                                        {orderAtt?.order
+                                                            ?.type_of_payment_desc ??
+                                                            'n/a'}
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                <span className="text-xs font-medium text-primary">
+                                                    {orderAtt?.creator
+                                                        ?.full_name ?? 'n/a'}
+                                                </span>
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                <div className="sm:text-left flex flex-col text-right">
+                                                    <span className="text-xs font-bold text-primary">
+                                                        {formatDate(
+                                                            orderAtt.created_at,
+                                                        )}
+                                                    </span>
+                                                    <span className="text-xs text-quaternary">
+                                                        {formatTime(
+                                                            orderAtt.created_at,
                                                         )}
                                                     </span>
                                                 </div>
                                             </td>
 
-                                            <td className="py-4 px-6">
-                                                <span className="text-xs font-medium text-primary">
-                                                    {adminName}
-                                                </span>
-                                            </td>
-
-                                            <td className="py-4 px-6">
-                                                <div className="flex flex-col text-right sm:text-left">
-                                                    <span className="text-xs font-bold text-primary">
-                                                        {date}
-                                                    </span>
-                                                    <span className="text-xs text-quaternary">
-                                                        {time}
-                                                    </span>
-                                                </div>
-                                            </td>
-
-                                            <td className="py-4 px-6 text-right">
+                                            <td className="px-6 py-4 text-right">
                                                 <TableActionMenu
                                                     menuWidth="w-48"
                                                     groups={[
@@ -341,26 +249,26 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                                                                 ),
                                                                 href: route(
                                                                     'hotel.orders.orderDetails',
-                                                                    urlCode,
+                                                                    orderAtt.code_for_url,
                                                                 ),
                                                             },
+                                                        ],
+                                                        [
                                                             {
-                                                                label: 'Edit Order',
+                                                                label: 'Preview Voucher',
                                                                 icon: (
-                                                                    <Edit
+                                                                    <Printer
                                                                         size={
                                                                             16
                                                                         }
                                                                     />
                                                                 ),
-                                                                onClick: () =>
-                                                                    console.log(
-                                                                        'Edit order',
-                                                                        order.id,
-                                                                    ),
+                                                                target: '_blank',
+                                                                href: route(
+                                                                    'hotel.orders.orderPreviewPdf',
+                                                                    orderAtt.code_for_url,
+                                                                ),
                                                             },
-                                                        ],
-                                                        [
                                                             {
                                                                 label: 'Download PDF',
                                                                 icon: (
@@ -371,11 +279,11 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                                                                     />
                                                                 ),
                                                                 variant: 'info',
-                                                                onClick: () =>
-                                                                    console.log(
-                                                                        'Download PDF',
-                                                                        order.id,
-                                                                    ),
+                                                                target: '_blank',
+                                                                href: route(
+                                                                    'hotel.orders.orderDownloadPdf',
+                                                                    orderAtt.code_for_url,
+                                                                ),
                                                             },
                                                         ],
                                                     ]}
@@ -390,8 +298,8 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                 </div>
 
                 {orders && orders.links && orders.links.length > 3 && (
-                    <div className="px-6 py-4 border-t border-[#E2E8F0] bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <span className="text-sm text-quaternary font-medium">
+                    <div className="px-6 py-4 bg-gray-50/50 sm:flex-row gap-4 flex flex-col items-center justify-between border-t border-[#E2E8F0]">
+                        <span className="text-sm font-medium text-quaternary">
                             Showing{' '}
                             <span className="font-bold text-primary">
                                 {orders.from ?? 0}
@@ -406,7 +314,7 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                             </span>{' '}
                             entries
                         </span>
-                        <div className="flex gap-1 flex-wrap">
+                        <div className="gap-1 flex flex-wrap">
                             {orders.links.map((link, idx) => {
                                 const isPrev =
                                     link.label.includes('Previous') ||
@@ -425,7 +333,7 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                                         <button
                                             key={idx}
                                             disabled
-                                            className="px-3 py-1 border border-gray-200 bg-white text-gray-300 rounded-lg text-sm font-medium cursor-not-allowed"
+                                            className="px-3 py-1 text-sm font-medium text-gray-300 bg-white border-gray-200 rounded-lg cursor-not-allowed border"
                                         >
                                             {label}
                                         </button>
@@ -442,10 +350,10 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                                                 preserveState: true,
                                             })
                                         }
-                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                                        className={`px-3 py-1 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
                                             link.active
                                                 ? 'bg-primary text-white font-bold shadow-sm'
-                                                : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                                                : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50 border'
                                         }`}
                                     >
                                         {label}

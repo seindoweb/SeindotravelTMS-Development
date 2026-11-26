@@ -4,8 +4,6 @@ namespace App\Notifications;
 
 use App\Mail\EmailVerificationMail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class RegisterActivityNotification extends Notification
@@ -18,6 +16,7 @@ class RegisterActivityNotification extends Notification
      * @var mixed
      */
     public $platform;
+
     /**
      * offerData
      *
@@ -27,11 +26,12 @@ class RegisterActivityNotification extends Notification
 
     /**
      * Create a new notification instance.
-     * @param mixed $offerData
+     *
+     * @param  mixed  $offerData
      */
     public function __construct($offerData, $platform = null)
     {
-        $this->offerData  = $offerData;
+        $this->offerData = $offerData;
         $this->platform = $platform;
     }
 

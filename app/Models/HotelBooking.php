@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Illuminate\Support\Carbon;
+use Throwable;
 
 class HotelBooking extends Model
 {
-    use LogsActivity, CreatorAndUpdater, HasFactory;
+    use CreatorAndUpdater, HasFactory, LogsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -29,7 +31,7 @@ class HotelBooking extends Model
      *
      * @var array
      */
-    protected $appends = ['index', 'key'];
+    protected $appends = ['index', 'key', 'total_nights'];
 
     public function getIndexAttribute()
     {
@@ -38,13 +40,37 @@ class HotelBooking extends Model
 
     public function getKeyAttribute()
     {
-        return Crypt::encryptString($this->id); // atau logika dinamis
+        return Crypt::encryptString($this->id);
+    }
+
+    public function getTotalNightsAttribute()
+    {
+        if (empty($this->check_in) || empty($this->check_out)) {
+            return "n/a";
+        }
+
+        try {
+            $start = Carbon::parse($this->check_in)->startOfDay();
+            $end = Carbon::parse($this->check_out)->startOfDay();
+
+            // If the checkout time is earlier than the check-in time (reversed), it is still considered invalid (0).
+            if ($end->lt($start)) {
+                return "n/a";
+            }
+
+            // If the dates are the same, count it as 1 night
+            if ($end->eq($start)) {
+                return 1;
+            }
+
+            return (int) $start->diffInDays($end);
+        } catch (Throwable $e) {
+            return "n/a";
+        }
     }
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class LastActiveUser
 {
@@ -24,7 +24,7 @@ class LastActiveUser
 
             // Update setiap 5 menit menggunakan Carbon
             if (
-                !$user->last_active_at ||
+                ! $user->last_active_at ||
                 Carbon::parse($user->last_active_at)->lt(Carbon::now()->subMinutes(5))
             ) {
                 $user->forceFill([

@@ -166,13 +166,13 @@ class HotelBookingController extends Controller
                         $h_book->pic_guest_nationality = $res['params']['rooms']['picGuestNationality'];
 
                         if ($h_book->save()) {
-                            $h_book_det = new HotelBookingDetails();
+                            $h_book_det = new HotelBookingDetails;
 
                             $h_book_det->hotel_booking_id = $h_book->id;
                             $h_book_det->name = $res['results']['name'];
                             $h_book_det->code = $res['results']['code'];
                             $h_book_det->rating = $res['results']['rating'];
-                            $h_book_det->address_main =  $res['results']['locations']['addressMain'];
+                            $h_book_det->address_main = $res['results']['locations']['addressMain'];
                             $h_book_det->address_alternative = $res['results']['locations']['addressAlternative'];
                             $h_book_det->area_name = $res['results']['locations']['area'];
                             $h_book_det->destination_name = $res['results']['locations']['cityName'];

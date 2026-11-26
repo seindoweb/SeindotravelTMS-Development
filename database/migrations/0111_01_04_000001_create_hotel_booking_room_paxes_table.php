@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('salutation', 20)->nullable();
             $table->string('first_name', 100);
             $table->string('last_name', 100);
-            $table->string('age')->nullable()->default("");
+            $table->string('age')->nullable()->default('');
             $table->timestamps();
             $table->foreign('hotel_booking_room_id')
                 ->references('id')

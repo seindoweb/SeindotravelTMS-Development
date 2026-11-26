@@ -2,8 +2,8 @@
 
 namespace App\Services\Systems;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
 trait CreatorAndUpdater

@@ -12,7 +12,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class UserCreditTransaction extends Model
 {
-    use LogsActivity, CreatorAndUpdater;
+    use CreatorAndUpdater, LogsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -40,8 +40,6 @@ class UserCreditTransaction extends Model
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @extends Factory<User>
@@ -32,9 +31,9 @@ class UserFactory extends Factory
 
         // 2. Generate an identification number based on the type.
         $identityNumber = match ($identityType) {
-            'KTP'      => fake()->unique()->numerify('3171################'), // The unique 16-digit number of an Indonesian ID card (KTP)
+            'KTP' => fake()->unique()->numerify('3171################'), // The unique 16-digit number of an Indonesian ID card (KTP)
             'Passport' => fake()->unique()->regexify('[A-Z]{1}[0-9]{7}'),     // 1 uppercase letter followed by 7 digits (Example: B1234567)
-            'SIM'      => fake()->unique()->numerify('################'),     // New 16-digit driver's license number
+            'SIM' => fake()->unique()->numerify('################'),     // New 16-digit driver's license number
         };
 
         $country = Country::query()
@@ -51,16 +50,15 @@ class UserFactory extends Factory
             ->inRandomOrder()
             ->first();
 
-
         return [
             'title' => fake()->title(),
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'dial_code'   => fake()->regexify('\+[1-9]{1,3}'),
+            'dial_code' => fake()->regexify('\+[1-9]{1,3}'),
             'phone_number' => fake()->numerify('8##########'),
-            'identity_type'   => $identityType,
+            'identity_type' => $identityType,
             'identity_number' => $identityNumber,
             'gender' => fake()->randomElement(['Male', 'Female', 'Rather not say', 'Custom']),
             'place_of_birth' => fake()->country(),
@@ -81,7 +79,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

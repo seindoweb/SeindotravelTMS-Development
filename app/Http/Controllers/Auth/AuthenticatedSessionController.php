@@ -21,8 +21,8 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
-            'appLogo' => asset("assets/icons/icon-default.svg"),
-            'appName' => config('app.name')
+            'appLogo' => asset('assets/icons/icon-default.svg'),
+            'appName' => config('app.name'),
         ]);
     }
 

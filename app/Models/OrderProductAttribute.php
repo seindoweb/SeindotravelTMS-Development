@@ -26,7 +26,7 @@ class OrderProductAttribute extends Model
      *
      * @var array
      */
-    protected $appends = ['index', 'key'];
+    protected $appends = ['index', 'key', 'code_for_url'];
 
     public function getIndexAttribute()
     {
@@ -36,6 +36,11 @@ class OrderProductAttribute extends Model
     public function getKeyAttribute()
     {
         return Crypt::encryptString($this->id); // atau logika dinamis
+    }
+
+    public function getCodeForUrlAttribute()
+    {
+        return helperReplaceSeparator($this->code, '/', '-');
     }
 
     /**

@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 
 class VouchersTableSeeder extends Seeder
 {
-
     /**
      * Auto generated seed file
      *
@@ -14,20 +13,18 @@ class VouchersTableSeeder extends Seeder
      */
     public function run()
     {
-        
 
         \DB::table('vouchers')->delete();
-        
-        \DB::table('vouchers')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('vouchers')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'Seindo Travel Bagi-bagi Hadiah 50k untuk 100 Orang',
                 'product_attribute_id' => 1,
                 'image_path' => 'vouchers/lqyN11SI5CbtCvHMaOegyUkEEqZAuJaOFwX5dgxq.jpg',
                 'discount_type' => 'fixed',
                 'discount_value' => '50000.00',
-                'max_discount' => NULL,
+                'max_discount' => null,
                 'min_order_amount' => '0.00',
                 'start_at' => '2026-12-12 00:00:00',
                 'end_at' => '2027-12-12 00:00:00',
@@ -42,9 +39,8 @@ class VouchersTableSeeder extends Seeder
                 'updated_by' => 1,
                 'created_at' => '2026-11-23 14:25:31',
                 'updated_at' => '2026-11-23 14:25:31',
-            ),
-        ));
-        
-        
+            ],
+        ]);
+
     }
 }

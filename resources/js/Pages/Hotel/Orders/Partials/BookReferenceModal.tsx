@@ -127,12 +127,13 @@ export default function BookReferenceModal({
         'BOOKING'
     ).toUpperCase();
 
-    const mgBookingID = bookingDetails?.mgBookingID || orderProductAttribute?.reference_id || null;
+    const mgBookingID =
+        bookingDetails?.mgBookingID ||
+        orderProductAttribute?.reference_id ||
+        null;
     const agencyVoucherNo = bookingDetails?.agencyVoucherNo || null;
-    const sessionId =
-        results?.sessionID || hotelBooking?.session_id || '-';
-    const supplierHotelId =
-        apiHotel?.code || hotelBooking?.hotel || '-';
+    const sessionId = results?.sessionID || hotelBooking?.session_id || '-';
+    const supplierHotelId = apiHotel?.code || hotelBooking?.hotel || '-';
     const firstRateKey = rooms?.[0]?.rate_key || '-';
 
     const previewResults = hotelPreview?.results;
@@ -247,7 +248,9 @@ export default function BookReferenceModal({
                         );
                     });
                 } else {
-                    guestLines.push(`  Room ${r.roomNo || rIdx + 1}: ${leadGuestName}`);
+                    guestLines.push(
+                        `  Room ${r.roomNo || rIdx + 1}: ${leadGuestName}`,
+                    );
                 }
             });
         } else {
@@ -391,18 +394,22 @@ ${guestLines.join('\n')}`;
                                 {bookingStatus}
                             </span>
                             {isLoading && (
-                                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200">
-                                    <Loader2 size={11} className="animate-spin" />
+                                <span className="gap-1 font-semibold text-sky-600 bg-sky-50 px-2 py-0.5 border-sky-200 inline-flex items-center rounded-full border text-[11px]">
+                                    <Loader2
+                                        size={11}
+                                        className="animate-spin"
+                                    />
                                     Live Syncing...
                                 </span>
                             )}
                         </div>
                         <p className="text-xs text-slate-500">
-                            Rincian identitas reservasi untuk sinkronisasi supplier & operasional
+                            Rincian identitas reservasi untuk sinkronisasi
+                            supplier & operasional
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="gap-2 flex items-center">
                         <button
                             type="button"
                             onClick={fetchReservationDetails}
@@ -410,7 +417,10 @@ ${guestLines.join('\n')}`;
                             className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl cursor-pointer transition-colors disabled:opacity-50"
                             title="Refresh data dari supplier"
                         >
-                            <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
+                            <RefreshCw
+                                size={16}
+                                className={isLoading ? 'animate-spin' : ''}
+                            />
                         </button>
                         <button
                             type="button"
@@ -425,16 +435,24 @@ ${guestLines.join('\n')}`;
 
                 <div className="p-6 space-y-6 text-slate-800 overflow-y-auto">
                     {apiError && (
-                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5 flex items-start gap-3 text-xs text-amber-800">
-                            <AlertCircle size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                        <div className="rounded-xl border-amber-200 bg-amber-50 p-3.5 gap-3 text-xs text-amber-800 flex items-start border">
+                            <AlertCircle
+                                size={16}
+                                className="text-amber-600 mt-0.5 shrink-0"
+                            />
                             <div className="flex-1">
-                                <p className="font-semibold">Informasi Supplier Offline</p>
-                                <p className="text-amber-700 mt-0.5">{apiError}. Menampilkan data lokal tersimpan.</p>
+                                <p className="font-semibold">
+                                    Informasi Supplier Offline
+                                </p>
+                                <p className="text-amber-700 mt-0.5">
+                                    {apiError}. Menampilkan data lokal
+                                    tersimpan.
+                                </p>
                             </div>
                             <button
                                 type="button"
                                 onClick={fetchReservationDetails}
-                                className="font-bold underline cursor-pointer text-amber-900 hover:text-amber-950"
+                                className="font-bold text-amber-900 hover:text-amber-950 cursor-pointer underline"
                             >
                                 Coba Lagi
                             </button>
@@ -465,7 +483,9 @@ ${guestLines.join('\n')}`;
                                     >
                                         <div className="min-w-0 flex-1">
                                             <div className="gap-2 flex items-center">
-                                                <span className={`text-xs font-semibold ${item.highlight ? 'text-blue-900' : 'text-slate-600'}`}>
+                                                <span
+                                                    className={`text-xs font-semibold ${item.highlight ? 'text-blue-900' : 'text-slate-600'}`}
+                                                >
                                                     {item.label}
                                                 </span>
                                                 <span className="text-slate-400 sm:inline hidden text-[10px]">
@@ -474,7 +494,9 @@ ${guestLines.join('\n')}`;
                                             </div>
                                             <div
                                                 className={`font-mono text-xs font-bold mt-0.5 break-all select-all ${
-                                                    item.highlight ? 'text-blue-700' : 'text-slate-900'
+                                                    item.highlight
+                                                        ? 'text-blue-700'
+                                                        : 'text-slate-900'
                                                 }`}
                                                 title={item.value}
                                             >
@@ -553,7 +575,10 @@ ${guestLines.join('\n')}`;
                                 <span className="font-bold text-slate-400 tracking-wider block text-[10px] uppercase">
                                     Tipe Kamar
                                 </span>
-                                <span className="font-semibold text-slate-900 mt-0.5 block truncate" title={roomTypeName}>
+                                <span
+                                    className="font-semibold text-slate-900 mt-0.5 block truncate"
+                                    title={roomTypeName}
+                                >
                                     {roomTypeName}
                                 </span>
                             </div>
@@ -561,7 +586,10 @@ ${guestLines.join('\n')}`;
                                 <span className="font-bold text-slate-400 tracking-wider block text-[10px] uppercase">
                                     Paket Makan
                                 </span>
-                                <span className="font-semibold text-slate-900 mt-0.5 block truncate" title={mealPlanName}>
+                                <span
+                                    className="font-semibold text-slate-900 mt-0.5 block truncate"
+                                    title={mealPlanName}
+                                >
                                     {mealPlanName}
                                 </span>
                             </div>
@@ -579,112 +607,142 @@ ${guestLines.join('\n')}`;
                         </div>
 
                         <div className="space-y-2">
-                            {apiRoomsList.length > 0 ? (
-                                apiRoomsList.map((r: any, rIdx: number) => {
-                                    const paxes = r?.paxDetails?.pax || [];
-                                    const paxArr = Array.isArray(paxes) ? paxes : [paxes];
-                                    return (
-                                        <div
-                                            key={rIdx}
-                                            className="border-slate-200 rounded-xl p-3 bg-white space-y-1.5 border"
-                                        >
-                                            <div className="text-xs font-bold text-slate-700 flex items-center justify-between">
-                                                <span>
-                                                    Kamar {r.roomNo || rIdx + 1}
-                                                </span>
-                                                <span className="font-normal text-slate-400 text-[11px]">
-                                                    {r.noOfAdults || 1} Dewasa
-                                                    {r.noOfChild > 0 ? `, ${r.noOfChild} Anak` : ''}
-                                                </span>
-                                            </div>
+                            {apiRoomsList.length > 0
+                                ? apiRoomsList.map((r: any, rIdx: number) => {
+                                      const paxes = r?.paxDetails?.pax || [];
+                                      const paxArr = Array.isArray(paxes)
+                                          ? paxes
+                                          : [paxes];
+                                      return (
+                                          <div
+                                              key={rIdx}
+                                              className="border-slate-200 rounded-xl p-3 bg-white space-y-1.5 border"
+                                          >
+                                              <div className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                                                  <span>
+                                                      Kamar{' '}
+                                                      {r.roomNo || rIdx + 1}
+                                                  </span>
+                                                  <span className="font-normal text-slate-400 text-[11px]">
+                                                      {r.noOfAdults || 1} Dewasa
+                                                      {r.noOfChild > 0
+                                                          ? `, ${r.noOfChild} Anak`
+                                                          : ''}
+                                                  </span>
+                                              </div>
 
-                                            <div className="text-xs divide-slate-100 divide-y">
-                                                {paxArr.length > 0 ? (
-                                                    paxArr.map((p: any, pIdx: number) => (
-                                                        <div
-                                                            key={pIdx}
-                                                            className="py-1.5 text-slate-800 flex items-center justify-between"
-                                                        >
-                                                            <span className="font-medium">
-                                                                {p.salutation
-                                                                    ? p.salutation.trim() + ' '
-                                                                    : ''}
-                                                                {p.firstName}{' '}
-                                                                {p.lastName}
-                                                            </span>
-                                                            <span className="text-slate-400 text-[10px]">
-                                                                {pIdx === 0 && rIdx === 0
-                                                                    ? 'Lead Guest • '
-                                                                    : ''}
-                                                                {p.age ? `${p.age} th` : 'Adult'}
-                                                            </span>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="py-1 font-medium text-slate-600">
-                                                        {leadGuestName} (Lead Guest)
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                rooms.map((r: any, rIdx: number) => {
-                                    const paxes = r.hotel_booking_room_paxes || [];
-                                    return (
-                                        <div
-                                            key={rIdx}
-                                            className="border-slate-200 rounded-xl p-3 bg-white space-y-1.5 border"
-                                        >
-                                            <div className="text-xs font-bold text-slate-700 flex items-center justify-between">
-                                                <span>
-                                                    Kamar {r.room_no || rIdx + 1}
-                                                </span>
-                                                <span className="font-normal text-slate-400 text-[11px]">
-                                                    {r.no_of_adults || 1} Dewasa,{' '}
-                                                    {r.no_of_child || 0} Anak
-                                                </span>
-                                            </div>
+                                              <div className="text-xs divide-slate-100 divide-y">
+                                                  {paxArr.length > 0 ? (
+                                                      paxArr.map(
+                                                          (
+                                                              p: any,
+                                                              pIdx: number,
+                                                          ) => (
+                                                              <div
+                                                                  key={pIdx}
+                                                                  className="py-1.5 text-slate-800 flex items-center justify-between"
+                                                              >
+                                                                  <span className="font-medium">
+                                                                      {p.salutation
+                                                                          ? p.salutation.trim() +
+                                                                            ' '
+                                                                          : ''}
+                                                                      {
+                                                                          p.firstName
+                                                                      }{' '}
+                                                                      {
+                                                                          p.lastName
+                                                                      }
+                                                                  </span>
+                                                                  <span className="text-slate-400 text-[10px]">
+                                                                      {pIdx ===
+                                                                          0 &&
+                                                                      rIdx === 0
+                                                                          ? 'Lead Guest • '
+                                                                          : ''}
+                                                                      {p.age
+                                                                          ? `${p.age} th`
+                                                                          : 'Adult'}
+                                                                  </span>
+                                                              </div>
+                                                          ),
+                                                      )
+                                                  ) : (
+                                                      <div className="py-1 font-medium text-slate-600">
+                                                          {leadGuestName} (Lead
+                                                          Guest)
+                                                      </div>
+                                                  )}
+                                              </div>
+                                          </div>
+                                      );
+                                  })
+                                : rooms.map((r: any, rIdx: number) => {
+                                      const paxes =
+                                          r.hotel_booking_room_paxes || [];
+                                      return (
+                                          <div
+                                              key={rIdx}
+                                              className="border-slate-200 rounded-xl p-3 bg-white space-y-1.5 border"
+                                          >
+                                              <div className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                                                  <span>
+                                                      Kamar{' '}
+                                                      {r.room_no || rIdx + 1}
+                                                  </span>
+                                                  <span className="font-normal text-slate-400 text-[11px]">
+                                                      {r.no_of_adults || 1}{' '}
+                                                      Dewasa,{' '}
+                                                      {r.no_of_child || 0} Anak
+                                                  </span>
+                                              </div>
 
-                                            <div className="text-xs divide-slate-100 divide-y">
-                                                {paxes.length > 0 ? (
-                                                    paxes.map(
-                                                        (p: any, pIdx: number) => (
-                                                            <div
-                                                                key={pIdx}
-                                                                className="py-1.5 text-slate-800 flex items-center justify-between"
-                                                            >
-                                                                <span className="font-medium">
-                                                                    {p.salutation
-                                                                        ? p.salutation.trim() +
-                                                                          ' '
-                                                                        : ''}
-                                                                    {p.first_name}{' '}
-                                                                    {p.last_name}
-                                                                </span>
-                                                                <span className="text-slate-400 text-[10px]">
-                                                                    {pIdx === 0 &&
-                                                                    rIdx === 0
-                                                                        ? 'Lead Guest • '
-                                                                        : ''}
-                                                                    {p.age
-                                                                        ? `${p.age} th`
-                                                                        : 'Adult'}
-                                                                </span>
-                                                            </div>
-                                                        ),
-                                                    )
-                                                ) : (
-                                                    <div className="py-1 font-medium text-slate-600">
-                                                        {leadGuestName} (Lead Guest)
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            )}
+                                              <div className="text-xs divide-slate-100 divide-y">
+                                                  {paxes.length > 0 ? (
+                                                      paxes.map(
+                                                          (
+                                                              p: any,
+                                                              pIdx: number,
+                                                          ) => (
+                                                              <div
+                                                                  key={pIdx}
+                                                                  className="py-1.5 text-slate-800 flex items-center justify-between"
+                                                              >
+                                                                  <span className="font-medium">
+                                                                      {p.salutation
+                                                                          ? p.salutation.trim() +
+                                                                            ' '
+                                                                          : ''}
+                                                                      {
+                                                                          p.first_name
+                                                                      }{' '}
+                                                                      {
+                                                                          p.last_name
+                                                                      }
+                                                                  </span>
+                                                                  <span className="text-slate-400 text-[10px]">
+                                                                      {pIdx ===
+                                                                          0 &&
+                                                                      rIdx === 0
+                                                                          ? 'Lead Guest • '
+                                                                          : ''}
+                                                                      {p.age
+                                                                          ? `${p.age} th`
+                                                                          : 'Adult'}
+                                                                  </span>
+                                                              </div>
+                                                          ),
+                                                      )
+                                                  ) : (
+                                                      <div className="py-1 font-medium text-slate-600">
+                                                          {leadGuestName} (Lead
+                                                          Guest)
+                                                      </div>
+                                                  )}
+                                              </div>
+                                          </div>
+                                      );
+                                  })}
                         </div>
                     </div>
                 </div>
@@ -702,12 +760,14 @@ ${guestLines.join('\n')}`;
                         {copiedAll ? (
                             <>
                                 <Check size={14} className="stroke-[3]" />
-                                <span>Semua Rincian Berhasil Disalin!</span>
+                                <span>
+                                    All details have been successfully copied!
+                                </span>
                             </>
                         ) : (
                             <>
                                 <Copy size={14} />
-                                <span>Salin Semua Rincian</span>
+                                <span>Copy All Details</span>
                             </>
                         )}
                     </button>
@@ -715,18 +775,10 @@ ${guestLines.join('\n')}`;
                     <div className="gap-2 sm:w-auto flex w-full items-center">
                         <button
                             type="button"
-                            onClick={() => window.print()}
-                            className="sm:flex-initial gap-1.5 px-4 py-2 bg-white border-slate-300 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold inline-flex flex-1 cursor-pointer items-center justify-center border transition-colors"
-                        >
-                            <Printer size={14} />
-                            Cetak
-                        </button>
-                        <button
-                            type="button"
                             onClick={onClose}
                             className="px-5 py-2 text-xs font-bold text-white sm:flex-initial bg-slate-900 hover:bg-slate-800 rounded-xl flex-1 cursor-pointer transition-colors"
                         >
-                            Tutup
+                            Close
                         </button>
                     </div>
                 </div>

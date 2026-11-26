@@ -11,16 +11,15 @@ use App\Models\User;
 use App\Services\Systems\ResponseFormatter;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
     /**
      * login
      *
-     * @param Request $request
      * @return void
      */
     public function login(Request $request)
@@ -37,7 +36,7 @@ class AuthController extends Controller
             $credentials = $request->only('email', 'password');
             $credentials['email'] = Str::lower($credentials['email']);
 
-            if (!Auth::attempt($credentials)) {
+            if (! Auth::attempt($credentials)) {
                 return ResponseFormatter::error(
                     ['error' => 'Invalid username/password'],
                     'Authentication Failed',
@@ -48,34 +47,34 @@ class AuthController extends Controller
             // Invalid credentials
             $user = User::findOrFail(Auth::id());
 
-            if (!Hash::check($request->password, $user->password, [])) {
+            if (! Hash::check($request->password, $user->password, [])) {
                 throw new Exception('Invalid Credentials');
             }
 
             // Set Default Currency
-            if ($request->input('currency') != null || $request->input('currency') != "") {
+            if ($request->input('currency') != null || $request->input('currency') != '') {
                 $user->currency = $request->input('currency');
             }
 
             // Set Default Locale
-            if ($request->input('locale') != null || $request->input('locale') != "") {
+            if ($request->input('locale') != null || $request->input('locale') != '') {
                 $user->locale = $request->input('locale');
             }
 
             $user->save();
-
 
             // Send login activity notification
             LoginActivityEvent::dispatch($user);
 
             // Valid Credentials
             $tokenResults = $user->createToken('authToken')->plainTextToken;
+
             return ResponseFormatter::success(
                 [
                     'access_token' => $tokenResults,
                     'token_type' => 'Bearer',
                     'customer' => new UserResource($user),
-                    'info' => ''
+                    'info' => '',
                 ],
             );
         } catch (Exception $error) {
@@ -133,7 +132,7 @@ class AuthController extends Controller
                     'access_token' => $user->createToken('authToken')->plainTextToken,
                     'token_type' => 'Bearer',
                     'customer' => new UserResource($user),
-                    'info' => ''
+                    'info' => '',
                 ]
             );
         } catch (Exception $error) {

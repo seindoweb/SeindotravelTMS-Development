@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a0b5fc0ac47d28899b6c21896c919e8",
+    "content-hash": "a21a88c28febfce6856dde4a99473538",
     "packages": [
         {
             "name": "brick/math",
@@ -3602,7 +3602,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-23T14:34:09+00:00"
+            "time": "2026-11-23T14:34:09+00:00",
+            "published-time": "2026-11-23T14:34:23+00:00"
         },
         {
             "name": "spatie/laravel-activitylog",
@@ -3851,7 +3852,8 @@
                 "issues": "https://github.com/spatie/laravel-pdf/issues",
                 "source": "https://github.com/spatie/laravel-pdf/tree/2.14.0"
             },
-            "time": "2026-10-05T08:48:41+00:00"
+            "time": "2026-10-05T08:48:41+00:00",
+            "published-time": "2026-10-05T08:49:40+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -10572,5 +10574,5 @@
         "php": "^8.3"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }

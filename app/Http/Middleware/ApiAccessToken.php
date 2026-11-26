@@ -11,7 +11,7 @@ class ApiAccessToken
     /**
      * validate
      *
-     * @param  mixed $token
+     * @param  mixed  $token
      * @return void
      */
     private function validate($token)
@@ -43,18 +43,18 @@ class ApiAccessToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $prefixXendit = config('app.url') . "/api/xendit/";
-        $prefixCdn = config('app.url') . "/api/cdn/";
+        $prefixXendit = config('app.url').'/api/xendit/';
+        $prefixCdn = config('app.url').'/api/cdn/';
 
         if (strpos($request->url(), $prefixXendit) === 0) {
             // URL starts with the specified prefix
             return $next($request);
-        } else if (strpos($request->url(), $prefixCdn) === 0) {
+        } elseif (strpos($request->url(), $prefixCdn) === 0) {
             // URL starts with the specified prefix
             return $next($request);
         } else {
             // URL does not start with the specified prefix
-            if (!self::validate($request->header('Tms-Access-Token'))) {
+            if (! self::validate($request->header('Tms-Access-Token'))) {
                 return response('', 404);
             }
         }

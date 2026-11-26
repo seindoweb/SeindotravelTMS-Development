@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Pages\Users;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AdministratorsController extends Controller

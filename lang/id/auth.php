@@ -12,7 +12,6 @@ return [
     |
     */
 
-
     'login' => 'Masuk',
     'logout' => 'Keluar',
     'register' => 'Daftar',

@@ -16,11 +16,9 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-
     /**
      * fetchProfile
      *
-     * @param Request $request
      * @return void
      */
     public function fetchProfile(Request $request)
@@ -29,7 +27,7 @@ class ProfileController extends Controller
             return ResponseFormatter::success(
                 [
                     'customer' => new UserResource(Auth::user()),
-                    'info' => ''
+                    'info' => '',
                 ]
             );
         } catch (Exception $error) {
@@ -44,38 +42,37 @@ class ProfileController extends Controller
     /**
      * updateIdentity
      *
-     * @param Request $request
      * @return void
      */
     public function updateIdentity(Request $request)
     {
         try {
-            $user   = User::findOrFail(Auth::id());
+            $user = User::findOrFail(Auth::id());
 
             $rules = [
-                'title'             => ['required', 'string', 'max:255'],
-                'fullName'          => ['required', 'string', 'max:255'],
-                'dialCode'          => ['required', 'string'],
-                'phoneNumber'       => ['required', 'string', 'max:255'],
-                'gender'            => ['nullable', 'string', 'in:Male,Female,Rather not say,Custom'],
-                'placeOfBirth'      => ['nullable', 'string', 'max:255'],
-                'dateOfBirth'       => ['nullable', 'date', 'max:255'],
-                'identityType'      => ['nullable', 'string', 'max:255', 'in:KTP,Passport,SIM'],
-                'identityNumber'    => ['nullable', 'string', 'max:255'],
+                'title' => ['required', 'string', 'max:255'],
+                'fullName' => ['required', 'string', 'max:255'],
+                'dialCode' => ['required', 'string'],
+                'phoneNumber' => ['required', 'string', 'max:255'],
+                'gender' => ['nullable', 'string', 'in:Male,Female,Rather not say,Custom'],
+                'placeOfBirth' => ['nullable', 'string', 'max:255'],
+                'dateOfBirth' => ['nullable', 'date', 'max:255'],
+                'identityType' => ['nullable', 'string', 'max:255', 'in:KTP,Passport,SIM'],
+                'identityNumber' => ['nullable', 'string', 'max:255'],
             ];
 
             $request->validate($rules);
 
             $query = [
-                'title'             => $request->title,
-                'full_name'        => $request->fullName,
-                'dial_code'         => $request->dialCode,
-                'phone_number'      => $request->phoneNumber,
-                'gender'            => $request->gender,
-                'place_of_birth'    => $request->placeOfBirth,
-                'date_of_birth'     => $request->dateOfBirth,
-                'identity_type'     => $request->identityType,
-                'identity_number'     => $request->identityNumber,
+                'title' => $request->title,
+                'full_name' => $request->fullName,
+                'dial_code' => $request->dialCode,
+                'phone_number' => $request->phoneNumber,
+                'gender' => $request->gender,
+                'place_of_birth' => $request->placeOfBirth,
+                'date_of_birth' => $request->dateOfBirth,
+                'identity_type' => $request->identityType,
+                'identity_number' => $request->identityNumber,
             ];
 
             $user->update($query);
@@ -83,7 +80,7 @@ class ProfileController extends Controller
             return ResponseFormatter::success(
                 [
                     'customer' => new UserResource($user),
-                    'info' => 'Identity updated successfully.'
+                    'info' => 'Identity updated successfully.',
                 ]
             );
         } catch (Exception $error) {
@@ -98,25 +95,24 @@ class ProfileController extends Controller
     /**
      * updateAddress
      *
-     * @param Request $request
      * @return void
      */
     public function updateAddress(Request $request)
     {
         try {
-            $user   = User::findOrFail(Auth::id());
+            $user = User::findOrFail(Auth::id());
 
             $rules = [
-                'locationId'        => ['nullable', 'numeric'],
-                'address'           => ['nullable', 'string', 'max:255'],
-                'zipCode'           => ['nullable', 'string', 'max:255'],
+                'locationId' => ['nullable', 'numeric'],
+                'address' => ['nullable', 'string', 'max:255'],
+                'zipCode' => ['nullable', 'string', 'max:255'],
             ];
 
             $request->validate($rules);
 
             $query = [
-                'address'           => $request->address,
-                'zip_code'          => $request->zipCode,
+                'address' => $request->address,
+                'zip_code' => $request->zipCode,
             ];
 
             if ($request->locationId) {
@@ -131,7 +127,7 @@ class ProfileController extends Controller
             return ResponseFormatter::success(
                 [
                     'customer' => new UserResource($user),
-                    'info' => 'Address updated successfully.'
+                    'info' => 'Address updated successfully.',
                 ]
             );
         } catch (Exception $error) {
@@ -146,23 +142,22 @@ class ProfileController extends Controller
     /**
      * changePassword
      *
-     * @param Request $request
      * @return void
      */
     public function changePassword(Request $request)
     {
         try {
             $rules = [
-                'password'                  => ['string', 'max:255'],
-                'newPassword'               => 'min:6|required_with:newPasswordConfirmation|same:newPasswordConfirmation',
-                'newPasswordConfirmation'   => 'min:6'
+                'password' => ['string', 'max:255'],
+                'newPassword' => 'min:6|required_with:newPasswordConfirmation|same:newPasswordConfirmation',
+                'newPasswordConfirmation' => 'min:6',
             ];
             $request->validate($rules);
             // Retrieve the authenticated user
             $user = User::findOrFail(Auth::id());
 
             // Verify the current password
-            if (!Hash::check($request->password, $user->password)) {
+            if (! Hash::check($request->password, $user->password)) {
 
                 throw new Exception('The current password is incorrect.');
             }
@@ -173,7 +168,7 @@ class ProfileController extends Controller
                 PasswordActivityEvent::dispatch($user->email, SystemConstant::PASSWORD_TYPE_ACTIVITY_PASS_CHA);
                 return ResponseFormatter::success(
                     [
-                        'info' => 'Password changed successfully.'
+                        'info' => 'Password changed successfully.',
                     ]
                 );
             } else {
@@ -188,11 +183,9 @@ class ProfileController extends Controller
         }
     }
 
-
     /**
      * changeCurrency
      *
-     * @param Request $request
      * @return void
      */
     public function changeCurrency(Request $request)
@@ -200,11 +193,11 @@ class ProfileController extends Controller
         try {
 
             $rules = [
-                'currency'    => ['required', 'string', 'in:' . implode(',', SystemConstant::AVAILABLE_CURRENCY)],
+                'currency' => ['required', 'string', 'in:'.implode(',', SystemConstant::AVAILABLE_CURRENCY)],
             ];
 
             $request->validate($rules);
-            $user   = User::where('id', Auth::id())->firstOrFail();
+            $user = User::where('id', Auth::id())->firstOrFail();
 
             $user->currency = $request->input('currency');
 
@@ -215,7 +208,7 @@ class ProfileController extends Controller
             return ResponseFormatter::success(
                 [
                     new UserResource($user),
-                    'info' => 'Currency updated successfully.'
+                    'info' => 'Currency updated successfully.',
                 ]
             );
         } catch (Exception $error) {
@@ -230,7 +223,6 @@ class ProfileController extends Controller
     /**
      * changeLocale
      *
-     * @param Request $request
      * @return void
      */
     public function changeLocale(Request $request)
@@ -238,11 +230,11 @@ class ProfileController extends Controller
         try {
 
             $rules = [
-                'locale'    => ['required', 'string', 'in:' . implode(',', SystemConstant::AVAILABLE_LOCALE)],
+                'locale' => ['required', 'string', 'in:'.implode(',', SystemConstant::AVAILABLE_LOCALE)],
             ];
 
             $request->validate($rules);
-            $user   = User::where('id', Auth::id())->firstOrFail();
+            $user = User::where('id', Auth::id())->firstOrFail();
 
             $user->locale = $request->input('locale');
 
@@ -253,7 +245,7 @@ class ProfileController extends Controller
             return ResponseFormatter::success(
                 [
                     new UserResource($user),
-                    'info' => 'Locale updated successfully.'
+                    'info' => 'Locale updated successfully.',
                 ]
             );
         } catch (Exception $error) {

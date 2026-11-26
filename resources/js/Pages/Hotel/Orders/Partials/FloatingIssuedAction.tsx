@@ -1,5 +1,5 @@
 import { formatRupiah } from '@/helpers';
-import { router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import {
     AlertCircle,
     Check,
@@ -17,6 +17,7 @@ export interface FloatingIssuedActionProps {
     order?: any;
     orderStatus?: string;
     rawOrderCode: string;
+    rawOrderCodeForUrl: string;
     invoiceNumber: string;
     totalPayment: number;
     totalRooms: number;
@@ -29,6 +30,7 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
         order,
         orderStatus,
         rawOrderCode,
+        rawOrderCodeForUrl,
         invoiceNumber,
         totalPayment,
         totalRooms,
@@ -62,16 +64,18 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
             setSelectedPaymentStatus('paid');
             setIsIssuedSuccess(true);
 
-            const safeCode = (rawOrderCode || '').replace(/\//g, '-');
-            router.visit(route('hotel.orders.orderIssued', safeCode), {
-                method: 'post',
-                data: {
-                    payment_status: 'paid',
+            router.visit(
+                route('hotel.orders.orderIssued', rawOrderCodeForUrl),
+                {
+                    method: 'post',
+                    data: {
+                        payment_status: 'paid',
+                    },
+                    onFinish: () => {
+                        setIsSubmitting(false);
+                    },
                 },
-                onFinish: () => {
-                    setIsSubmitting(false);
-                },
-            });
+            );
         };
 
         const calculateTimeRemaining = () => {
@@ -406,16 +410,21 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                             </div>
 
                             <div className="pt-1">
+                                {rawOrderCodeForUrl}
                                 {isIssued ? (
                                     <div className="space-y-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => window.print()}
+                                        <Link
+                                            href={route(
+                                                'hotel.orders.orderPreviewPdf',
+                                                rawOrderCodeForUrl,
+                                            )}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             className="gap-2 py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-extrabold shadow-md hover:shadow-lg group inline-flex w-full cursor-pointer items-center justify-center transition-all active:scale-[0.98]"
                                         >
                                             <Printer size={16} />
-                                            CETAK / DOWNLOAD VOUCHER
-                                        </button>
+                                            CETAK / DOWNLOAD VOUCHER{' '}
+                                        </Link>
                                         <div className="px-1 flex items-center justify-between">
                                             <span className="text-emerald-600 font-semibold gap-1 flex items-center text-[11px]">
                                                 <CheckCircle2 size={13} />

@@ -26,7 +26,6 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
 
-
             $table
                 ->foreign('order_prod_attr_id')
                 ->references('id')

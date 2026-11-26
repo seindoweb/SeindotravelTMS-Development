@@ -258,6 +258,47 @@ export interface UserCreditTransactionProps {
     updated_by: number | null;
 }
 
+export interface OrderProps {
+    index: string;
+    key: string;
+    invoice_number: string;
+    user_id: number;
+    base_currency_code: string;
+    subtotal_base_amount: string | number;
+    total_base_amount: string | number;
+    currency_code: string;
+    total_amount: string | number;
+    type_of_payment: string;
+    type_of_payment_desc: string;
+    payment_status: string;
+    payment_url?: string | null;
+    system: string;
+    expired_at?: string | null;
+    created_by?: number | null;
+    updated_by?: number | null;
+    created_at: string;
+    updated_at: string;
+    index?: string;
+    key?: string;
+    user?: OrderUser | null;
+    creator?: OrderCreator | null;
+}
+
+export interface OrderProductAttributeProps {
+    index: string;
+    key: string;
+    order_id: number;
+    code: string;
+    code_for_url: string;
+    product_attribute_id: number;
+    order_status: string;
+    created_at: string;
+    updated_at: string;
+    creator?: OrderCreator | null;
+    order?: OrderProps | null;
+    details?: any;
+}
+
 export interface HotelProps {
     id: number;
     code: string;

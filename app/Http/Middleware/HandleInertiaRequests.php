@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Inertia\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,7 +36,7 @@ class HandleInertiaRequests extends Middleware
             $locale = Auth::user()->locale;
         }
 
-        if (!in_array($locale, ['en', 'id'])) {
+        if (! in_array($locale, ['en', 'id'])) {
             $locale = 'en';
         }
 
@@ -44,23 +44,23 @@ class HandleInertiaRequests extends Middleware
 
         return [
             ...parent::share($request),
-            'appLogo' => asset("assets/images/logo.svg"),
-            'appIconDefault' => asset("assets/icons/icon-default.svg"),
-            'appIconWhite' => asset("assets/icons/icon-white.svg"),
-            'appName' => config("app.name"),
+            'appLogo' => asset('assets/images/logo.svg'),
+            'appIconDefault' => asset('assets/icons/icon-default.svg'),
+            'appIconWhite' => asset('assets/icons/icon-white.svg'),
+            'appName' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
-                'roles' =>  $request->user()?->getRoleNames() ?? [],
+                'roles' => $request->user()?->getRoleNames() ?? [],
             ],
             'locale' => $locale,
             'translations' => [
                 'auth' => trans('auth'),
             ],
             'flash' => [
-                'success' => fn() => $request->session()->get('success'),
-                'error' => fn() => $request->session()->get('error'),
-                'warning' => fn() => $request->session()->get('warning'),
-                'info' => fn() => $request->session()->get('info'),
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'warning' => fn () => $request->session()->get('warning'),
+                'info' => fn () => $request->session()->get('info'),
             ],
         ];
     }

@@ -7,8 +7,6 @@ use App\Constants\SystemConstant;
 use App\Events\NotificationWebMobileEvent;
 use App\Events\PaymentActivityEvent;
 use App\Notifications\PaymentActivityNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
 class PaymentActivityListener
@@ -26,12 +24,12 @@ class PaymentActivityListener
      */
     public function handle(PaymentActivityEvent $event): void
     {
-        $orderUrl = array();
-        $data = array(
+        $orderUrl = [];
+        $data = [
             'invoice_number' => $event?->order?->invoice_number,
             'currency_code' => $event?->order?->currency_code,
-            'total_amount' => $event?->order?->total_amount
-        );
+            'total_amount' => $event?->order?->total_amount,
+        ];
         $offerData = match ($event?->order?->payment_status) {
             ModelConstant::PAYMENT_STATUS_UNPAID => [
                 'title' => 'Payment Unpaid',

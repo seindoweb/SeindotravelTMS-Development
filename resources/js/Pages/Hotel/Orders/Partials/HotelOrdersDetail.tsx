@@ -5,7 +5,6 @@ import {
     Archive,
     ArrowLeft,
     BedDouble,
-    CheckCircle2,
     CircleDollarSign,
     CreditCard,
     Hotel,
@@ -13,14 +12,13 @@ import {
     PhoneCall,
     Printer,
     ShieldAlert,
-    Star,
     User,
     Users,
 } from 'lucide-react';
 import { useState } from 'react';
 import BookReferenceModal from './BookReferenceModal';
 import FloatingIssuedAction from './FloatingIssuedAction';
-import { formatRupiah } from '@/helpers';
+import { formatDate, formatDatetime, formatRupiah } from '@/helpers';
 
 export interface HotelOrderDetailProps {
     orderProductAttribute?: any;
@@ -29,69 +27,6 @@ export interface HotelOrderDetailProps {
 
 const StatusBadge = ({ status }: { status?: string }) => {
     return <OrderStatusBadge status={status} size="lg" />;
-};
-
-const formatPaymentMethod = (type?: string) => {
-    switch (type) {
-        case 'CH':
-            return 'Cash';
-        case 'TF':
-            return 'Bank Transfer';
-        case 'PG':
-            return 'Online Pay';
-        case 'UC':
-            return 'User Credit';
-        default:
-            return type || 'Manual';
-    }
-};
-
-const formatFullDate = (dateStr?: string) => {
-    if (!dateStr) return '-';
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-
-    return d.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-};
-
-const formatShortDate = (dateStr?: string) => {
-    if (!dateStr) return '-';
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-
-    const day = String(d.getDate()).padStart(2, '0');
-    const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'Mei',
-        'Jun',
-        'Jul',
-        'Agu',
-        'Sep',
-        'Okt',
-        'Nov',
-        'Des',
-    ];
-    const month = months[d.getMonth()];
-    const year = String(d.getFullYear()).slice(-2);
-
-    return `${day}-${month}-${year}`;
-};
-
-const countNights = (ci?: string, co?: string): number => {
-    if (!ci || !co) return 1;
-    const d1 = new Date(ci);
-    const d2 = new Date(co);
-    const diff = d2.getTime() - d1.getTime();
-    return Math.max(1, Math.round(diff / (1000 * 60 * 60 * 24)));
 };
 
 export default function HotelOrdersDetail({
@@ -109,12 +44,13 @@ export default function HotelOrdersDetail({
     const rooms = hotelBooking?.hotel_booking_rooms || [];
 
     const referenceId = orderProductAttribute?.reference_id ?? '-';
+    const rawOrderCodeForUrl = orderProductAttribute?.code_for_url ?? 'n/a';
     const rawOrderCode =
         orderProductAttribute?.code || order?.invoice_number || '-';
     const invoiceNumber = order?.invoice_number || '-';
     const orderStatus = orderProductAttribute?.order_status || 'B';
     const paymentStatus = order?.payment_status || 'unpaid';
-    const paymentMethod = formatPaymentMethod(order?.type_of_payment);
+    const paymentMethod = order?.type_of_payment_desc;
 
     const previewResults = hotelPreview?.results;
     const hotelName =
@@ -145,7 +81,7 @@ export default function HotelOrdersDetail({
 
     const checkInDate = hotelBooking?.check_in || '-';
     const checkOutDate = hotelBooking?.check_out || '-';
-    const nights = countNights(checkInDate, checkOutDate);
+    const nights = hotelBooking?.total_nights;
 
     const totalRooms = rooms.length > 0 ? rooms.length : 1;
     const totalGuests =
@@ -387,13 +323,19 @@ export default function HotelOrdersDetail({
                                     <span>
                                         Order Time:{' '}
                                         <span className="font-bold text-primary">
-                                            {formatFullDate(order?.created_at)}
+                                            {formatDatetime(
+                                                order?.created_at,
+                                                true,
+                                            )}
                                         </span>
                                     </span>
                                     {order?.expired_at && (
                                         <span className="gap-1.5 text-rose-500 flex items-center">
                                             <AlertCircle size={14} /> Exp:{' '}
-                                            {formatFullDate(order.expired_at)}
+                                            {formatDatetime(
+                                                order.expired_at,
+                                                true,
+                                            )}
                                         </span>
                                     )}
                                 </div>
@@ -646,7 +588,7 @@ export default function HotelOrdersDetail({
                                                             Check In
                                                         </span>
                                                         <span className="text-sm font-bold text-primary">
-                                                            {formatShortDate(
+                                                            {formatDate(
                                                                 checkInDate,
                                                             )}
                                                         </span>
@@ -657,7 +599,7 @@ export default function HotelOrdersDetail({
                                                             Check Out
                                                         </span>
                                                         <span className="text-sm font-bold text-primary">
-                                                            {formatShortDate(
+                                                            {formatDate(
                                                                 checkOutDate,
                                                             )}
                                                         </span>
@@ -678,14 +620,18 @@ export default function HotelOrdersDetail({
                                 </div>
 
                                 <div className="pt-6 mt-auto flex justify-end">
-                                    <button
-                                        type="button"
-                                        onClick={() => window.print()}
+                                    <a
+                                        href={route(
+                                            'hotel.orders.orderPreviewPdf',
+                                            rawOrderCodeForUrl,
+                                        )}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="sm:w-auto gap-2.5 px-6 py-3.5 bg-primary hover:bg-primary-bright text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg inline-flex w-full cursor-pointer items-center justify-center transition-all active:scale-[0.98]"
                                     >
                                         <Printer size={18} />
                                         DOWNLOAD / PRINT ORDER
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -773,6 +719,7 @@ export default function HotelOrdersDetail({
             <FloatingIssuedAction
                 order={order}
                 orderStatus={orderProductAttribute?.order_status}
+                rawOrderCodeForUrl={rawOrderCodeForUrl}
                 rawOrderCode={rawOrderCode}
                 invoiceNumber={invoiceNumber}
                 totalPayment={totalPayment}

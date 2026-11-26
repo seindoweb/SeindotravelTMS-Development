@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class TravellerFactory extends Factory
 {
     protected $model = Traveller::class;
+
     /**
      * Define the model's default state.
      *

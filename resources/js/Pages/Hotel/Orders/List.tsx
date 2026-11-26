@@ -1,11 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Paginate } from '@/types';
+import { OrderProductAttributeProps, Paginate } from '@/types';
 import { Head } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
-import HotelOrdersList, { HotelOrderItem } from './Partials/HotelOrdersList';
+import HotelOrdersList from './Partials/HotelOrdersList';
 
 interface OrderListProps {
-    orders: Paginate<HotelOrderItem>;
+    orders: Paginate<OrderProductAttributeProps>;
     filters?: {
         search?: string;
     };
@@ -16,14 +16,14 @@ export default function OrderList({ orders, filters }: OrderListProps) {
         <AuthenticatedLayout
             header={
                 <>
-                    <span className="text-sm font-bold truncate text-primary">
+                    <span className="text-sm font-bold text-primary truncate">
                         Hotel
                     </span>
                     <ChevronRight
                         size={14}
-                        className="hidden text-[#CBD5E1] sm:block"
+                        className="sm:block hidden text-[#CBD5E1]"
                     />
-                    <span className="text-sm font-bold truncate text-primary">
+                    <span className="text-sm font-bold text-primary truncate">
                         Hotel Orders
                     </span>
                 </>

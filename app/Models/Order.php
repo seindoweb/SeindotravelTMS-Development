@@ -3,19 +3,18 @@
 namespace App\Models;
 
 use App\Services\Systems\CreatorAndUpdater;
-use Spatie\Activitylog\Models\Concerns\LogsActivity;
-use Spatie\Activitylog\Support\LogOptions;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Services\Systems\TriadIdMask;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Order extends Model
 {
-    use LogsActivity, CreatorAndUpdater, HasFactory;
+    use CreatorAndUpdater, HasFactory, LogsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -31,7 +30,7 @@ class Order extends Model
     {
         static::creating(function (Order $order) {
 
-            if (!empty($order->invoice_number)) {
+            if (! empty($order->invoice_number)) {
                 return;
             }
 
@@ -77,7 +76,7 @@ class Order extends Model
      *
      * @var array
      */
-    protected $appends = ['index', 'key'];
+    protected $appends = ['index', 'key', 'type_of_payment_desc'];
 
     public function getIndexAttribute()
     {
@@ -89,10 +88,25 @@ class Order extends Model
         return Crypt::encryptString($this->id); // atau logika dinamis
     }
 
+    public function getTypeOfPaymentDescAttribute()
+    {
+        switch ($this->type_of_payment) {
+            case 'CH':
+                return 'Cash';
+            case 'TF':
+                return 'Bank Transfer';
+            case 'PG':
+                return 'Online Pay';
+            case 'UC':
+                return 'User Credit';
+            default:
+                return 'Unknown';
+        }
+    }
+
+
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

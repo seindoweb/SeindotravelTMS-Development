@@ -11,11 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
-use Illuminate\Support\Facades\Storage;
 
 class Voucher extends Model
 {
-    use LogsActivity, CreatorAndUpdater, HasFactory;
+    use CreatorAndUpdater, HasFactory, LogsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -43,17 +42,15 @@ class Voucher extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        if (!$this->image_path) {
+        if (! $this->image_path) {
             return asset('assets/images/no-image-available.jpg');
         }
 
-        return asset('storage/' . $this->image_path);
+        return asset('storage/'.$this->image_path);
     }
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

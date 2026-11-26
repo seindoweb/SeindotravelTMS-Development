@@ -4,7 +4,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -15,6 +14,7 @@ class NotificationWebMobileEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $token;
+
     public $message;
 
     /**
@@ -26,18 +26,17 @@ class NotificationWebMobileEvent implements ShouldBroadcast
         $this->message = $message;
     }
 
-
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
 
         // return new PrivateChannel('stcrm.notification.' . $this->token);
         return [
-            new PrivateChannel('WebMobile.WS.User.Notification.' . $this->token),
+            new PrivateChannel('WebMobile.WS.User.Notification.'.$this->token),
             new Channel('WebMobile.WS.User.Broadcast'),
         ];
     }
