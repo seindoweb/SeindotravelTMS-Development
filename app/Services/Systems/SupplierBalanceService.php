@@ -40,7 +40,7 @@ class SupplierBalanceService
         $supplierId = $supplier->id;
 
         // Validate balance type.
-        if (!in_array($balanceType, [
+        if (! in_array($balanceType, [
             SupplierAndBalanceConstant::TYPE_PREPAID,
             SupplierAndBalanceConstant::TYPE_POSTPAID,
         ], true)) {
@@ -93,7 +93,7 @@ class SupplierBalanceService
                 ->first();
 
             // Create balance if not exists.
-            if (!$balance) {
+            if (! $balance) {
                 $balance = SupplierBalance::create([
                     'supplier_id' => $supplierId,
                     'currency_code' => $currencyCode,
@@ -105,7 +105,7 @@ class SupplierBalanceService
             }
 
             // Validate active balance.
-            if (!$balance->is_active) {
+            if (! $balance->is_active) {
                 throw ValidationException::withMessages([
                     'supplier_balance' => 'Supplier balance is inactive.',
                 ]);
@@ -131,8 +131,7 @@ class SupplierBalanceService
                     bccomp($before, '0', 2) !== 0
                 ) {
                     throw ValidationException::withMessages([
-                        'transaction_type' =>
-                        'Initial balance has already been recorded.',
+                        'transaction_type' => 'Initial balance has already been recorded.',
                     ]);
                 }
             }
@@ -225,12 +224,11 @@ class SupplierBalanceService
          * End of supplier customization
          * =======================================================================
          */
-
         $supplier = Supplier::query()
             ->where('code', $supplierResourceCode)
             ->first();
 
-        if (!$supplier) {
+        if (! $supplier) {
             return false;
         }
 
@@ -239,7 +237,7 @@ class SupplierBalanceService
             ->where('currency_code', $currencyCode)
             ->first();
 
-        if (!$balance || !$balance->is_active) {
+        if (! $balance || ! $balance->is_active) {
             return false;
         }
 
@@ -279,7 +277,7 @@ class SupplierBalanceService
             SupplierAndBalanceConstant::TRANSACTION_ADJUSTMENT_OUT => -1,
         ];
 
-        if (!isset($directions[$transactionType])) {
+        if (! isset($directions[$transactionType])) {
             throw ValidationException::withMessages([
                 'transaction_type' => 'Invalid supplier transaction type.',
             ]);

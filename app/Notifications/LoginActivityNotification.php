@@ -3,10 +3,8 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Carbon;
 
 class LoginActivityNotification extends Notification
 {
@@ -18,6 +16,7 @@ class LoginActivityNotification extends Notification
      * @var mixed
      */
     public $platform;
+
     /**
      * offerData
      *
@@ -27,11 +26,12 @@ class LoginActivityNotification extends Notification
 
     /**
      * Create a new notification instance.
-     * @param mixed $offerData
+     *
+     * @param  mixed  $offerData
      */
     public function __construct($offerData, $platform = null)
     {
-        $this->offerData  = $offerData;
+        $this->offerData = $offerData;
         $this->platform = $platform;
     }
 

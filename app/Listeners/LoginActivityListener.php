@@ -7,8 +7,6 @@ use App\Events\LoginActivityEvent;
 use App\Events\NotificationWebMobileEvent;
 use App\Notifications\LoginActivityNotification;
 use Carbon\Carbon;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
 class LoginActivityListener
@@ -32,7 +30,7 @@ class LoginActivityListener
             'title' => 'Security Information',
             'message' => "Login activity detected on your {$appName} account on {$time}.",
             'data' => [],
-            'url' => null
+            'url' => null,
         ];
 
         Notification::send($event?->user, new LoginActivityNotification($offerData, SystemConstant::NOTIFICATION_PLATFORM_WEBMOBILE));

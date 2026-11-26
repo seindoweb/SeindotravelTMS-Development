@@ -2,7 +2,7 @@ import TableOnlySkeleton from '@/Components/Skeleton/TableOnlySkeleton';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import TablePaginate from '@/Components/TablePaginate';
 import { formatDate, formatRupiah } from '@/helpers';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/Hooks/useDebounce';
 import { Paginate } from '@/types';
 import { router } from '@inertiajs/react';
 import {

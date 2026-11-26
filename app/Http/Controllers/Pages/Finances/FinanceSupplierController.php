@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use App\Services\Systems\SupplierBalanceService;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class FinanceSupplierController extends Controller
 {
@@ -15,11 +14,11 @@ class FinanceSupplierController extends Controller
     {
         if ($validated['transaction_type'] == SupplierAndBalanceConstant::TRANSACTION_INITIAL) {
             $validated['description'] = 'Initial supplier balance';
-        } else if ($validated['transaction_type'] === SupplierAndBalanceConstant::TRANSACTION_TOPUP && blank($validated['description'] ?? null)) {
+        } elseif ($validated['transaction_type'] === SupplierAndBalanceConstant::TRANSACTION_TOPUP && blank($validated['description'] ?? null)) {
             $validated['description'] = 'Supplier deposit top up';
-        } else if ($validated['transaction_type'] === SupplierAndBalanceConstant::TRANSACTION_ADJUSTMENT_IN && blank($validated['description'] ?? null)) {
+        } elseif ($validated['transaction_type'] === SupplierAndBalanceConstant::TRANSACTION_ADJUSTMENT_IN && blank($validated['description'] ?? null)) {
             $validated['description'] = 'Supplier balance correction';
-        } else if ($validated['transaction_type'] === SupplierAndBalanceConstant::TRANSACTION_ADJUSTMENT_OUT && blank($validated['description'] ?? null)) {
+        } elseif ($validated['transaction_type'] === SupplierAndBalanceConstant::TRANSACTION_ADJUSTMENT_OUT && blank($validated['description'] ?? null)) {
             $validated['description'] = 'Supplier balance correction';
         }
         app(SupplierBalanceService::class)->record(

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/locale', function () {
     $locale = request('locale', 'en');
 
-    if (!in_array($locale, ['en', 'id'])) {
+    if (! in_array($locale, ['en', 'id'])) {
         $locale = 'en';
     }
 

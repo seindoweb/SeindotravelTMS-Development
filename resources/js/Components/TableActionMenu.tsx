@@ -8,6 +8,9 @@ export type ActionMenuItem = {
     icon?: React.ReactNode;
     onClick?: () => void;
     href?: string;
+    target?: string;
+    external?: boolean;
+    download?: boolean | string;
     variant?: 'default' | 'danger' | 'info';
 };
 
@@ -71,6 +74,20 @@ export default function TableActionMenu({ groups, menuWidth = 'w-40' }: TableAct
                                         );
 
                                         if (item.href) {
+                                            if (item.target || item.external || item.download) {
+                                                return (
+                                                    <a
+                                                        href={item.href}
+                                                        target={item.target}
+                                                        rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
+                                                        download={item.download}
+                                                        className={className}
+                                                    >
+                                                        {content}
+                                                    </a>
+                                                );
+                                            }
+
                                             return (
                                                 <Link href={item.href} className={className}>
                                                     {content}

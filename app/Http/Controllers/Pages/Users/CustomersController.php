@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Pages\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\Systems\TriadIdMask;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -46,8 +45,6 @@ class CustomersController extends Controller
 
     /**
      * show
-     *
-     * @param  string  $tracking_code
      */
     public function show(string $tracking_code): Response
     {

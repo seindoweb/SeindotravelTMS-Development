@@ -20,11 +20,11 @@ return [
     ],
 
     'mgbedbank' => [
-        'agency_code'       => env('MGBEDBANK_AGENCY_CODE', 'AGID013799'),
-        'username'          => env('MGBEDBANK_USERNAME', 'SEIGTINJsonV1'),
-        'password'          => env('MGBEDBANK_PASSWORD', '52!n6OG1062L75'),
-        'currency'          => env('MGBEDBANK_DEFAULT_CURRENCY', 'IDR'),
-        'url'               => env('MGBEDBANK_URL', 'http://uat-jarvis1-xmlsell.mgbedbank.com')
+        'agency_code' => env('MGBEDBANK_AGENCY_CODE', 'AGID013799'),
+        'username' => env('MGBEDBANK_USERNAME', 'SEIGTINJsonV1'),
+        'password' => env('MGBEDBANK_PASSWORD', '52!n6OG1062L75'),
+        'currency' => env('MGBEDBANK_DEFAULT_CURRENCY', 'IDR'),
+        'url' => env('MGBEDBANK_URL', 'http://uat-jarvis1-xmlsell.mgbedbank.com'),
     ],
 
     'postmark' => [
@@ -47,6 +47,5 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
 
 ];

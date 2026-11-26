@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 
 class ProductAttributesTableSeeder extends Seeder
 {
-
     /**
      * Auto generated seed file
      *

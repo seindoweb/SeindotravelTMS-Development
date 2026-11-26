@@ -15,6 +15,7 @@ use Inertia\Response;
 class AllVouchersController extends Controller
 {
     private ?string $distributionType = null;
+
     /**
      * indexFlight
      */
@@ -42,19 +43,21 @@ class AllVouchersController extends Controller
     public function indexDistyPersonal(): Response
     {
         $this->distributionType = 'personal';
+
         return $this->index(null, 'Distribution Personal');
     }
 
     public function indexDistyPublic(): Response
     {
         $this->distributionType = 'public';
+
         return $this->index(null, 'Distribution Public');
     }
 
     /**
      * index
      */
-    public function index(string|null $product_attribute, string $title): Response
+    public function index(?string $product_attribute, string $title): Response
     {
         $att = ProductAttribute::where('attribute', $product_attribute)->first();
 
@@ -64,17 +67,17 @@ class AllVouchersController extends Controller
         $voucherType = request()->input('voucher_type');
 
         $vouchers = Voucher::query()
-            ->when($att, fn($q) => $q->where('product_attribute_id', $att->id))
-            ->when($this->distributionType !== null, fn($q) => $q->where('distribution_type', $this->distributionType))
+            ->when($att, fn ($q) => $q->where('product_attribute_id', $att->id))
+            ->when($this->distributionType !== null, fn ($q) => $q->where('distribution_type', $this->distributionType))
             ->when($search, function ($q, $search) {
                 $q->where(function ($sub) use ($search) {
                     $sub->where('id', 'like', "%{$search}%")
                         ->orWhere('discount_value', 'like', "%{$search}%");
                 });
             })
-            ->when($status, fn($q, $status) => $q->where('status', $status))
-            ->when($discountType, fn($q, $type) => $q->where('discount_type', $type))
-            ->when($voucherType, fn($q, $type) => $q->where('voucher_type', $type))
+            ->when($status, fn ($q, $status) => $q->where('status', $status))
+            ->when($discountType, fn ($q, $type) => $q->where('discount_type', $type))
+            ->when($voucherType, fn ($q, $type) => $q->where('voucher_type', $type))
             ->with(['productAttribute', 'creator', 'voucherTranslations', 'voucherCodes'])
             ->latest()
             ->paginate(10)
@@ -163,18 +166,18 @@ class AllVouchersController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
 
-            if (!$file->isValid()) {
+            if (! $file->isValid()) {
                 throw new \RuntimeException('Uploaded image is invalid.');
             }
 
-            $imagePath = 'vouchers/' . $file->hashName();
+            $imagePath = 'vouchers/'.$file->hashName();
 
             $stored = Storage::disk('public')->put(
                 $imagePath,
                 $file->get()
             );
 
-            if (!$stored) {
+            if (! $stored) {
                 throw new \RuntimeException('Failed to upload voucher image.');
             }
         }
@@ -216,7 +219,7 @@ class AllVouchersController extends Controller
         $voucher->load('productAttribute');
 
         $product_attribute = $voucher->productAttribute?->attribute ?? 'hotel';
-        $title = ucfirst($product_attribute) . ' Vouchers';
+        $title = ucfirst($product_attribute).' Vouchers';
 
         return Inertia::render('Voucher/AllVouchers/Edit', [
             'voucher' => $voucher,
@@ -269,18 +272,18 @@ class AllVouchersController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
 
-            if (!$file->isValid()) {
+            if (! $file->isValid()) {
                 throw new \RuntimeException('Uploaded image is invalid.');
             }
 
-            $newPath = 'vouchers/' . $file->hashName();
+            $newPath = 'vouchers/'.$file->hashName();
 
             $stored = Storage::disk('public')->put(
                 $newPath,
                 $file->get()
             );
 
-            if (!$stored) {
+            if (! $stored) {
                 throw new \RuntimeException('Failed to upload voucher image.');
             }
 

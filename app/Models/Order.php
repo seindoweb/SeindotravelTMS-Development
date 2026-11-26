@@ -3,19 +3,18 @@
 namespace App\Models;
 
 use App\Services\Systems\CreatorAndUpdater;
-use Spatie\Activitylog\Models\Concerns\LogsActivity;
-use Spatie\Activitylog\Support\LogOptions;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Services\Systems\TriadIdMask;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Order extends Model
 {
-    use LogsActivity, CreatorAndUpdater, HasFactory;
+    use CreatorAndUpdater, HasFactory, LogsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -31,12 +30,12 @@ class Order extends Model
     {
         static::creating(function (Order $order) {
 
-            if (!empty($order->invoice_number)) {
+            if (! empty($order->invoice_number)) {
                 return;
             }
 
             // Prefix tanggal mengikuti tanggal saat ini
-            $prefix = now()->format('Ymd') . '-';
+            $prefix = now()->format('Ymd').'-';
 
             // Ambil nomor urut terbesar dari seluruh invoice
             $lastNumber = static::query()
@@ -51,7 +50,7 @@ class Order extends Model
             // Nomor urut selalu bertambah
             $nextNumber = ((int) $lastNumber) + 1;
 
-            $order->invoice_number = $prefix . str_pad(
+            $order->invoice_number = $prefix.str_pad(
                 (string) $nextNumber,
                 4,
                 '0',
@@ -91,8 +90,6 @@ class Order extends Model
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

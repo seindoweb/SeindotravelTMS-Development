@@ -9,6 +9,7 @@ import {
     Eye,
     Filter,
     Inbox,
+    Printer,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -362,6 +363,18 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                                                         ],
                                                         [
                                                             {
+                                                                label: 'Preview Voucher',
+                                                                icon: (
+                                                                    <Printer
+                                                                        size={
+                                                                            16
+                                                                        }
+                                                                    />
+                                                                ),
+                                                                target: '_blank',
+                                                                href: route('hotel.orders.orderPreviewPdf', urlCode),
+                                                            },
+                                                            {
                                                                 label: 'Download PDF',
                                                                 icon: (
                                                                     <Download
@@ -371,11 +384,8 @@ export default function HotelOrdersList({ orders, filters }: HotelOrdersListProp
                                                                     />
                                                                 ),
                                                                 variant: 'info',
-                                                                onClick: () =>
-                                                                    console.log(
-                                                                        'Download PDF',
-                                                                        order.id,
-                                                                    ),
+                                                                target: '_blank',
+                                                                href: route('hotel.orders.orderDownloadPdf', urlCode),
                                                             },
                                                         ],
                                                     ]}

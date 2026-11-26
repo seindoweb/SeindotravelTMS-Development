@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('hotel_booking_id');
             $table->string('room_no');
-            $table->string('no_of_adults')->default("1");
-            $table->string('no_of_child')->nullable()->default("");
+            $table->string('no_of_adults')->default('1');
+            $table->string('no_of_child')->nullable()->default('');
 
-            $table->string('child1_age')->nullable()->default("");
-            $table->string('child2_age')->nullable()->default("");
+            $table->string('child1_age')->nullable()->default('');
+            $table->string('child2_age')->nullable()->default('');
 
             $table->boolean('extra_bed')->default(false);
             $table->string('rate_key');

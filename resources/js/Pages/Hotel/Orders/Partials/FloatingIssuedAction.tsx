@@ -422,14 +422,21 @@ const FloatingIssuedAction: React.FC<FloatingIssuedActionProps> = React.memo(
                             <div className="pt-1">
                                 {isIssued ? (
                                     <div className="space-y-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => window.print()}
+                                        <a
+                                            href={route(
+                                                'hotel.orders.orderPreviewPdf',
+                                                (rawOrderCode || '').replace(
+                                                    /\//g,
+                                                    '-',
+                                                ),
+                                            )}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-extrabold shadow-md hover:shadow-lg active:scale-[0.98] transition-all cursor-pointer group"
                                         >
                                             <Printer size={16} />
                                             CETAK / DOWNLOAD VOUCHER
-                                        </button>
+                                        </a>
                                         <div className="flex items-center justify-between px-1">
                                             <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
                                                 <CheckCircle2 size={13} />

@@ -63,7 +63,6 @@ class RolePermissionSeeder extends Seeder
                 'edit',
             ]);
 
-
         $users = [
             'it.seindo@gmail.com' => 'super-admin',
         ];

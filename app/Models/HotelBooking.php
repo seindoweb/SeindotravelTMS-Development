@@ -15,7 +15,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class HotelBooking extends Model
 {
-    use LogsActivity, CreatorAndUpdater, HasFactory;
+    use CreatorAndUpdater, HasFactory, LogsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -43,8 +43,6 @@ class HotelBooking extends Model
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

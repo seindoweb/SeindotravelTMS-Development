@@ -2,9 +2,6 @@
 
 namespace App\Services\HotelMicroserviceApi;
 
-use Exception;
-
-use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 class BookingPreview
@@ -15,10 +12,10 @@ class BookingPreview
             'sessionId' => $sessionId,
         ];
 
-        $url = config('services.hotelMicroserviceApi.base_url') . '/booking-preview';
+        $url = config('services.hotelMicroserviceApi.base_url').'/booking-preview';
 
         $headers = [
-            'AccessPermissionToken: ' . config('services.hotelMicroserviceApi.access_permission_token'),
+            'AccessPermissionToken: '.config('services.hotelMicroserviceApi.access_permission_token'),
             'Content-Type: application/json',
         ];
 
@@ -46,7 +43,7 @@ class BookingPreview
             $response = curl_exec($curl);
 
             if ($response === false) {
-                throw new RuntimeException('cURL error: ' . curl_error($curl));
+                throw new RuntimeException('cURL error: '.curl_error($curl));
             }
 
             $res = json_decode($response, true, 512, JSON_THROW_ON_ERROR);

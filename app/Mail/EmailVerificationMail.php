@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -24,7 +23,7 @@ class EmailVerificationMail extends Mailable
     /**
      * __construct
      *
-     * @param mixed $offerData
+     * @param  mixed  $offerData
      * @return void
      */
     public function __construct($offerData)
@@ -51,7 +50,7 @@ class EmailVerificationMail extends Mailable
             view: 'emails.html.email-verification',
             with: [
                 'title' => 'Verify Your Account',
-                'description' => 'Hello, Travel Enthusiast! Thank you for joining ' . config('app.name') . '. Use the OTP code below to verify your account.',
+                'description' => 'Hello, Travel Enthusiast! Thank you for joining '.config('app.name').'. Use the OTP code below to verify your account.',
                 'code' => $this->offerData['code'],
             ],
         );

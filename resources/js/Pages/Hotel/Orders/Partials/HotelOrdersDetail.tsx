@@ -125,6 +125,7 @@ export default function HotelOrdersDetail({
     const referenceId = orderProductAttribute?.reference_id ?? '-';
     const rawOrderCode =
         orderProductAttribute?.code || order?.invoice_number || '-';
+       console.log('woiiiiii:', rawOrderCode);
     const invoiceNumber = order?.invoice_number || '-';
     const orderStatus = orderProductAttribute?.order_status || 'B';
     const paymentStatus = order?.payment_status || 'unpaid';
@@ -690,14 +691,21 @@ export default function HotelOrdersDetail({
                                 </div>
 
                                 <div className="pt-6 mt-auto flex justify-end">
-                                    <button
-                                        type="button"
-                                        onClick={() => window.print()}
+                                    <a
+                                        href={route(
+                                            'hotel.orders.orderPreviewPdf',
+                                            (rawOrderCode || '').replace(
+                                                /\//g,
+                                                '-',
+                                            ),
+                                        )}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="sm:w-auto gap-2.5 px-6 py-3.5 bg-primary hover:bg-primary-bright text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg inline-flex w-full cursor-pointer items-center justify-center transition-all active:scale-[0.98]"
                                     >
                                         <Printer size={18} />
                                         DOWNLOAD / PRINT ORDER
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

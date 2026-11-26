@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-
     /**
      * Auto generated seed file
      *
@@ -15,57 +14,54 @@ class UserSeeder extends Seeder
     public function run()
     {
 
-
         \DB::table('users')->delete();
 
-        \DB::table('users')->insert(array(
-            0 =>
-            array(
+        \DB::table('users')->insert([
+            0 => [
                 'id' => 1,
-                'title' => NULL,
+                'title' => null,
                 'full_name' => 'IT Seindo',
                 'email' => 'it.seindo@gmail.com',
-                'email_verified_at' => "2026-08-27 06:57:52",
+                'email_verified_at' => '2026-08-27 06:57:52',
                 'password' => '$2y$12$m5xBfE.nj1e1iZo4q1yAzOGkA8C3i6TCSfNFHux7aFVzYWxGxq376',
                 'dial_code' => '+62',
                 'phone_number' => '85277230961',
-                'identity_type' => NULL,
-                'identity_number' => NULL,
+                'identity_type' => null,
+                'identity_number' => null,
                 'gender' => 'Rather not say',
                 'place_of_birth' => 'Indonesia',
                 'date_of_birth' => '2008-08-08',
                 'tracking_code' => '1t531nd0',
                 'has_credit' => 0,
                 'is_agent' => 0,
-                'upline_id' => NULL,
-                'country_id' => NULL,
-                'state_id' => NULL,
-                'city_id' => NULL,
-                'address' => NULL,
-                'zip_code' => NULL,
+                'upline_id' => null,
+                'country_id' => null,
+                'state_id' => null,
+                'city_id' => null,
+                'address' => null,
+                'zip_code' => null,
                 'locale' => 'id',
                 'currency' => 'USD',
-                'profile_photo_path' => NULL,
+                'profile_photo_path' => null,
                 'active' => 1,
                 'remember_token' => '1ts31nd0',
                 'created_at' => '2026-08-18 09:02:48',
                 'updated_at' => '2026-08-21 03:48:22',
-                'deleted_at' => NULL,
-                'created_by' => NULL,
+                'deleted_at' => null,
+                'created_by' => null,
                 'updated_by' => 1,
-            ),
-            1 =>
-            array(
+            ],
+            1 => [
                 'id' => 2,
-                'title' => NULL,
+                'title' => null,
                 'full_name' => 'Seindo Web',
                 'email' => 'seindoweb@gmail.com',
-                'email_verified_at' => "2026-08-27 06:57:52",
+                'email_verified_at' => '2026-08-27 06:57:52',
                 'password' => '$2y$12$m5xBfE.nj1e1iZo4q1yAzOGkA8C3i6TCSfNFHux7aFVzYWxGxq376',
                 'dial_code' => '+62',
                 'phone_number' => '85277230961',
-                'identity_type' => NULL,
-                'identity_number' => NULL,
+                'identity_type' => null,
+                'identity_number' => null,
                 'gender' => 'Rather not say',
                 'place_of_birth' => 'Indonesia',
                 'date_of_birth' => '2008-08-08',
@@ -73,22 +69,22 @@ class UserSeeder extends Seeder
                 'has_credit' => 0,
                 'is_agent' => 0,
                 'upline_id' => 1,
-                'country_id' => NULL,
-                'state_id' => NULL,
-                'city_id' => NULL,
-                'address' => NULL,
-                'zip_code' => NULL,
+                'country_id' => null,
+                'state_id' => null,
+                'city_id' => null,
+                'address' => null,
+                'zip_code' => null,
                 'locale' => 'id',
                 'currency' => 'IDR',
-                'profile_photo_path' => NULL,
+                'profile_photo_path' => null,
                 'active' => 1,
                 'remember_token' => 's31nd0w3b',
                 'created_at' => '2026-08-18 09:02:48',
                 'updated_at' => '2026-08-21 03:48:22',
-                'deleted_at' => NULL,
-                'created_by' => NULL,
+                'deleted_at' => null,
+                'created_by' => null,
                 'updated_by' => 2,
-            ),
-        ));
+            ],
+        ]);
     }
 }

@@ -34,7 +34,6 @@ return new class extends Migration
             $table->decimal('balance_after', 18, 2);
             $table->dateTime('transaction_date');
 
-
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();

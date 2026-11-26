@@ -1,34 +1,40 @@
 <?php
 
+use App\Http\Middleware\ApiAccessToken;
+use App\Http\Middleware\ApplyLocale;
+use App\Http\Middleware\EnsureUserHasRole;
+use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\LastActiveUser;
 use App\Services\Systems\ResponseFormatter;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        channels: __DIR__ . '/../routes/channels.php',
-        web: __DIR__ . '/../routes/web.php',
-        api: __DIR__ . '/../routes/api.php',
-        commands: __DIR__ . '/../routes/console.php',
+        channels: __DIR__.'/../routes/channels.php',
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
-            \App\Http\Middleware\ApplyLocale::class,
-            \App\Http\Middleware\HandleInertiaRequests::class,
-            \App\Http\Middleware\LastActiveUser::class,
-            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            ApplyLocale::class,
+            HandleInertiaRequests::class,
+            LastActiveUser::class,
+            AddLinkHeadersForPreloadedAssets::class,
         ]);
 
         $middleware->alias([
-            'has.role' => \App\Http\Middleware\EnsureUserHasRole::class,
-            'api.client' => \App\Http\Middleware\ApiAccessToken::class,
+            'has.role' => EnsureUserHasRole::class,
+            'api.client' => ApiAccessToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -38,10 +44,8 @@ return Application::configure(basePath: dirname(__DIR__))
         |--------------------------------------------------------------------------
         */
         $exceptions->shouldRenderJsonWhen(
-            fn(Request $request) =>
-            $request->is('api/*') || $request->expectsJson(),
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
-
 
         /*
         |--------------------------------------------------------------------------
@@ -60,7 +64,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 );
             }
         });
-
 
         /*
         |--------------------------------------------------------------------------
@@ -82,7 +85,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-
         /*
         |--------------------------------------------------------------------------
         | 404 - Not Found
@@ -101,7 +103,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-
         /*
         |--------------------------------------------------------------------------
         | HTTP Exception
@@ -119,7 +120,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 );
             }
         });
-
 
         /*
         |--------------------------------------------------------------------------

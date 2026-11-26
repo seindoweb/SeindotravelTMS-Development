@@ -5,10 +5,10 @@ namespace App\Console\Commands;
 use App\Constants\ModelConstant;
 use App\Events\MonitoringHotelProductAttributeOrderEvent;
 use App\Models\OrderProductAttribute;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
 
 class MonitoringHotelProductAttributeOrderCommand extends Command
 {

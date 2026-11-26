@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('image_path', 888)->nullable();
 
             // Aturan potongan voucher
-            $table->enum('discount_type', ['percentage', 'fixed',]);
+            $table->enum('discount_type', ['percentage', 'fixed']);
             $table->decimal('discount_value', 18, 2);
             $table->decimal('max_discount', 18, 2)->nullable();
             $table->decimal('min_order_amount', 18, 2)->default(0);
@@ -30,8 +30,8 @@ return new class extends Migration
             $table->timestamp('end_at')->nullable();
 
             // Distribusi voucher
-            $table->enum('voucher_type', ['general', 'signup',])->default('general');
-            $table->enum('distribution_type', ['public', 'personal',])->default('public');
+            $table->enum('voucher_type', ['general', 'signup'])->default('general');
+            $table->enum('distribution_type', ['public', 'personal'])->default('public');
 
             // Batas pemakaian total seluruh kode
             $table->unsignedInteger('usage_limit')->nullable();

@@ -13,7 +13,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class ProductAttribute extends Model
 {
-    use LogsActivity, CreatorAndUpdater, HasFactory;
+    use CreatorAndUpdater, HasFactory, LogsActivity;
 
     /**
      * The attributes that aren't mass assignable.
@@ -41,8 +41,6 @@ class ProductAttribute extends Model
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

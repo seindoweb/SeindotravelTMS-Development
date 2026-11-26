@@ -2,12 +2,9 @@
 
 namespace App\Models;
 
-
-use App\Services\Systems\TriadIdMask;
-use Illuminate\Support\Facades\Crypt;
 use App\Services\Systems\CreatorAndUpdater;
+use App\Services\Systems\TriadIdMask;
 use Database\Factories\UserFactory;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -17,10 +14,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Support\Str;
 
 #[Fillable([
     'title',
@@ -55,7 +54,7 @@ use Illuminate\Support\Str;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, HasApiTokens, Notifiable, LogsActivity, CreatorAndUpdater;
+    use CreatorAndUpdater, HasApiTokens, HasFactory, HasRoles, LogsActivity, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -82,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         static::creating(function (User $user) {
             do {
-                $user->tracking_code  = Str::lower(Str::random(8));
+                $user->tracking_code = Str::lower(Str::random(8));
             } while (User::query()->where('tracking_code', $user->tracking_code)->exists());
         });
     }
@@ -109,9 +108,8 @@ class User extends Authenticatable implements MustVerifyEmail
             return $this->attributes['profile_photo_path'];
         }
 
-        return 'https://avatars.mantapbacklink.com/api?format=svg&name=' . $this->full_name . '&format=svg&bold=false&size=320&background=Eb2E34&color=ffffff';
+        return 'https://avatars.mantapbacklink.com/api?format=svg&name='.$this->full_name.'&format=svg&bold=false&size=320&background=Eb2E34&color=ffffff';
     }
-
 
     public function getIndexAttribute()
     {
@@ -125,8 +123,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * getActivitylogOptions
-     *
-     * @return LogOptions
      */
     public function getActivitylogOptions(): LogOptions
     {

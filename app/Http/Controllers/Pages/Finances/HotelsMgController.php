@@ -31,7 +31,7 @@ class HotelsMgController extends Controller
                         ->orWhere('reference_id', 'like', "%{$search}%");
                 });
             })
-            ->when($transactionType, fn($q, $type) => $q->where('transaction_type', $type))
+            ->when($transactionType, fn ($q, $type) => $q->where('transaction_type', $type))
             ->with(['creator'])
             ->latest('transaction_date')
             ->latest('id')
@@ -81,6 +81,7 @@ class HotelsMgController extends Controller
         $supplier = Supplier::query()->where('code', ModelConstant::ORDER_SUPPLIER_RESOURCE_MG)->first();
         if ($supplier) {
             FinanceSupplierController::balance($supplier, $validated);
+
             return redirect()
                 ->route('finance.hotels.mg.index')
                 ->with('success', 'Transaction payload received successfully!');
