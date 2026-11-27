@@ -1,4 +1,4 @@
-import { useDebounce } from '@/Hooks/useDebounce';
+import { useDebounce } from '@/hooks/useDebounce';
 import { hotelMicroserviceApi } from '@/libs/http/mikroserviceApi';
 import { DestinationProps, HotelProps, SearchSelectionProps } from '@/types';
 import { Popover, Transition } from '@headlessui/react';

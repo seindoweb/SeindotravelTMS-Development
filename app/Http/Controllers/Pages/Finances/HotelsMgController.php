@@ -14,16 +14,24 @@ use Inertia\Response;
 
 class HotelsMgController extends Controller
 {
-
     /**
      * index
-     *
-     * @return Response
      */
     public function index(): Response
     {
-        $search = request()->input('search');
-        $transactionType = request()->input('transaction_type');
+        $supplier = Supplier::where('code', 'MG')->first();
+        $balance = $supplier ? SupplierBalance::where('supplier_id', $supplier->id)->first() : null;
+
+        return Inertia::render('Finance/Hotels/Mg/Index', [
+            'supplier' => $supplier,
+            'balance' => $balance,
+        ]);
+    }
+
+    public function retrieveData(Request $request)
+    {
+        $search = $request->input('search');
+        $transactionType = $request->input('transaction_type');
 
         $transactions = SupplierBalanceTransaction::query()
             ->where('supplier_resource_code', 'MG')
@@ -34,33 +42,18 @@ class HotelsMgController extends Controller
                         ->orWhere('reference_id', 'like', "%{$search}%");
                 });
             })
-            ->when($transactionType, fn($q, $type) => $q->where('transaction_type', $type))
+            ->when($transactionType, fn ($q, $type) => $q->where('transaction_type', $type))
             ->with(['creator'])
             ->latest('transaction_date')
             ->latest('id')
             ->paginate(10)
             ->withQueryString();
 
-        $supplier = Supplier::where('code', 'MG')->first();
-        $balance = $supplier ? SupplierBalance::where('supplier_id', $supplier->id)->first() : null;
-
-        return Inertia::render('Finance/Hotels/Mg/Index', [
-            'supplier' => $supplier,
-            'balance' => $balance,
-            'transactions' => $transactions,
-            'filters' => [
-                'search' => $search,
-                'transaction_type' => $transactionType,
-            ],
-        ]);
+        return response()->json($transactions);
     }
-
-    public function retrieveData(Request $request) {}
 
     /**
      * create
-     *
-     * @return Response
      */
     public function create(): Response
     {
@@ -73,14 +66,10 @@ class HotelsMgController extends Controller
         ]);
     }
 
-
     /**
-     * storeData
-     *
-     * @param Request $request
-     * @return RedirectResponse
+     * store
      */
-    public function storeData(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'transaction_type' => ['required', 'string'],

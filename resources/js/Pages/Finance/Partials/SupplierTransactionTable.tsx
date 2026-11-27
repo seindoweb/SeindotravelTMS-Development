@@ -2,8 +2,9 @@ import TableOnlySkeleton from '@/Components/Skeleton/TableOnlySkeleton';
 import { TableHeader } from '@/Components/TableHeading/TableHeader';
 import TablePaginate from '@/Components/TablePaginate';
 import { formatDate, formatRupiah } from '@/helpers';
-import { useDebounce } from '@/Hooks/useDebounce';
-import { Paginate } from '@/types';
+import { useDebounce } from '@/hooks/useDebounce';
+import { api } from '@/libs/http/api';
+import { Paginate, SupplierTransactionProps } from '@/types';
 import { router } from '@inertiajs/react';
 import {
     ArrowDownRight,
@@ -13,7 +14,7 @@ import {
     Plus,
     RefreshCw,
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface SupplierTransactionItem {
     id: number;
@@ -52,73 +53,76 @@ export interface SupplierBalanceItem {
     is_active?: boolean;
 }
 
-interface SupplierTransactionTableProps {
-    supplier: SupplierItem | null;
-    balance: SupplierBalanceItem | null;
-    transactions: Paginate<SupplierTransactionItem>;
-    createUrl: string;
-    indexUrl: string;
-    supplierTitle: string;
-    categoryTitle: string;
-    filters?: {
-        search?: string;
-        transaction_type?: string;
-    };
-}
+
 
 export default function SupplierTransactionTable({
-    supplier,
-    balance,
     transactions,
     createUrl,
     indexUrl,
+    retrieveUrl,
     supplierTitle,
     categoryTitle,
     filters = {},
-}: SupplierTransactionTableProps) {
+}: SupplierTransactionProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [typeFilter, setTypeFilter] = useState(
         filters.transaction_type || '',
     );
+    const [page, setPage] = useState<Paginate<SupplierTransactionItem> | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const debouncedSearch = useDebounce(search, 400);
-    const isFirstRender = useRef(true);
+    const targetRetrieveUrl =
+        retrieveUrl ||
+        (indexUrl.endsWith('/')
+            ? `${indexUrl}retrieve-data`
+            : `${indexUrl}/retrieve-data`);
 
-    const fetchFiltered = (s: string, t: string, url?: string) => {
+    const fetchPage = async (
+        urlOrPage: string | number = 1,
+        s: string = search,
+        t: string = typeFilter,
+    ) => {
         setLoading(true);
-        router.get(
-            url || indexUrl,
-            {
-                search: s || undefined,
-                transaction_type: t || undefined,
-            },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                onFinish: () => setLoading(false),
-            },
-        );
+        try {
+            const isUrl = typeof urlOrPage === 'string' && urlOrPage.startsWith('http');
+            const res = isUrl
+                ? await api.get<Paginate<SupplierTransactionItem>>(urlOrPage, {
+                      search: s,
+                      transaction_type: t || undefined,
+                  })
+                : await api.get<Paginate<SupplierTransactionItem>>(
+                      targetRetrieveUrl,
+                      {
+                          page: urlOrPage,
+                          search: s,
+                          transaction_type: t || undefined,
+                      },
+                  );
+            setPage(res);
+        } catch (error) {
+            console.error('Failed to retrieve supplier transactions:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    const debouncedSearch = useDebounce(search, 400);
+
     useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
-        fetchFiltered(debouncedSearch, typeFilter);
-    }, [debouncedSearch]);
+        fetchPage(1, debouncedSearch, typeFilter);
+    }, [debouncedSearch, typeFilter]);
 
     const handleTypeChange = (type: string) => {
         setTypeFilter(type);
-        fetchFiltered(search, type);
     };
 
     const handlePageNavigate = (url: string) => {
-        fetchFiltered(search, typeFilter, url);
+        fetchPage(url, search, typeFilter);
     };
 
-    const items = transactions?.data ?? [];
+    const activePage = page ?? transactions;
+    const items = activePage?.data ?? [];
+
 
     const getTransactionTypeBadge = (type: string) => {
         switch (type) {
@@ -381,9 +385,9 @@ export default function SupplierTransactionTable({
                 )}
             </div>
 
-            {transactions && (
+            {activePage && (
                 <TablePaginate
-                    page={transactions}
+                    page={activePage}
                     loading={loading}
                     onNavigate={(url) => handlePageNavigate(url)}
                 />
