@@ -45,16 +45,18 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::prefix('flights')->name('flights.')->group(function () {
             Route::prefix('via')->name('via.')->group(function () {
                 Route::match(['get', 'post'], '/', [FlightsViaController::class, 'index'])->name('index');
+                Route::match(['get', 'post'], '/retrieve-data', [FlightsViaController::class, 'retrieveData'])->name('retrieveData');
                 Route::match(['get', 'post'], '/create', [FlightsViaController::class, 'create'])->name('create');
-                Route::match(['get', 'post'], '/store', [FlightsViaController::class, 'store'])->name('store');
+                Route::match(['get', 'post'], '/store-data', [FlightsViaController::class, 'storeData'])->name('storeData');
             });
         });
 
         Route::prefix('hotels')->name('hotels.')->group(function () {
             Route::prefix('mg')->name('mg.')->group(function () {
                 Route::match(['get', 'post'], '/', [HotelsMgController::class, 'index'])->name('index');
+                Route::match(['get', 'post'], '/retrieve-data', [HotelsMgController::class, 'retrieveData'])->name('retrieveData');
                 Route::match(['get', 'post'], '/create', [HotelsMgController::class, 'create'])->name('create');
-                Route::match(['get', 'post'], '/store', [HotelsMgController::class, 'store'])->name('store');
+                Route::match(['get', 'post'], '/store-data', [HotelsMgController::class, 'storeData'])->name('storeData');
             });
         });
     });
@@ -147,10 +149,10 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::match(['get', 'post'], '/', [TravellersController::class, 'index'])->name('index');
             Route::match(['get', 'post'], '/retrieve-data', [TravellersController::class, 'retrieveData'])->name('retrieveData');
             Route::match(['get', 'post'], '/create', [TravellersController::class, 'create'])->name('create');
-            Route::post('/store', [TravellersController::class, 'store'])->name('store');
-            Route::get('/search-customers', [TravellersController::class, 'searchCustomers'])->name('searchCustomers');
+            Route::match(['get', 'post'], '/store-data', [TravellersController::class, 'storeData'])->name('storeData');
+            Route::match(['get', 'post'], '/search-customers', [TravellersController::class, 'searchCustomers'])->name('searchCustomers');
             Route::match(['get', 'post'], '/{id}/edit', [TravellersController::class, 'edit'])->name('edit');
-            Route::match(['put', 'patch', 'post'], '/{id}', [TravellersController::class, 'update'])->name('update');
+            Route::match(['put', 'patch', 'post'], '/{id}/update-data', [TravellersController::class, 'updateData'])->name('updateData');
             Route::delete('/{id}', [TravellersController::class, 'destroy'])->name('destroy');
         });
     });
@@ -180,5 +182,5 @@ Route::get('/test', function () {
     }
 });
 
-require __DIR__.'/auth.php';
-require __DIR__.'/locale.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/locale.php';

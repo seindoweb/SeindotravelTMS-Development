@@ -7,7 +7,7 @@ import SelectOption, {
     useSelectOption,
 } from '@/Components/SelectOption';
 import TextInput from '@/Components/TextInput';
-import { useDebounce } from '@/Hooks/useDebounce';
+import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/libs/http/api';
 import { router, useForm } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
@@ -149,7 +149,7 @@ function EditTravellerForm({ traveller }: EditTravellerFormProps) {
 
         const targetIdentifier = traveller.index || traveller.id;
 
-        put(route('user.travellers.update', targetIdentifier), {
+        put(route('user.travellers.updateData', targetIdentifier), {
             preserveScroll: true,
             onError: () =>
                 setApiError('Please check the form fields and try again.'),
@@ -157,14 +157,14 @@ function EditTravellerForm({ traveller }: EditTravellerFormProps) {
     };
 
     return (
-        <div className="max-w-3xl rounded-xl bg-white p-6 shadow-sm border-gray-100 mt-6 mx-auto border">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+        <div className="max-w-3xl p-6 mt-6 bg-white border-gray-100 shadow-sm rounded-xl mx-auto border">
+            <h2 className="mb-6 text-xl font-bold text-gray-900">
                 Edit Traveller
             </h2>
 
             <form onSubmit={submit} className="space-y-6">
                 {apiError && (
-                    <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 border-red-100 border whitespace-pre-line">
+                    <div className="p-4 text-sm text-red-600 border-red-100 rounded-lg bg-red-50 border whitespace-pre-line">
                         {apiError}
                     </div>
                 )}
@@ -518,7 +518,7 @@ function EditTravellerForm({ traveller }: EditTravellerFormProps) {
                         />
                     </div>
                 </div>
-                <div className="border-gray-100 pt-6 gap-3 flex items-center justify-end border-t">
+                <div className="gap-3 pt-6 border-gray-100 flex items-center justify-end border-t">
                     <button
                         type="button"
                         onClick={() =>

@@ -14,8 +14,11 @@ use Inertia\Response;
 
 class HotelsMgController extends Controller
 {
+
     /**
      * index
+     *
+     * @return Response
      */
     public function index(): Response
     {
@@ -31,7 +34,7 @@ class HotelsMgController extends Controller
                         ->orWhere('reference_id', 'like', "%{$search}%");
                 });
             })
-            ->when($transactionType, fn ($q, $type) => $q->where('transaction_type', $type))
+            ->when($transactionType, fn($q, $type) => $q->where('transaction_type', $type))
             ->with(['creator'])
             ->latest('transaction_date')
             ->latest('id')
@@ -52,8 +55,12 @@ class HotelsMgController extends Controller
         ]);
     }
 
+    public function retrieveData(Request $request) {}
+
     /**
      * create
+     *
+     * @return Response
      */
     public function create(): Response
     {
@@ -66,10 +73,14 @@ class HotelsMgController extends Controller
         ]);
     }
 
+
     /**
-     * store
+     * storeData
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function storeData(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'transaction_type' => ['required', 'string'],

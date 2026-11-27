@@ -55,7 +55,7 @@ class TravellersController extends Controller
             ->orderBy('full_name')
             ->limit(10)
             ->get()
-            ->map(fn (User $user): array => [
+            ->map(fn(User $user): array => [
                 'id' => $user->id,
                 'full_name' => $user->full_name,
                 'email' => $user->email,
@@ -67,7 +67,7 @@ class TravellersController extends Controller
     /**
      * Store a newly created traveller for the selected customer.
      */
-    public function store(TravellerRequest $request): RedirectResponse
+    public function storeData(TravellerRequest $request): RedirectResponse
     {
         Traveller::create($request->travellerAttributes());
 
@@ -92,7 +92,7 @@ class TravellersController extends Controller
     /**
      * Update the specified traveller in storage.
      */
-    public function update(TravellerRequest $request, string|int $id): RedirectResponse
+    public function updateData(TravellerRequest $request, string|int $id): RedirectResponse
     {
         $traveller = $this->findTraveller($id);
         $traveller->update($request->travellerAttributes());
