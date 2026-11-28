@@ -11,7 +11,7 @@ import SupplierTransactionTable, {
 interface MgIndexProps {
     supplier: SupplierItem | null;
     balance: SupplierBalanceItem | null;
-    transactions: Paginate<SupplierTransactionItem>;
+    transactions?: Paginate<SupplierTransactionItem>;
     filters?: {
         search?: string;
         transaction_type?: string;
@@ -57,6 +57,7 @@ export default function Index({
                     transactions={transactions}
                     createUrl={route('finance.hotels.mg.create')}
                     indexUrl={route('finance.hotels.mg.index')}
+                    retrieveUrl={route('finance.hotels.mg.retrieveData')}
                     supplierTitle="MG Bedbank"
                     categoryTitle="Hotels"
                     filters={filters}

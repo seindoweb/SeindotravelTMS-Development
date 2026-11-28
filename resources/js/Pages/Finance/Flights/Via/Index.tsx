@@ -57,6 +57,7 @@ export default function Index({
                     transactions={transactions}
                     createUrl={route('finance.flights.via.create')}
                     indexUrl={route('finance.flights.via.index')}
+                    retrieveUrl={route('finance.flights.via.retrieveData')}
                     supplierTitle="Via.com"
                     categoryTitle="Flights"
                     filters={filters}

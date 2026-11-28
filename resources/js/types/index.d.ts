@@ -389,3 +389,18 @@ export interface SupplierBalanceProps {
     created_at: string | null;
     updated_at: string | null;
 }
+
+export interface SupplierTransactionProps {
+    supplier: SupplierItem | null;
+    balance: SupplierBalanceItem | null;
+    transactions?: Paginate<SupplierTransactionItem>;
+    createUrl: string;
+    indexUrl: string;
+    retrieveUrl?: string;
+    supplierTitle: string;
+    categoryTitle: string;
+    filters?: {
+        search?: string;
+        transaction_type?: string;
+    };
+}

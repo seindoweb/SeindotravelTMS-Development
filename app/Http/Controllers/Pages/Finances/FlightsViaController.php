@@ -22,8 +22,19 @@ class FlightsViaController extends Controller
      */
     public function index(): Response
     {
-        $search = request()->input('search');
-        $transactionType = request()->input('transaction_type');
+        $supplier = Supplier::where('code', 'VIA')->first();
+        $balance = $supplier ? SupplierBalance::where('supplier_id', $supplier->id)->first() : null;
+
+        return Inertia::render('Finance/Flights/Via/Index', [
+            'supplier' => $supplier,
+            'balance' => $balance,
+        ]);
+    }
+
+    public function retrieveData(Request $request)
+    {
+        $search = $request->input('search');
+        $transactionType = $request->input('transaction_type');
 
         $transactions = SupplierBalanceTransaction::query()
             ->where('supplier_resource_code', 'VIA')
@@ -41,21 +52,8 @@ class FlightsViaController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $supplier = Supplier::where('code', 'VIA')->first();
-        $balance = $supplier ? SupplierBalance::where('supplier_id', $supplier->id)->first() : null;
-
-        return Inertia::render('Finance/Flights/Via/Index', [
-            'supplier' => $supplier,
-            'balance' => $balance,
-            'transactions' => $transactions,
-            'filters' => [
-                'search' => $search,
-                'transaction_type' => $transactionType,
-            ],
-        ]);
+        return response()->json($transactions);
     }
-
-    public function retrieveData(Request $request) {}
 
 
     /**
@@ -81,7 +79,7 @@ class FlightsViaController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function storeData(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'transaction_type' => ['required', 'string'],
