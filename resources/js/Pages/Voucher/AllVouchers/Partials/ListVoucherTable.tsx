@@ -126,7 +126,7 @@ export default function ListVoucherTable({
     const confirmDelete = () => {
         if (!voucherToDelete) return;
         setIsDeleting(true);
-        router.delete(route('voucher.destroy', voucherToDelete.id), {
+        router.delete(route('voucher.dataDestroy', voucherToDelete.id), {
             preserveScroll: true,
             onSuccess: () => {
                 setIsDeleteModalOpen(false);

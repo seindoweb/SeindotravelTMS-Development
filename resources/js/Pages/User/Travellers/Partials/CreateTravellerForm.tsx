@@ -103,7 +103,7 @@ function CreateTravellerForm() {
         e.preventDefault();
         setApiError(null);
 
-        post(route('user.travellers.storeData'), {
+        post(route('user.travellers.dataStore'), {
             preserveScroll: true,
             onError: () => {
                 setApiError('Please check the form fields and try again.');

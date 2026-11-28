@@ -5,8 +5,10 @@ import {
     ChevronRight,
     ClipboardList,
     Hotel,
+    LucideTowerControl,
     MapPinned,
     Plane,
+    PlaneIcon,
 } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
@@ -32,19 +34,19 @@ export default function AuthenticatedMenuFlights({
 
     const isFlightOrders = route().current('flight.orders.*');
 
-    const isHotelBookings = route().current('hotel.bookings.*');
+    const isFlightBookings = route().current('flight.bookings.*');
 
-    // Hotel Markup
-    const isHotelMarkup = route().current('hotel.markups.hotel.*');
+    // Airline Markup
+    const isAirlineMarkup = route().current('flight.markups.airline.*');
 
-    // Destination Markup
-    const isDestinationMarkup = route().current('hotel.markups.destination.*');
+    // Airport Markup
+    const isAirportMarkup = route().current('flight.markups.airport.*');
 
     // Apakah sedang berada di salah satu halaman markup?
-    const isMarkupPage = isHotelMarkup || isDestinationMarkup;
+    const isMarkupPage = isAirlineMarkup || isAirportMarkup;
 
     // Apakah sedang berada di halaman Flights?
-    const isFlightsPage = isFlightOrders || isHotelBookings || isMarkupPage;
+    const isFlightsPage = isFlightOrders || isFlightBookings || isMarkupPage;
 
     /*
     |--------------------------------------------------------------------------
@@ -154,7 +156,7 @@ export default function AuthenticatedMenuFlights({
                         ================================================== */}
 
                         <Link
-                            href={route('flight.orders.list')}
+                            href={route('flight.orders.index')}
                             className={[
                                 'group gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',
@@ -199,16 +201,16 @@ export default function AuthenticatedMenuFlights({
                         </Link>
 
                         {/* =================================================
-                            HOTEL BOOKINGS
+                            FLIGHT BOOKINGS
                         ================================================== */}
 
                         <Link
-                            href={route('hotel.bookings.index')}
+                            href={route('flight.bookings.index')}
                             className={[
                                 'group mt-1 gap-3 rounded-xl px-3 py-3 flex items-center',
                                 'transition-all duration-150',
 
-                                isHotelBookings
+                                isFlightBookings
                                     ? 'bg-tertiary/10 text-tertiary'
                                     : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                             ].join(' ')}
@@ -217,21 +219,21 @@ export default function AuthenticatedMenuFlights({
                                 className={[
                                     'h-8 w-8 rounded-lg flex shrink-0 items-center justify-center',
 
-                                    isHotelBookings
+                                    isFlightBookings
                                         ? 'bg-tertiary/10 text-tertiary'
                                         : 'bg-secondary-dark text-quaternary',
                                 ].join(' ')}
                             >
-                                <BedDouble size={16} />
+                                <PlaneIcon size={16} />
                             </div>
 
                             <div className="min-w-0 flex-1">
                                 <p className="text-xs font-semibold">
-                                    Hotel Bookings
+                                    Flight Bookings
                                 </p>
 
                                 <p className="mt-0.5 text-quaternary-bright text-[10px]">
-                                    Manage hotel bookings
+                                    Manage flight bookings
                                 </p>
                             </div>
 
@@ -240,7 +242,7 @@ export default function AuthenticatedMenuFlights({
                                 className={[
                                     'shrink-0 transition-transform duration-150',
 
-                                    isHotelBookings
+                                    isFlightBookings
                                         ? 'text-tertiary'
                                         : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                 ].join(' ')}
@@ -316,16 +318,16 @@ export default function AuthenticatedMenuFlights({
                         >
                             <div className="ml-5 mt-1 pl-2 border-l border-[#E2E8F0]">
                                 {/* =========================================
-                                    HOTEL MARKUP
+                                    AIRLINE MARKUP
                                 ========================================== */}
 
                                 <Link
-                                    href={route('hotel.markups.hotel.index')}
+                                    href={route('flight.markups.airline.index')}
                                     className={[
                                         'group gap-2 rounded-lg px-3 py-2.5 flex items-center',
                                         'transition-all duration-150',
 
-                                        isHotelMarkup
+                                        isAirlineMarkup
                                             ? 'bg-tertiary/10 text-tertiary'
                                             : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                                     ].join(' ')}
@@ -334,21 +336,21 @@ export default function AuthenticatedMenuFlights({
                                         className={[
                                             'h-6 w-6 rounded-md flex shrink-0 items-center justify-center',
 
-                                            isHotelMarkup
+                                            isAirlineMarkup
                                                 ? 'bg-tertiary/10 text-tertiary'
                                                 : 'bg-secondary-dark text-quaternary',
                                         ].join(' ')}
                                     >
-                                        <Hotel size={13} />
+                                        <PlaneIcon size={13} />
                                     </div>
 
                                     <div className="min-w-0 flex-1">
                                         <p className="font-semibold text-[11px]">
-                                            Hotel Markup
+                                            Airline Markup
                                         </p>
 
                                         <p className="mt-0.5 text-quaternary-bright truncate text-[9px]">
-                                            Manage hotel markups
+                                            Manage airline markups
                                         </p>
                                     </div>
 
@@ -357,7 +359,7 @@ export default function AuthenticatedMenuFlights({
                                         className={[
                                             'shrink-0 transition-transform duration-150',
 
-                                            isHotelMarkup
+                                            isAirlineMarkup
                                                 ? 'text-tertiary'
                                                 : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                         ].join(' ')}
@@ -365,18 +367,16 @@ export default function AuthenticatedMenuFlights({
                                 </Link>
 
                                 {/* =========================================
-                                    DESTINATION MARKUP
+                                    AIRPORT MARKUP
                                 ========================================== */}
 
                                 <Link
-                                    href={route(
-                                        'hotel.markups.destination.index',
-                                    )}
+                                    href={route('flight.markups.airport.index')}
                                     className={[
                                         'group mt-1 gap-2 rounded-lg px-3 py-2.5 flex items-center',
                                         'transition-all duration-150',
 
-                                        isDestinationMarkup
+                                        isAirportMarkup
                                             ? 'bg-tertiary/10 text-tertiary'
                                             : 'text-quaternary-dark hover:bg-secondary hover:text-primary',
                                     ].join(' ')}
@@ -385,21 +385,21 @@ export default function AuthenticatedMenuFlights({
                                         className={[
                                             'h-6 w-6 rounded-md flex shrink-0 items-center justify-center',
 
-                                            isDestinationMarkup
+                                            isAirportMarkup
                                                 ? 'bg-tertiary/10 text-tertiary'
                                                 : 'bg-secondary-dark text-quaternary',
                                         ].join(' ')}
                                     >
-                                        <MapPinned size={13} />
+                                        <LucideTowerControl size={13} />
                                     </div>
 
                                     <div className="min-w-0 flex-1">
                                         <p className="font-semibold text-[11px]">
-                                            Destination Markup
+                                            Airport Markup
                                         </p>
 
                                         <p className="mt-0.5 text-quaternary-bright truncate text-[9px]">
-                                            Manage destination markups
+                                            Manage airport markups
                                         </p>
                                     </div>
 
@@ -408,7 +408,7 @@ export default function AuthenticatedMenuFlights({
                                         className={[
                                             'shrink-0 transition-transform duration-150',
 
-                                            isDestinationMarkup
+                                            isAirportMarkup
                                                 ? 'text-tertiary'
                                                 : 'group-hover:translate-x-0.5 text-[#CBD5E1]',
                                         ].join(' ')}

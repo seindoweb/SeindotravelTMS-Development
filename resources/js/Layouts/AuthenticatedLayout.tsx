@@ -142,7 +142,7 @@ export default function Authenticated({
                     Navigation
                 -------------------------------------------------- */}
 
-                <nav className="gap-2 px-2 py-5 flex flex-1 flex-col items-center">
+                <nav className="gap-2 px-2 py-5 flex flex-1 flex-col items-center overflow-x-hidden overflow-y-auto">
                     {/* =================================================
                         DASHBOARD
                     ================================================== */}

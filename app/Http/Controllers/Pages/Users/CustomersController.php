@@ -21,12 +21,12 @@ class CustomersController extends Controller
     }
 
     /**
-     * retrieveData
+     * dataList
      *
      * @param  mixed  $request
      * @return void
      */
-    public function retrieveData(Request $request)
+    public function dataList(Request $request)
     {
         $search = $request->search;
         $customers = User::query()

@@ -9,12 +9,12 @@ use Inertia\Inertia;
 class FlightOrderController extends Controller
 {
     /**
-     * orderList
+     * index
      *
      * @return void
      */
-    public function orderList(Request $request)
+    public function index(Request $request)
     {
-        return Inertia::render('Flight/Orders/List', []);
+        return Inertia::render('Flight/Orders/Index', []);
     }
 }

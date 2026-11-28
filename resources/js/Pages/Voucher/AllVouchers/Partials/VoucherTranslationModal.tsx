@@ -51,12 +51,14 @@ export default function VoucherTranslationModal({
 
     const hasIdTranslation = Boolean(
         voucher.voucher_translations?.some(
-            (t) => t.locale === 'id' && (t.description?.trim()?.length ?? 0) > 0,
+            (t) =>
+                t.locale === 'id' && (t.description?.trim()?.length ?? 0) > 0,
         ),
     );
     const hasEnTranslation = Boolean(
         voucher.voucher_translations?.some(
-            (t) => t.locale === 'en' && (t.description?.trim()?.length ?? 0) > 0,
+            (t) =>
+                t.locale === 'en' && (t.description?.trim()?.length ?? 0) > 0,
         ),
     );
 
@@ -119,10 +121,10 @@ export default function VoucherTranslationModal({
         activeLocale === 'id' ? hasIdTranslation : hasEnTranslation;
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4">
-            <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
-                <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-                    <div className="flex items-center gap-3">
+        <div className="inset-0 bg-slate-900/40 p-4 fixed z-50 flex items-center justify-center overflow-y-auto backdrop-blur-[2px]">
+            <div className="max-w-2xl bg-white rounded-2xl shadow-xl border-slate-200 relative flex max-h-[90vh] w-full flex-col overflow-hidden border">
+                <div className="px-6 py-4 border-slate-200 bg-slate-50 flex items-center justify-between border-b">
+                    <div className="gap-3 flex items-center">
                         <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                             <Globe size={18} />
                         </div>
@@ -146,38 +148,43 @@ export default function VoucherTranslationModal({
                     </button>
                 </div>
 
-                <div className="p-6 overflow-y-auto space-y-4">
+                <div className="p-6 space-y-4 overflow-y-auto">
                     {totalTranslations === 0 ? (
-                        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs">
+                        <div className="gap-2.5 p-3 rounded-xl bg-amber-50 border-amber-200 text-amber-800 text-xs flex items-start border">
                             <AlertCircle
                                 size={16}
-                                className="shrink-0 mt-0.5 text-amber-600"
+                                className="mt-0.5 text-amber-600 shrink-0"
                             />
                             <div>
                                 <span className="font-semibold block">
                                     Translation Required
                                 </span>
                                 This voucher cannot be set to{' '}
-                                <strong className="font-semibold">Active</strong> status
-                                until you create at least one translation (Indonesian or
-                                English).
+                                <strong className="font-semibold">
+                                    Active
+                                </strong>{' '}
+                                status until you create at least one translation
+                                (Indonesian or English).
                             </div>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
-                            <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                        <div className="gap-2 px-3 py-2 text-xs rounded-xl bg-emerald-50 border-emerald-200 text-emerald-800 flex items-center border">
+                            <CheckCircle2
+                                size={16}
+                                className="text-emerald-600 shrink-0"
+                            />
                             <span>
-                                Voucher is eligible for active status ({totalTranslations}/2
-                                languages configured).
+                                Voucher is eligible for active status (
+                                {totalTranslations}/2 languages configured).
                             </span>
                         </div>
                     )}
 
-                    <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
+                    <div className="gap-2 pb-3 border-slate-200 flex items-center border-b">
                         <button
                             type="button"
                             onClick={() => setActiveLocale('id')}
-                            className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 transition-all ${
+                            className={`px-4 py-2 text-xs font-semibold rounded-lg gap-2 flex items-center transition-all ${
                                 activeLocale === 'id'
                                     ? 'bg-primary text-white shadow-sm'
                                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -194,7 +201,7 @@ export default function VoucherTranslationModal({
                                 />
                             ) : (
                                 <span
-                                    className={`text-[10px] px-1.5 py-0.2 rounded font-normal ${
+                                    className={`px-1.5 py-0.2 rounded font-normal text-[10px] ${
                                         activeLocale === 'id'
                                             ? 'bg-white/20 text-white'
                                             : 'bg-slate-200 text-slate-500'
@@ -208,7 +215,7 @@ export default function VoucherTranslationModal({
                         <button
                             type="button"
                             onClick={() => setActiveLocale('en')}
-                            className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 transition-all ${
+                            className={`px-4 py-2 text-xs font-semibold rounded-lg gap-2 flex items-center transition-all ${
                                 activeLocale === 'en'
                                     ? 'bg-primary text-white shadow-sm'
                                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -225,7 +232,7 @@ export default function VoucherTranslationModal({
                                 />
                             ) : (
                                 <span
-                                    className={`text-[10px] px-1.5 py-0.2 rounded font-normal ${
+                                    className={`px-1.5 py-0.2 rounded font-normal text-[10px] ${
                                         activeLocale === 'en'
                                             ? 'bg-white/20 text-white'
                                             : 'bg-slate-200 text-slate-500'
@@ -239,7 +246,7 @@ export default function VoucherTranslationModal({
 
                     <form onSubmit={handleSave} className="space-y-4">
                         <div>
-                            <div className="flex items-center justify-between mb-1.5">
+                            <div className="mb-1.5 flex items-center justify-between">
                                 <label className="text-xs font-semibold text-slate-700">
                                     Description & Terms (
                                     {activeLocale === 'id'
@@ -248,7 +255,7 @@ export default function VoucherTranslationModal({
                                     )
                                 </label>
                                 {isCurrentSaved && (
-                                    <span className="text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+                                    <span className="text-emerald-600 font-medium gap-1 flex items-center text-[11px]">
                                         <CheckCircle2 size={12} />
                                         Saved
                                     </span>
@@ -259,41 +266,45 @@ export default function VoucherTranslationModal({
                                 value={currentContent}
                                 onChange={setCurrentContent}
                                 placeholder={`Write ${
-                                    activeLocale === 'id' ? 'deskripsi dan' : 'description &'
+                                    activeLocale === 'id'
+                                        ? 'deskripsi dan'
+                                        : 'description &'
                                 } terms & conditions here...`}
                                 minHeight="min-h-[220px]"
                             />
                         </div>
 
-                        <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                        <div className="pt-2 border-slate-100 flex items-center justify-between border-t">
                             {isCurrentSaved ? (
                                 <button
                                     type="button"
                                     onClick={handleDelete}
                                     disabled={deleting || saving}
-                                    className="inline-flex items-center gap-1.5 text-xs text-rose-600 hover:text-rose-700 font-medium px-2.5 py-1.5 rounded-lg hover:bg-rose-50 border border-rose-200 transition-colors disabled:opacity-50"
+                                    className="gap-1.5 text-xs text-rose-600 hover:text-rose-700 font-medium px-2.5 py-1.5 rounded-lg hover:bg-rose-50 border-rose-200 inline-flex items-center border transition-colors disabled:opacity-50"
                                 >
                                     <Trash2 size={13} />
                                     <span>
-                                        {deleting ? 'Deleting...' : 'Delete Language'}
+                                        {deleting
+                                            ? 'Deleting...'
+                                            : 'Delete Language'}
                                     </span>
                                 </button>
                             ) : (
                                 <div />
                             )}
 
-                            <div className="flex items-center gap-2">
+                            <div className="gap-2 flex items-center">
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-300 transition-colors"
+                                    className="px-4 py-2 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-100 border-slate-300 border transition-colors"
                                 >
                                     Close
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="px-4 py-2 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-sm transition-all disabled:opacity-50"
+                                    className="px-4 py-2 text-xs font-semibold text-white rounded-lg shadow-sm bg-primary hover:bg-primary/90 transition-all disabled:opacity-50"
                                 >
                                     {saving
                                         ? 'Saving...'

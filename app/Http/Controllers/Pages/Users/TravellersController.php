@@ -35,8 +35,12 @@ class TravellersController extends Controller
         return Inertia::render('User/Travellers/Create');
     }
 
+
     /**
-     * Search customers by name or email for the traveller customer picker.
+     * searchCustomers
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function searchCustomers(Request $request): JsonResponse
     {
@@ -65,9 +69,12 @@ class TravellersController extends Controller
     }
 
     /**
-     * Store a newly created traveller for the selected customer.
+     * dataStore
+     *
+     * @param TravellerRequest $request
+     * @return RedirectResponse
      */
-    public function storeData(TravellerRequest $request): RedirectResponse
+    public function dataStore(TravellerRequest $request): RedirectResponse
     {
         Traveller::create($request->travellerAttributes());
 
@@ -102,10 +109,14 @@ class TravellersController extends Controller
             ->with('success', 'Traveller updated successfully.');
     }
 
+
     /**
-     * Remove the specified traveller from storage.
+     * dataDestroy
+     *
+     * @param string|int $id
+     * @return JsonResponse|RedirectResponse
      */
-    public function destroy(string|int $id): JsonResponse|RedirectResponse
+    public function dataDestroy(string|int $id): JsonResponse|RedirectResponse
     {
         $traveller = $this->findTraveller($id);
         $traveller->delete();
@@ -140,12 +151,12 @@ class TravellersController extends Controller
     }
 
     /**
-     * retrieveData
+     * dataList
      *
      * @param  mixed  $request
      * @return void
      */
-    public function retrieveData(Request $request)
+    public function dataList(Request $request)
     {
         $search = $request->search;
         $userId = $request->query('user_id', $request->query('customer_id'));

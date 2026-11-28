@@ -146,7 +146,7 @@ export default function EditVoucherForm({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('voucher.update', voucher.id), {
+        post(route('voucher.dataUpdate', voucher.id), {
             forceFormData: true,
             preserveScroll: true,
         });
@@ -179,7 +179,7 @@ export default function EditVoucherForm({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="md:grid-cols-2 gap-2 grid grid-cols-1">
+                <div className="gap-2 md:grid-cols-2 grid grid-cols-1">
                     <div>
                         <InputLabel value="Banner / Voucher Image (Optional)" />
                         <div className="mt-1.5 gap-4 flex items-center">

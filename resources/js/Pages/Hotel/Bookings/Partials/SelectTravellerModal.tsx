@@ -54,7 +54,7 @@ export default function SelectTravellerModal({
                           user_id: customerUserId,
                       })
                     : await api.get<Paginate<TravellerProps>>(
-                          route('user.travellers.retrieveData'),
+                          route('user.travellers.dataList'),
                           {
                               page: urlOrPage,
                               search,

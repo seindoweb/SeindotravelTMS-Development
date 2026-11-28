@@ -35,7 +35,7 @@ export default function ListTravellerTable() {
                           search: search,
                       })
                     : await api.get<Paginate<TravellerProps>>(
-                          route('user.travellers.retrieveData'),
+                          route('user.travellers.dataList'),
                           {
                               page: urlOrPage,
                               search: search,
@@ -67,7 +67,7 @@ export default function ListTravellerTable() {
         setIsDeleting(true);
         try {
             const targetId = itemToDelete.index || itemToDelete.id;
-            await api.del(route('user.travellers.destroy', targetId));
+            await api.del(route('user.travellers.dataDestroy', targetId));
             setIsDeleteModalOpen(false);
             setItemToDelete(null);
             fetchPage(page?.current_page || 1);
@@ -158,7 +158,7 @@ export default function ListTravellerTable() {
                                                         {val.last_name}
                                                     </span>
                                                     {val.user && (
-                                                        <span className="text-[11px] text-gray-400">
+                                                        <span className="text-gray-400 text-[11px]">
                                                             Customer:{' '}
                                                             {val.user.full_name}
                                                         </span>

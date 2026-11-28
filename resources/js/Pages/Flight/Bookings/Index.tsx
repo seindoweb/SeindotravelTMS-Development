@@ -16,7 +16,7 @@ export default function OrderList() {
                         className="sm:block hidden text-[#CBD5E1]"
                     />
                     <span className="text-sm font-bold text-primary truncate">
-                        Flight Orders
+                        Flight Bookings
                     </span>
                 </>
             }

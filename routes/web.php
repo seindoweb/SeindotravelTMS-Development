@@ -3,6 +3,8 @@
 use App\Http\Controllers\Pages\DashboardController;
 use App\Http\Controllers\Pages\Finances\FlightsViaController;
 use App\Http\Controllers\Pages\Finances\HotelsMgController;
+use App\Http\Controllers\Pages\Flights\FlightBookingController;
+use App\Http\Controllers\Pages\Flights\FlightMarkupController;
 use App\Http\Controllers\Pages\Flights\FlightOrderController;
 use App\Http\Controllers\Pages\Hotels\HotelBookingController;
 use App\Http\Controllers\Pages\Hotels\HotelMarkupController;
@@ -70,7 +72,26 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
     });
     Route::prefix('flight')->name('flight.')->group(function () {
         Route::prefix('orders')->name('orders.')->group(function () {
-            Route::match(['get', 'post'], '/list', [FlightOrderController::class, 'orderList'])->name('list');
+            Route::match(['get', 'post'], '/', [FlightOrderController::class, 'index'])->name('index');
+            Route::match(['get', 'post'], '/{code}/show', [FlightOrderController::class, 'show'])->name('show');
+            Route::prefix('/data')->group(function () {
+                Route::match(['get', 'post'], '/data-list', [FlightOrderController::class, 'dataList'])->name('dataList');
+                Route::match(['get', 'post'], '/data-details', [FlightOrderController::class, 'dataDetails'])->name('dataDetails');
+            });
+        });
+
+        Route::prefix('bookings')->name('bookings.')->group(function () {
+            Route::match(['get', 'post'], '/', [FlightBookingController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('markups')->name('markups.')->group(function () {
+            Route::prefix('airline')->name('airline.')->group(function () {
+                Route::match(['get', 'post'], '/', [FlightMarkupController::class, 'indexByAirline'])->name('index');
+            });
+
+            Route::prefix('airport')->name('airport.')->group(function () {
+                Route::match(['get', 'post'], '/', [FlightMarkupController::class, 'indexByAirport'])->name('index');
+            });
         });
     });
 
@@ -125,13 +146,17 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
             Route::match(['get', 'post'], '/personal', [AllVouchersController::class, 'indexDistyPersonal'])->name('indexPersonal');
             Route::match(['get', 'post'], '/public', [AllVouchersController::class, 'indexDistyPublic'])->name('indexPublic');
         });
-        Route::post('/store', [AllVouchersController::class, 'store'])->name('store');
         Route::match(['get', 'post'], '/{voucher}/edit', [AllVouchersController::class, 'edit'])->name('edit');
-        Route::match(['put', 'patch', 'post'], '/{voucher}', [AllVouchersController::class, 'update'])->name('update');
-        Route::delete('/{voucher}', [AllVouchersController::class, 'destroy'])->name('destroy');
-        Route::patch('/{voucher}/toggle-status', [AllVouchersController::class, 'toggleStatus'])->name('toggleStatus');
-        Route::post('/{voucher}/translations', [AllVouchersController::class, 'saveTranslation'])->name('saveTranslation');
-        Route::delete('/{voucher}/translations/{locale}', [AllVouchersController::class, 'deleteTranslation'])->name('deleteTranslation');
+
+        Route::prefix('/data')->group(function () {
+            Route::match(['post'], '/data-store', [AllVouchersController::class, 'dataStore'])->name('dataStore');
+            Route::match(['put', 'patch'], '/{voucher}/data-update', [AllVouchersController::class, 'dataUpdate'])->name('dataUpdate');
+            Route::match(['delete'], '/{voucher}/data-destroy', [AllVouchersController::class, 'dataDestroy'])->name('dataDestroy');
+
+            Route::match(['patch'], '/{voucher}/toggle-status', [AllVouchersController::class, 'toggleStatus'])->name('toggleStatus');
+            Route::match(['get', 'post'], '/{voucher}/save-translations', [AllVouchersController::class, 'saveTranslation'])->name('saveTranslation');
+            Route::match(['delete'], '/{voucher}/{locale}/delete-translations', [AllVouchersController::class, 'deleteTranslation'])->name('deleteTranslation');
+        });
     });
 
     Route::prefix('user')->name('user.')->group(function () {
@@ -141,19 +166,25 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
         Route::prefix('customers')->name('customers.')->group(function () {
             Route::match(['get', 'post'], '/', [CustomersController::class, 'index'])->name('index');
-            Route::match(['get', 'post'], '/retrieve-data', [CustomersController::class, 'retrieveData'])->name('retrieveData');
             Route::match(['get', 'post'], '/{tracking_code}', [CustomersController::class, 'show'])->name('show');
+
+            Route::prefix('travellers')->group(function () {
+                Route::match(['get', 'post'], '/data-list', [CustomersController::class, 'dataList'])->name('dataList');
+                Route::match(['get', 'post'], '/data-details', [FlightOrderController::class, 'dataList'])->name('dataDetails');
+            });
         });
 
         Route::prefix('travellers')->name('travellers.')->group(function () {
             Route::match(['get', 'post'], '/', [TravellersController::class, 'index'])->name('index');
-            Route::match(['get', 'post'], '/retrieve-data', [TravellersController::class, 'retrieveData'])->name('retrieveData');
             Route::match(['get', 'post'], '/create', [TravellersController::class, 'create'])->name('create');
-            Route::match(['get', 'post'], '/store-data', [TravellersController::class, 'storeData'])->name('storeData');
-            Route::match(['get', 'post'], '/search-customers', [TravellersController::class, 'searchCustomers'])->name('searchCustomers');
             Route::match(['get', 'post'], '/{id}/edit', [TravellersController::class, 'edit'])->name('edit');
-            Route::match(['put', 'patch', 'post'], '/{id}/update-data', [TravellersController::class, 'updateData'])->name('updateData');
-            Route::delete('/{id}', [TravellersController::class, 'destroy'])->name('destroy');
+            Route::prefix('/data')->group(function () {
+                Route::match(['get', 'post'], '/data-list', [TravellersController::class, 'dataList'])->name('dataList');
+                Route::match(['get', 'post'], '/data-store', [TravellersController::class, 'dataStore'])->name('dataStore');
+                Route::match(['put', 'patch'], '/{id}/update-data', [TravellersController::class, 'updateData'])->name('updateData');
+                Route::match(['delete'], '/{id}/data-destroy', [TravellersController::class, 'dataDestroy'])->name('dataDestroy');
+                Route::match(['get', 'post'], '/search-customers', [TravellersController::class, 'searchCustomers'])->name('searchCustomers');
+            });
         });
     });
 

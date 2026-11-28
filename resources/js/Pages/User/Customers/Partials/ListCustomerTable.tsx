@@ -22,7 +22,7 @@ export default function ListCustomerTable() {
                           search: search,
                       })
                     : await api.get<Paginate<UserProps>>(
-                          route('user.customers.retrieveData'),
+                          route('user.customers.dataList'),
                           {
                               page: urlOrPage,
                               search: search,

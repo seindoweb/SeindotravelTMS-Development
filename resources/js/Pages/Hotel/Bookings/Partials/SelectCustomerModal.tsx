@@ -38,7 +38,7 @@ export default function SelectCustomerModal({
                 typeof urlOrPage === 'string'
                     ? await api.get<Paginate<UserProps>>(urlOrPage, { search })
                     : await api.get<Paginate<UserProps>>(
-                          route('user.customers.retrieveData'),
+                          route('user.customers.dataList'),
                           {
                               page: urlOrPage,
                               search,
