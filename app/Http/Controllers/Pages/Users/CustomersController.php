@@ -48,12 +48,22 @@ class CustomersController extends Controller
      */
     public function show(string $tracking_code): Response
     {
-        $customer = User::with(['countries', 'states', 'cities'])
-            ->where('tracking_code', $tracking_code)
-            ->firstOrFail();
-
         return Inertia::render('User/Customers/Show', [
-            'customer' => $customer,
+            'tracking_code' => $tracking_code,
         ]);
+    }
+
+    /**
+     * dataDetails
+     */
+    public function dataDetails(Request $request)
+    {
+        $trackingCode = $request->input('tracking_code');
+
+        $customer = User::with(['countries', 'states', 'cities', 'upline', 'userCredits'])
+            ->where('tracking_code', $trackingCode)
+            ->first();
+
+        return response()->json($customer);
     }
 }

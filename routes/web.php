@@ -166,12 +166,11 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
 
         Route::prefix('customers')->name('customers.')->group(function () {
             Route::match(['get', 'post'], '/', [CustomersController::class, 'index'])->name('index');
-            Route::match(['get', 'post'], '/{tracking_code}', [CustomersController::class, 'show'])->name('show');
-
-            Route::prefix('travellers')->group(function () {
+            Route::prefix('data')->group(function () {
                 Route::match(['get', 'post'], '/data-list', [CustomersController::class, 'dataList'])->name('dataList');
-                Route::match(['get', 'post'], '/data-details', [FlightOrderController::class, 'dataList'])->name('dataDetails');
+                Route::match(['get', 'post'], '/data-details', [CustomersController::class, 'dataDetails'])->name('dataDetails');
             });
+            Route::match(['get', 'post'], '/{tracking_code}', [CustomersController::class, 'show'])->name('show');
         });
 
         Route::prefix('travellers')->name('travellers.')->group(function () {
